@@ -1,0 +1,19 @@
+xread
+'Initial description
+on multiple
+lines'
+5 3
+& [num]
+taxonA 000[12]1
+taxonB 01111
+taxonC 1?111
+& [cont]
+taxonA 1.4 1.2-1.4
+taxonB 1.3 1.5
+taxonC 0.4-0.8 ?
+& [serial]
+taxonA [1 2.0][1 2.3][? ?]
+taxonB [2 1.5][3 2.3][? 2.3]
+taxonC [1 2.0][4 2.3]
+;
+
