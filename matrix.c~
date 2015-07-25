@@ -52,7 +52,7 @@ void print_matrix(matrix m){
     for(int p_count=0; p_count < m.npart; p_count++){
         printf("  Partition %i\n", p_count+1);
         printf("    Num. chars: %i\n", m.partitions[p_count]->nchar);
-        printf("    First state: %f\n", *((m.partitions[p_count])->states) );
+        //printf("    First state: %f\n", *(m.partitions[p_count])->states );
     }
 }
 
