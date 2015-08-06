@@ -16,7 +16,7 @@ void add_taxon_randomly(Tree *t, int id, int max_taxa){
         root_node->desc2 = NULL;
         new_node->anc = root_node;
         t->ntaxa = 1;
-        t->maxid = max_taxa;
+        t->max_id = max_taxa;
         t->root_node = root_node;
     }
     else {
@@ -61,9 +61,9 @@ Tree *make_random_tree(int ntaxa){
         int counter = -1, idx = 0;
         while (counter < r) {
             counter += included[idx];
-            idx++;
             printf("%i:", idx);
             printf("%i ", included[idx]);
+            idx++;
         }
         included[idx-1] = 0;
         printf("\nIncluded\n");
