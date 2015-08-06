@@ -37,12 +37,16 @@ void add_partition(Matrix *m, Partition *p){
     assert( (m->npart < 11) && "You cannot add more than 10 partitions"); // check that there is space for partitions in the matrix
     // TO-DO:
     // check that the total number of characters doesn't exceed the matrix
+    
     // check each taxon has the right number of characters
+    
     // check that there are the right number of taxa
     
     // finally, add matrix
     m->partitions[m->npart] = p; //pointer to partition struct
     m->npart = m->npart + 1;
+    
+    return 0;
 }
 
 
@@ -127,20 +131,3 @@ void tests(){
     printf("\n");
     Matrix_destroy(m);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
