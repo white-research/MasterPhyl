@@ -5,7 +5,7 @@
 
 #include "matrix.h"
 #include "tree.h"
-
+#include "analysis.h"
 
 
 int main(void){
@@ -31,6 +31,9 @@ int main(void){
     printf("\n");
     print_matrix(new_m);
     printf("\n");
-    make_random_tree(5);
+    Tree *rand_tree = make_random_tree(5);
+    assert(tree_is_correct(rand_tree));
+    spr(rand_tree, new_m);
+    
     return 1;
 }

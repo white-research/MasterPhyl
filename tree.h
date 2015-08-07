@@ -14,5 +14,7 @@ typedef struct {
 extern int get_children(int node, int phyl[], int num_vertices, int children[2]);
 extern int get_ancestor(int node, int phyl[], int num_vertices);
 extern Tree *make_random_tree(int ntaxa);
+extern Tree *split_tree(Tree *t);
+extern int tree_is_correct(Tree *t);
 
 #endif
