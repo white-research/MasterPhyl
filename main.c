@@ -33,7 +33,8 @@ int main(void){
     printf("\n");
     Tree *rand_tree = make_random_tree(5);
     assert(tree_is_correct(rand_tree));
-    spr(rand_tree, new_m);
-    
+    spr(rand_tree, new_m, 20.0);
+    free_tree(rand_tree);
+    Matrix_destroy(new_m);
     return 1;
 }

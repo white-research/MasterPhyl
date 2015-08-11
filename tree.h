@@ -7,14 +7,26 @@ typedef struct treeNode{
 } Node;
 
 typedef struct {
-    int ntaxa, max_id;
-    Node *root_node, *first_taxon;
+    int ntaxa, max_id; //delete max id?
+    Node *root_node, *first_taxon; // delete first_taxon pointer?
 } Tree;
 
 extern int get_children(int node, int phyl[], int num_vertices, int children[2]);
 extern int get_ancestor(int node, int phyl[], int num_vertices);
+
+
 extern Tree *make_random_tree(int ntaxa);
-extern Tree *split_tree(Tree *t);
+extern void split_tree(Tree *t, int anc_id, int des_id, Tree *subtree_array[2]);
+extern Tree *join_trees(Tree *subt1, Tree *subt2, int sister_id, int new_node_id);
 extern int tree_is_correct(Tree *t);
+extern void free_tree(Tree *t);
+extern int *get_branch_list(Tree *t);
+extern Tree *copy_tree(Tree *orig_tree);
+extern void reroot(Tree *t, int outgroup_id);
+extern void reroot_branch(Tree *t, int branch_anc, int branch_des);
+extern void print_tree(Tree *t, Node *current_node, int level);
+extern void print_nodes(Tree *t, Node *current_node);
+
+void free_node_recur(Node *n);
 
 #endif

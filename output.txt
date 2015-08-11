@@ -1,0 +1,343 @@
+Working
+0.000 0.000 0.000 0.000 0.000 0.000 1.000 1.000 1.000 1.000 1.000 1.000 
+3 3
+0.000 0.000 1.000 1.000 1.000 1.000 3.200 3.200 0.800 0.800 2.100 2.100 
+3 3
+1.000 1.000 1.300 1.300 2.000 2.000 2.600 2.600 1.000 1.000 1.300 1.300 1.000 1.000 1.300 1.300 2.000 2.000 2.600 2.600 1.000 1.000 1.300 1.300 2.000 2.000 2.600 2.600 
+3 3
+
+Taxa:3, Characters: 6, Partitions: 3
+  Partition 1
+    Num. chars: 2
+    First state: 0.000000
+  Partition 2
+    Num. chars: 2
+    First state: 0.000000
+  Partition 3
+    Num. chars: 2
+    First state: 1.000000
+    Segments per taxon: 2 3 2 
+
+0:1 1:1 2:1 3:1 1 1 1 0 1   Adding tip 3 randomly
+0:1 1:1 2:1 3:0 4:1 1 1 1 0 0   Adding tip 4 randomly
+
+About to add root's descendent
+
+Root:5
+
+About to add root as node's ancestor
+
+About to increment total taxa
+
+Done.
+0:1 1:1 1 0 1 0 0   Adding tip 1 randomly
+total taxa in tree: 3
+0:1 0 0 1 0 0   Adding tip 0 randomly
+total taxa in tree: 4
+0:0 1:0 2:1 0 0 0 0 0   Adding tip 2 randomly
+total taxa in tree: 5
+
+Current node: 5, Descendent 1:10, Descendent 2: 4, 
+Current node:10, Descendent 1: 2, Descendent 2: 8, 
+Current node: 2,  
+Current node: 8, Descendent 1: 0, Descendent 2: 6, 
+Current node: 0,  
+Current node: 6, Descendent 1: 1, Descendent 2: 3, 
+Current node: 1,  
+Current node: 3,  
+Current node: 4,  
+-- 5  --10    -- 2
+    -- 8      -- 0
+      -- 6        -- 1
+        -- 3
+  -- 4
+
+Final branch_count = 8
+
+Taxon count: 5
+Final branch_count = 8
+
+
+
+0 - Starting SPR at branch 5 to 10
+
+ Starting tree:
+-- 5--10  -- 2
+  -- 8    -- 0
+    -- 6      -- 1
+      -- 3
+-- 4
+
+
+ Splitting trees at branch 5 -> 10
+  Tree has 5 taxa
+  Making list of branches to check that branch to split at exists.
+Final branch_count = 8
+   Index: 0
+   Branch 5 -> 10
+   Index: 1
+   Branch 10 -> 2
+   Index: 2
+   Branch 10 -> 8
+   Index: 3
+   Branch 8 -> 0
+   Index: 4
+   Branch 8 -> 6
+   Index: 5
+   Branch 6 -> 1
+   Index: 6
+   Branch 6 -> 3
+   Index: 7
+   Branch 5 -> 4
+Branch to split at = 5 -> 10
+Copying ntaxa
+Copied ntaxa
+Copy of original tree within split tree function:
+--25--30  --22
+  --28    --20
+    --26      --21
+      --23
+--24
+
+Current node:25, Descendent 1:30, Descendent 2:24, 
+Current node:30, Descendent 1:22, Descendent 2:28, 
+Current node:22,  
+Current node:28, Descendent 1:20, Descendent 2:26, 
+Current node:20,  
+Current node:26, Descendent 1:21, Descendent 2:23, 
+Current node:21,  
+Current node:23,  
+Current node:24,  
+Created subtrees via malloc, finding node to remove with id: 5
+ Finding node 25, currently on node 25
+  Found it!
+ Finding node 25, currently on node 30
+ Finding node 25, currently on node 22
+ Finding node 25, currently on node 28
+ Finding node 25, currently on node 20
+ Finding node 25, currently on node 26
+ Finding node 25, currently on node 21
+ Finding node 25, currently on node 23
+ Finding node 25, currently on node 24
+Found node to remove, id: 25
+Splitting tree at root node 25
+subtree1 has 4 taxa
+
+Current node:30, Descendent 1:22, Descendent 2:28, 
+Current node:22,  
+Current node:28, Descendent 1:20, Descendent 2:26, 
+Current node:20,  
+Current node:26, Descendent 1:21, Descendent 2:23, 
+Current node:21,  
+Current node:23,  subtree2 has 1 taxa
+
+Current node:24,  
+ Created subtrees, with 4 and 1 taxa
+Subtree1:
+--30--22
+--28  --20
+  --26    --21
+    --23
+
+Current node:30, Descendent 1:22, Descendent 2:28, 
+Current node:22,  
+Current node:28, Descendent 1:20, Descendent 2:26, 
+Current node:20,  
+Current node:26, Descendent 1:21, Descendent 2:23, 
+Current node:21,  
+Current node:23,  
+Subtree2:
+--24
+
+Current node:24,  
+
+
+  Print of Start tree after making subtrees from it:
+-- 5--10  -- 2
+  -- 8    -- 0
+    -- 6      -- 1
+      -- 3
+-- 4
+
+Current node: 5, Descendent 1:10, Descendent 2: 4, 
+Current node:10, Descendent 1: 2, Descendent 2: 8, 
+Current node: 2,  
+Current node: 8, Descendent 1: 0, Descendent 2: 6, 
+Current node: 0,  
+Current node: 6, Descendent 1: 1, Descendent 2: 3, 
+Current node: 1,  
+Current node: 3,  
+Current node: 4,  
+
+
+
+
+1 - Starting SPR at branch 10 to 2
+
+ Starting tree:
+-- 5--10  -- 2
+  -- 8    -- 0
+    -- 6      -- 1
+      -- 3
+-- 4
+
+
+ Splitting trees at branch 10 -> 2
+  Tree has 5 taxa
+  Making list of branches to check that branch to split at exists.
+Final branch_count = 8
+   Index: 0
+   Branch 5 -> 10
+   Index: 1
+   Branch 10 -> 2
+   Index: 2
+   Branch 10 -> 8
+   Index: 3
+   Branch 8 -> 0
+   Index: 4
+   Branch 8 -> 6
+   Index: 5
+   Branch 6 -> 1
+   Index: 6
+   Branch 6 -> 3
+   Index: 7
+   Branch 5 -> 4
+Branch to split at = 10 -> 2
+Copying ntaxa
+Copied ntaxa
+Copy of original tree within split tree function:
+--25--30  --22
+  --28    --20
+    --26      --21
+      --23
+--24
+
+Current node:25, Descendent 1:30, Descendent 2:24, 
+Current node:30, Descendent 1:22, Descendent 2:28, 
+Current node:22,  
+Current node:28, Descendent 1:20, Descendent 2:26, 
+Current node:20,  
+Current node:26, Descendent 1:21, Descendent 2:23, 
+Current node:21,  
+Current node:23,  
+Current node:24,  
+Created subtrees via malloc, finding node to remove with id: 10
+ Finding node 30, currently on node 25
+ Finding node 30, currently on node 30
+  Found it!
+ Finding node 30, currently on node 22
+ Finding node 30, currently on node 28
+ Finding node 30, currently on node 20
+ Finding node 30, currently on node 26
+ Finding node 30, currently on node 21
+ Finding node 30, currently on node 23
+ Finding node 30, currently on node 24
+Found node to remove, id: 30
+Splitting tree at interior node 30
+Node_to_remove_anc is: 5
+Node_to_shorten is: 22
+subtree1 root assigned to node 25subtree2 root assigned to node 28subtree1 has 5 taxa
+
+Current node:25, Descendent 1: 0, Descendent 2:24, 
+Current node: 0, Descendent 1:22, Descendent 2:28, 
+Current node:22,  
+Current node:28, Descendent 1:20, Descendent 2:26, 
+Current node:20,  
+Current node:26, Descendent 1:21, Descendent 2:23, 
+Current node:21,  
+Current node:23,  
+Current node:24,  subtree2 has 3 taxa
+
+Current node:28, Descendent 1:20, Descendent 2:26, 
+Current node:20,  
+Current node:26, Descendent 1:21, Descendent 2:23, 
+Current node:21,  
+Current node:23,  
+ Created subtrees, with 5 and 3 taxa
+Subtree1:
+--25-- 0  --22
+  --28    --20
+    --26      --21
+      --23
+--24
+
+Current node:25, Descendent 1: 0, Descendent 2:24, 
+Current node: 0, Descendent 1:22, Descendent 2:28, 
+Current node:22,  
+Current node:28, Descendent 1:20, Descendent 2:26, 
+Current node:20,  
+Current node:26, Descendent 1:21, Descendent 2:23, 
+Current node:21,  
+Current node:23,  
+Current node:24,  
+Subtree2:
+--28--20
+--26  --21
+  --23
+
+Current node:28, Descendent 1:20, Descendent 2:26, 
+Current node:20,  
+Current node:26, Descendent 1:21, Descendent 2:23, 
+Current node:21,  
+Current node:23,  
+
+
+  Print of Start tree after making subtrees from it:
+-- 5--10  -- 2
+  -- 8    -- 0
+    -- 6      -- 1
+      -- 3
+--22
+
+Current node: 5, Descendent 1:10, Descendent 2:22, 
+Current node:10, Descendent 1: 2, Descendent 2: 8, 
+Current node: 2,  
+Current node: 8, Descendent 1: 0, Descendent 2: 6, 
+Current node: 0,  
+Current node: 6, Descendent 1: 1, Descendent 2: 3, 
+Current node: 1,  
+Current node: 3,  
+Current node:22,  
+
+
+
+
+2 - Starting SPR at branch 10 to 8
+
+ Starting tree:
+-- 5--10  -- 2
+  -- 8    -- 0
+    -- 6      -- 1
+      -- 3
+--28345568
+
+
+ Splitting trees at branch 10 -> 8
+  Tree has 5 taxa
+  Making list of branches to check that branch to split at exists.
+Final branch_count = 8
+   Index: 0
+   Branch 5 -> 10
+   Index: 1
+   Branch 10 -> 2
+   Index: 2
+   Branch 10 -> 8
+   Index: 3
+   Branch 8 -> 0
+   Index: 4
+   Branch 8 -> 6
+   Index: 5
+   Branch 6 -> 1
+   Index: 6
+   Branch 6 -> 3
+   Index: 7
+   Branch 5 -> 28345568
+Branch to split at = 10 -> 8
+Copying ntaxa
+Copied ntaxa
+Copy of original tree within split tree function:
+--28345588
+
+Current node:28345588,  
+Created subtrees via malloc, finding node to remove with id: 10
+ Finding node 30, currently on node 28345588

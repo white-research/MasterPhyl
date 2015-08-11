@@ -64,6 +64,10 @@ void print_matrix(Matrix *m){
 
 
 void Partition_destroy(Partition *p){
+    if (p->data_type == 2){
+        free(p->segments);
+    }
+    free(p->states);
     free(p);
 }
 
@@ -71,8 +75,8 @@ void Partition_destroy(Partition *p){
 void Matrix_destroy(Matrix *m){
     for(int p_count=0; p_count < m->npart; p_count++){
         Partition_destroy(m->partitions[p_count]);
-        free(m);
     }
+    free(m);
 }
 
 
