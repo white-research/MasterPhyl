@@ -18,8 +18,8 @@ Taxa:3, Characters: 6, Partitions: 3
     First state: 1.000000
     Segments per taxon: 2 3 2 
 
-0:1 1:1 2:1 3:1 1 1 1 0 1   Adding tip 3 randomly
-0:1 1:1 2:1 3:0 4:1 1 1 1 0 0   Adding tip 4 randomly
+0:1 0 1 1 1 1   Adding tip 0 randomly
+0:0 1:1 2:1 3:1 0 1 1 0 1   Adding tip 3 randomly
 
 About to add root's descendent
 
@@ -30,27 +30,27 @@ About to add root as node's ancestor
 About to increment total taxa
 
 Done.
-0:1 1:1 1 0 1 0 0   Adding tip 1 randomly
+0:0 1:1 0 0 1 0 1   Adding tip 1 randomly
 total taxa in tree: 3
-0:1 0 0 1 0 0   Adding tip 0 randomly
+0:0 1:0 2:1 0 0 0 0 1   Adding tip 2 randomly
 total taxa in tree: 4
-0:0 1:0 2:1 0 0 0 0 0   Adding tip 2 randomly
+0:0 1:0 2:0 3:0 4:1 0 0 0 0 0   Adding tip 4 randomly
 total taxa in tree: 5
 
-Current node: 5, Descendent 1:10, Descendent 2: 4, 
-Current node:10, Descendent 1: 2, Descendent 2: 8, 
-Current node: 2,  
-Current node: 8, Descendent 1: 0, Descendent 2: 6, 
-Current node: 0,  
-Current node: 6, Descendent 1: 1, Descendent 2: 3, 
-Current node: 1,  
-Current node: 3,  
+Current node: 5, Descendent 1:10, Descendent 2: 3, 
+Current node:10, Descendent 1: 4, Descendent 2: 8, 
 Current node: 4,  
--- 5  --10    -- 2
-    -- 8      -- 0
+Current node: 8, Descendent 1: 2, Descendent 2: 6, 
+Current node: 2,  
+Current node: 6, Descendent 1: 1, Descendent 2: 0, 
+Current node: 1,  
+Current node: 0,  
+Current node: 3,  
+-- 5  --10    -- 4
+    -- 8      -- 2
       -- 6        -- 1
-        -- 3
-  -- 4
+        -- 0
+  -- 3
 
 Final branch_count = 8
 
@@ -62,11 +62,11 @@ Final branch_count = 8
 0 - Starting SPR at branch 5 to 10
 
  Starting tree:
--- 5--10  -- 2
-  -- 8    -- 0
+-- 5--10  -- 4
+  -- 8    -- 2
     -- 6      -- 1
-      -- 3
--- 4
+      -- 0
+-- 3
 
 
  Splitting trees at branch 5 -> 10
@@ -76,268 +76,1764 @@ Final branch_count = 8
    Index: 0
    Branch 5 -> 10
    Index: 1
-   Branch 10 -> 2
+   Branch 10 -> 4
    Index: 2
    Branch 10 -> 8
    Index: 3
-   Branch 8 -> 0
+   Branch 8 -> 2
    Index: 4
    Branch 8 -> 6
    Index: 5
    Branch 6 -> 1
    Index: 6
-   Branch 6 -> 3
+   Branch 6 -> 0
    Index: 7
-   Branch 5 -> 4
+   Branch 5 -> 3
 Branch to split at = 5 -> 10
 Copying ntaxa
 Copied ntaxa
 Copy of original tree within split tree function:
---25--30  --22
-  --28    --20
-    --26      --21
-      --23
---24
+-- 5--10  -- 4
+  -- 8    -- 2
+    -- 6      -- 1
+      -- 0
+-- 3
 
-Current node:25, Descendent 1:30, Descendent 2:24, 
-Current node:30, Descendent 1:22, Descendent 2:28, 
-Current node:22,  
-Current node:28, Descendent 1:20, Descendent 2:26, 
-Current node:20,  
-Current node:26, Descendent 1:21, Descendent 2:23, 
-Current node:21,  
-Current node:23,  
-Current node:24,  
+Current node: 5, Descendent 1:10, Descendent 2: 3, 
+Current node:10, Descendent 1: 4, Descendent 2: 8, 
+Current node: 4,  
+Current node: 8, Descendent 1: 2, Descendent 2: 6, 
+Current node: 2,  
+Current node: 6, Descendent 1: 1, Descendent 2: 0, 
+Current node: 1,  
+Current node: 0,  
+Current node: 3,  
 Created subtrees via malloc, finding node to remove with id: 5
- Finding node 25, currently on node 25
+
+ Finding node 5, currently on node 5
   Found it!
- Finding node 25, currently on node 30
- Finding node 25, currently on node 22
- Finding node 25, currently on node 28
- Finding node 25, currently on node 20
- Finding node 25, currently on node 26
- Finding node 25, currently on node 21
- Finding node 25, currently on node 23
- Finding node 25, currently on node 24
-Found node to remove, id: 25
-Splitting tree at root node 25
+  Checking 5's descendant1...
+
+ Finding node 5, currently on node 10
+  Checking 10's descendant1...
+
+ Finding node 5, currently on node 4
+  Checking 4's descendant1...
+  Checking 4's descendant2...
+  Finished on node 4
+  Checking 10's descendant2...
+
+ Finding node 5, currently on node 8
+  Checking 8's descendant1...
+
+ Finding node 5, currently on node 2
+  Checking 2's descendant1...
+  Checking 2's descendant2...
+  Finished on node 2
+  Checking 8's descendant2...
+
+ Finding node 5, currently on node 6
+  Checking 6's descendant1...
+
+ Finding node 5, currently on node 1
+  Checking 1's descendant1...
+  Checking 1's descendant2...
+  Finished on node 1
+  Checking 6's descendant2...
+
+ Finding node 5, currently on node 0
+  Checking 0's descendant1...
+  Checking 0's descendant2...
+  Finished on node 0
+  Finished on node 6
+  Finished on node 8
+  Finished on node 10
+  Checking 5's descendant2...
+
+ Finding node 5, currently on node 3
+  Checking 3's descendant1...
+  Checking 3's descendant2...
+  Finished on node 3
+  Finished on node 5
+Found node to remove, id: 5
+Splitting tree at root node 5
 subtree1 has 4 taxa
 
-Current node:30, Descendent 1:22, Descendent 2:28, 
-Current node:22,  
-Current node:28, Descendent 1:20, Descendent 2:26, 
-Current node:20,  
-Current node:26, Descendent 1:21, Descendent 2:23, 
-Current node:21,  
-Current node:23,  subtree2 has 1 taxa
-
-Current node:24,  
- Created subtrees, with 4 and 1 taxa
-Subtree1:
---30--22
---28  --20
-  --26    --21
-    --23
-
-Current node:30, Descendent 1:22, Descendent 2:28, 
-Current node:22,  
-Current node:28, Descendent 1:20, Descendent 2:26, 
-Current node:20,  
-Current node:26, Descendent 1:21, Descendent 2:23, 
-Current node:21,  
-Current node:23,  
-Subtree2:
---24
-
-Current node:24,  
-
-
-  Print of Start tree after making subtrees from it:
--- 5--10  -- 2
-  -- 8    -- 0
-    -- 6      -- 1
-      -- 3
--- 4
-
-Current node: 5, Descendent 1:10, Descendent 2: 4, 
-Current node:10, Descendent 1: 2, Descendent 2: 8, 
+Current node:10, Descendent 1: 4, Descendent 2: 8, 
+Current node: 4,  
+Current node: 8, Descendent 1: 2, Descendent 2: 6, 
 Current node: 2,  
-Current node: 8, Descendent 1: 0, Descendent 2: 6, 
-Current node: 0,  
-Current node: 6, Descendent 1: 1, Descendent 2: 3, 
+Current node: 6, Descendent 1: 1, Descendent 2: 0, 
 Current node: 1,  
+Current node: 0,  subtree2 has 1 taxa
+
+Current node: 3,  
+ Created subtrees, with 4 and 1 taxa
+Final branch_count = 6
+
+
+REJOINING
+Reattaching as sister to node 4 on branch 10 to 4
+
+
+Starting join_trees function:
+Copying ntaxa
+Copied ntaxa
+Copying ntaxa
+Copied ntaxa
+
+ Finding node 4, currently on node 10
+  Checking 10's descendant1...
+
+ Finding node 4, currently on node 4
+  Found it!
+  Checking 4's descendant1...
+  Checking 4's descendant2...
+  Finished on node 4
+  Checking 10's descendant2...
+
+ Finding node 4, currently on node 8
+  Checking 8's descendant1...
+
+ Finding node 4, currently on node 2
+  Checking 2's descendant1...
+  Checking 2's descendant2...
+  Finished on node 2
+  Checking 8's descendant2...
+
+ Finding node 4, currently on node 6
+  Checking 6's descendant1...
+
+ Finding node 4, currently on node 1
+  Checking 1's descendant1...
+  Checking 1's descendant2...
+  Finished on node 1
+  Checking 6's descendant2...
+
+ Finding node 4, currently on node 0
+  Checking 0's descendant1...
+  Checking 0's descendant2...
+  Finished on node 0
+  Finished on node 6
+  Finished on node 8
+  Finished on node 10
+Joining trees, to sister node 4
+Sisters ancestor is 10
+11
+14
+--10-- 5  -- 3
+  -- 4
+-- 8  -- 2
+  -- 6    -- 1
+    -- 0
+Joined tree: Root node's ancestor is NULL
+
+  Print of joined tree:
+--10-- 5  -- 3
+  -- 4
+-- 8  -- 2
+  -- 6    -- 1
+    -- 0
+
+Starting rerooting on node 0
+Current root is 10
+
+Current node:10, Descendent 1: 5, Descendent 2: 8, 
+Current node: 5, Descendent 1: 3, Descendent 2: 4, 
 Current node: 3,  
 Current node: 4,  
-
-
-
-
-1 - Starting SPR at branch 10 to 2
-
- Starting tree:
--- 5--10  -- 2
-  -- 8    -- 0
-    -- 6      -- 1
-      -- 3
--- 4
-
-
- Splitting trees at branch 10 -> 2
-  Tree has 5 taxa
-  Making list of branches to check that branch to split at exists.
-Final branch_count = 8
-   Index: 0
-   Branch 5 -> 10
-   Index: 1
-   Branch 10 -> 2
-   Index: 2
-   Branch 10 -> 8
-   Index: 3
-   Branch 8 -> 0
-   Index: 4
-   Branch 8 -> 6
-   Index: 5
-   Branch 6 -> 1
-   Index: 6
-   Branch 6 -> 3
-   Index: 7
-   Branch 5 -> 4
-Branch to split at = 10 -> 2
-Copying ntaxa
-Copied ntaxa
-Copy of original tree within split tree function:
---25--30  --22
-  --28    --20
-    --26      --21
-      --23
---24
-
-Current node:25, Descendent 1:30, Descendent 2:24, 
-Current node:30, Descendent 1:22, Descendent 2:28, 
-Current node:22,  
-Current node:28, Descendent 1:20, Descendent 2:26, 
-Current node:20,  
-Current node:26, Descendent 1:21, Descendent 2:23, 
-Current node:21,  
-Current node:23,  
-Current node:24,  
-Created subtrees via malloc, finding node to remove with id: 10
- Finding node 30, currently on node 25
- Finding node 30, currently on node 30
-  Found it!
- Finding node 30, currently on node 22
- Finding node 30, currently on node 28
- Finding node 30, currently on node 20
- Finding node 30, currently on node 26
- Finding node 30, currently on node 21
- Finding node 30, currently on node 23
- Finding node 30, currently on node 24
-Found node to remove, id: 30
-Splitting tree at interior node 30
-Node_to_remove_anc is: 5
-Node_to_shorten is: 22
-subtree1 root assigned to node 25subtree2 root assigned to node 28subtree1 has 5 taxa
-
-Current node:25, Descendent 1: 0, Descendent 2:24, 
-Current node: 0, Descendent 1:22, Descendent 2:28, 
-Current node:22,  
-Current node:28, Descendent 1:20, Descendent 2:26, 
-Current node:20,  
-Current node:26, Descendent 1:21, Descendent 2:23, 
-Current node:21,  
-Current node:23,  
-Current node:24,  subtree2 has 3 taxa
-
-Current node:28, Descendent 1:20, Descendent 2:26, 
-Current node:20,  
-Current node:26, Descendent 1:21, Descendent 2:23, 
-Current node:21,  
-Current node:23,  
- Created subtrees, with 5 and 3 taxa
-Subtree1:
---25-- 0  --22
-  --28    --20
-    --26      --21
-      --23
---24
-
-Current node:25, Descendent 1: 0, Descendent 2:24, 
-Current node: 0, Descendent 1:22, Descendent 2:28, 
-Current node:22,  
-Current node:28, Descendent 1:20, Descendent 2:26, 
-Current node:20,  
-Current node:26, Descendent 1:21, Descendent 2:23, 
-Current node:21,  
-Current node:23,  
-Current node:24,  
-Subtree2:
---28--20
---26  --21
-  --23
-
-Current node:28, Descendent 1:20, Descendent 2:26, 
-Current node:20,  
-Current node:26, Descendent 1:21, Descendent 2:23, 
-Current node:21,  
-Current node:23,  
-
-
-  Print of Start tree after making subtrees from it:
--- 5--10  -- 2
-  -- 8    -- 0
-    -- 6      -- 1
-      -- 3
---22
-
-Current node: 5, Descendent 1:10, Descendent 2:22, 
-Current node:10, Descendent 1: 2, Descendent 2: 8, 
+Current node: 8, Descendent 1: 2, Descendent 2: 6, 
 Current node: 2,  
-Current node: 8, Descendent 1: 0, Descendent 2: 6, 
-Current node: 0,  
-Current node: 6, Descendent 1: 1, Descendent 2: 3, 
+Current node: 6, Descendent 1: 1, Descendent 2: 0, 
 Current node: 1,  
+Current node: 0,  
+ Finding node 0, currently on node 10
+  Checking 10's descendant1...
+
+ Finding node 0, currently on node 5
+  Checking 5's descendant1...
+
+ Finding node 0, currently on node 3
+  Checking 3's descendant1...
+  Checking 3's descendant2...
+  Finished on node 3
+  Checking 5's descendant2...
+
+ Finding node 0, currently on node 4
+  Checking 4's descendant1...
+  Checking 4's descendant2...
+  Finished on node 4
+  Finished on node 5
+  Checking 10's descendant2...
+
+ Finding node 0, currently on node 8
+  Checking 8's descendant1...
+
+ Finding node 0, currently on node 2
+  Checking 2's descendant1...
+  Checking 2's descendant2...
+  Finished on node 2
+  Checking 8's descendant2...
+
+ Finding node 0, currently on node 6
+  Checking 6's descendant1...
+
+ Finding node 0, currently on node 1
+  Checking 1's descendant1...
+  Checking 1's descendant2...
+  Finished on node 1
+  Checking 6's descendant2...
+
+ Finding node 0, currently on node 0
+  Found it!
+  Checking 0's descendant1...
+  Checking 0's descendant2...
+  Finished on node 0
+  Finished on node 6
+  Finished on node 8
+  Finished on node 10
+Finding anc node: 6
+
+ Finding node 6, currently on node 10
+  Checking 10's descendant1...
+
+ Finding node 6, currently on node 5
+  Checking 5's descendant1...
+
+ Finding node 6, currently on node 3
+  Checking 3's descendant1...
+  Checking 3's descendant2...
+  Finished on node 3
+  Checking 5's descendant2...
+
+ Finding node 6, currently on node 4
+  Checking 4's descendant1...
+  Checking 4's descendant2...
+  Finished on node 4
+  Finished on node 5
+  Checking 10's descendant2...
+
+ Finding node 6, currently on node 8
+  Checking 8's descendant1...
+
+ Finding node 6, currently on node 2
+  Checking 2's descendant1...
+  Checking 2's descendant2...
+  Finished on node 2
+  Checking 8's descendant2...
+
+ Finding node 6, currently on node 6
+  Found it!
+  Checking 6's descendant1...
+
+ Finding node 6, currently on node 1
+  Checking 1's descendant1...
+  Checking 1's descendant2...
+  Finished on node 1
+  Checking 6's descendant2...
+
+ Finding node 6, currently on node 0
+  Checking 0's descendant1...
+  Checking 0's descendant2...
+  Finished on node 0
+  Finished on node 6
+  Finished on node 8
+  Finished on node 10
+Finding des node: 0
+
+ Finding node 0, currently on node 10
+  Checking 10's descendant1...
+
+ Finding node 0, currently on node 5
+  Checking 5's descendant1...
+
+ Finding node 0, currently on node 3
+  Checking 3's descendant1...
+  Checking 3's descendant2...
+  Finished on node 3
+  Checking 5's descendant2...
+
+ Finding node 0, currently on node 4
+  Checking 4's descendant1...
+  Checking 4's descendant2...
+  Finished on node 4
+  Finished on node 5
+  Checking 10's descendant2...
+
+ Finding node 0, currently on node 8
+  Checking 8's descendant1...
+
+ Finding node 0, currently on node 2
+  Checking 2's descendant1...
+  Checking 2's descendant2...
+  Finished on node 2
+  Checking 8's descendant2...
+
+ Finding node 0, currently on node 6
+  Checking 6's descendant1...
+
+ Finding node 0, currently on node 1
+  Checking 1's descendant1...
+  Checking 1's descendant2...
+  Finished on node 1
+  Checking 6's descendant2...
+
+ Finding node 0, currently on node 0
+  Found it!
+  Checking 0's descendant1...
+  Checking 0's descendant2...
+  Finished on node 0
+  Finished on node 6
+  Finished on node 8
+  Finished on node 10
+Branch exists
+Tree needs rerooting...
+Created new root node
+New root node, desc1=6 and desc2=0
+Starting iterations...
+Currently rerooting node: 6
+ with rearranged descendents 1 and 8
+  and ancestor 8
+   which is changed to 6
+Currently rerooting node: 8
+ with rearranged descendents 2 and 10
+  and ancestor 10
+   which is changed to 6
+
+Exited while loop, node_to_reroot is 10
+Node_to_reroot descs are 5 and 8
+Old desc: 8
+
+Tree's root node is: 10
+Reached old root
+Descendent 2 is last rerooted node (future ancestor)
+
+ so switching descendent 1 (5)'s ancestor (10) to 8
+Also switching desc2 (10) of node 8 to 5
+Current node:10, Descendent 1: 6, Descendent 2: 0, 
+Current node: 6, Descendent 1: 1, Descendent 2: 8, 
+Current node: 1,  
+Current node: 8, Descendent 1: 2, Descendent 2: 5, 
+Current node: 2,  
+Current node: 5, Descendent 1: 3, Descendent 2: 4, 
 Current node: 3,  
-Current node:22,  
+Current node: 4,  
+Current node: 0,  Finished rerooting tree
+Calculated cost: 1000.000000
+
+
+REJOINING
+Reattaching as sister to node 8 on branch 10 to 8
+
+
+Starting join_trees function:
+Copying ntaxa
+Copied ntaxa
+Copying ntaxa
+Copied ntaxa
+
+ Finding node 8, currently on node 10
+  Checking 10's descendant1...
+
+ Finding node 8, currently on node 4
+  Checking 4's descendant1...
+  Checking 4's descendant2...
+  Finished on node 4
+  Checking 10's descendant2...
+
+ Finding node 8, currently on node 8
+  Found it!
+  Checking 8's descendant1...
+
+ Finding node 8, currently on node 2
+  Checking 2's descendant1...
+  Checking 2's descendant2...
+  Finished on node 2
+  Checking 8's descendant2...
+
+ Finding node 8, currently on node 6
+  Checking 6's descendant1...
+
+ Finding node 8, currently on node 1
+  Checking 1's descendant1...
+  Checking 1's descendant2...
+  Finished on node 1
+  Checking 6's descendant2...
+
+ Finding node 8, currently on node 0
+  Checking 0's descendant1...
+  Checking 0's descendant2...
+  Finished on node 0
+  Finished on node 6
+  Finished on node 8
+  Finished on node 10
+Joining trees, to sister node 8
+Sisters ancestor is 10
+11
+14
+--10-- 4
+-- 5  -- 3
+  -- 8    -- 2
+    -- 6      -- 1
+      -- 0
+Joined tree: Root node's ancestor is NULL
+
+  Print of joined tree:
+--10-- 4
+-- 5  -- 3
+  -- 8    -- 2
+    -- 6      -- 1
+      -- 0
+
+Starting rerooting on node 0
+Current root is 10
+
+Current node:10, Descendent 1: 4, Descendent 2: 5, 
+Current node: 4,  
+Current node: 5, Descendent 1: 3, Descendent 2: 8, 
+Current node: 3,  
+Current node: 8, Descendent 1: 2, Descendent 2: 6, 
+Current node: 2,  
+Current node: 6, Descendent 1: 1, Descendent 2: 0, 
+Current node: 1,  
+Current node: 0,  
+ Finding node 0, currently on node 10
+  Checking 10's descendant1...
+
+ Finding node 0, currently on node 4
+  Checking 4's descendant1...
+  Checking 4's descendant2...
+  Finished on node 4
+  Checking 10's descendant2...
+
+ Finding node 0, currently on node 5
+  Checking 5's descendant1...
+
+ Finding node 0, currently on node 3
+  Checking 3's descendant1...
+  Checking 3's descendant2...
+  Finished on node 3
+  Checking 5's descendant2...
+
+ Finding node 0, currently on node 8
+  Checking 8's descendant1...
+
+ Finding node 0, currently on node 2
+  Checking 2's descendant1...
+  Checking 2's descendant2...
+  Finished on node 2
+  Checking 8's descendant2...
+
+ Finding node 0, currently on node 6
+  Checking 6's descendant1...
+
+ Finding node 0, currently on node 1
+  Checking 1's descendant1...
+  Checking 1's descendant2...
+  Finished on node 1
+  Checking 6's descendant2...
+
+ Finding node 0, currently on node 0
+  Found it!
+  Checking 0's descendant1...
+  Checking 0's descendant2...
+  Finished on node 0
+  Finished on node 6
+  Finished on node 8
+  Finished on node 5
+  Finished on node 10
+Finding anc node: 6
+
+ Finding node 6, currently on node 10
+  Checking 10's descendant1...
+
+ Finding node 6, currently on node 4
+  Checking 4's descendant1...
+  Checking 4's descendant2...
+  Finished on node 4
+  Checking 10's descendant2...
+
+ Finding node 6, currently on node 5
+  Checking 5's descendant1...
+
+ Finding node 6, currently on node 3
+  Checking 3's descendant1...
+  Checking 3's descendant2...
+  Finished on node 3
+  Checking 5's descendant2...
+
+ Finding node 6, currently on node 8
+  Checking 8's descendant1...
+
+ Finding node 6, currently on node 2
+  Checking 2's descendant1...
+  Checking 2's descendant2...
+  Finished on node 2
+  Checking 8's descendant2...
+
+ Finding node 6, currently on node 6
+  Found it!
+  Checking 6's descendant1...
+
+ Finding node 6, currently on node 1
+  Checking 1's descendant1...
+  Checking 1's descendant2...
+  Finished on node 1
+  Checking 6's descendant2...
+
+ Finding node 6, currently on node 0
+  Checking 0's descendant1...
+  Checking 0's descendant2...
+  Finished on node 0
+  Finished on node 6
+  Finished on node 8
+  Finished on node 5
+  Finished on node 10
+Finding des node: 0
+
+ Finding node 0, currently on node 10
+  Checking 10's descendant1...
+
+ Finding node 0, currently on node 4
+  Checking 4's descendant1...
+  Checking 4's descendant2...
+  Finished on node 4
+  Checking 10's descendant2...
+
+ Finding node 0, currently on node 5
+  Checking 5's descendant1...
+
+ Finding node 0, currently on node 3
+  Checking 3's descendant1...
+  Checking 3's descendant2...
+  Finished on node 3
+  Checking 5's descendant2...
+
+ Finding node 0, currently on node 8
+  Checking 8's descendant1...
+
+ Finding node 0, currently on node 2
+  Checking 2's descendant1...
+  Checking 2's descendant2...
+  Finished on node 2
+  Checking 8's descendant2...
+
+ Finding node 0, currently on node 6
+  Checking 6's descendant1...
+
+ Finding node 0, currently on node 1
+  Checking 1's descendant1...
+  Checking 1's descendant2...
+  Finished on node 1
+  Checking 6's descendant2...
+
+ Finding node 0, currently on node 0
+  Found it!
+  Checking 0's descendant1...
+  Checking 0's descendant2...
+  Finished on node 0
+  Finished on node 6
+  Finished on node 8
+  Finished on node 5
+  Finished on node 10
+Branch exists
+Tree needs rerooting...
+Created new root node
+New root node, desc1=6 and desc2=0
+Starting iterations...
+Currently rerooting node: 6
+ with rearranged descendents 1 and 8
+  and ancestor 8
+   which is changed to 6
+Currently rerooting node: 8
+ with rearranged descendents 2 and 10
+  and ancestor 10
+   which is changed to 6
+
+Exited while loop, node_to_reroot is 10
+Node_to_reroot descs are 4 and 5
+Old desc: 8
+
+Tree's root node is: 10
+Reached old root
+Descendent 2 is last rerooted node (future ancestor)
+
+ so switching descendent 1 (4)'s ancestor (10) to 8
+Also switching desc2 (10) of node 8 to 4
+Current node:10, Descendent 1: 6, Descendent 2: 0, 
+Current node: 6, Descendent 1: 1, Descendent 2: 8, 
+Current node: 1,  
+Current node: 8, Descendent 1: 2, Descendent 2: 4, 
+Current node: 2,  
+Current node: 4,  
+Current node: 0,  Finished rerooting tree
+Calculated cost: 1000.000000
+
+
+REJOINING
+Reattaching as sister to node 2 on branch 8 to 2
+
+
+Starting join_trees function:
+Copying ntaxa
+Copied ntaxa
+Copying ntaxa
+Copied ntaxa
+
+ Finding node 2, currently on node 10
+  Checking 10's descendant1...
+
+ Finding node 2, currently on node 4
+  Checking 4's descendant1...
+  Checking 4's descendant2...
+  Finished on node 4
+  Checking 10's descendant2...
+
+ Finding node 2, currently on node 8
+  Checking 8's descendant1...
+
+ Finding node 2, currently on node 2
+  Found it!
+  Checking 2's descendant1...
+  Checking 2's descendant2...
+  Finished on node 2
+  Checking 8's descendant2...
+
+ Finding node 2, currently on node 6
+  Checking 6's descendant1...
+
+ Finding node 2, currently on node 1
+  Checking 1's descendant1...
+  Checking 1's descendant2...
+  Finished on node 1
+  Checking 6's descendant2...
+
+ Finding node 2, currently on node 0
+  Checking 0's descendant1...
+  Checking 0's descendant2...
+  Finished on node 0
+  Finished on node 6
+  Finished on node 8
+  Finished on node 10
+Joining trees, to sister node 2
+Sisters ancestor is 8
+11
+14
+--10-- 4
+-- 8  -- 5    -- 3
+    -- 2
+  -- 6    -- 1
+    -- 0
+Joined tree: Root node's ancestor is NULL
+
+  Print of joined tree:
+--10-- 4
+-- 8  -- 5    -- 3
+    -- 2
+  -- 6    -- 1
+    -- 0
+
+Starting rerooting on node 0
+Current root is 10
+
+Current node:10, Descendent 1: 4, Descendent 2: 8, 
+Current node: 4,  
+Current node: 8, Descendent 1: 5, Descendent 2: 6, 
+Current node: 5, Descendent 1: 3, Descendent 2: 2, 
+Current node: 3,  
+Current node: 2,  
+Current node: 6, Descendent 1: 1, Descendent 2: 0, 
+Current node: 1,  
+Current node: 0,  
+ Finding node 0, currently on node 10
+  Checking 10's descendant1...
+
+ Finding node 0, currently on node 4
+  Checking 4's descendant1...
+  Checking 4's descendant2...
+  Finished on node 4
+  Checking 10's descendant2...
+
+ Finding node 0, currently on node 8
+  Checking 8's descendant1...
+
+ Finding node 0, currently on node 5
+  Checking 5's descendant1...
+
+ Finding node 0, currently on node 3
+  Checking 3's descendant1...
+  Checking 3's descendant2...
+  Finished on node 3
+  Checking 5's descendant2...
+
+ Finding node 0, currently on node 2
+  Checking 2's descendant1...
+  Checking 2's descendant2...
+  Finished on node 2
+  Finished on node 5
+  Checking 8's descendant2...
+
+ Finding node 0, currently on node 6
+  Checking 6's descendant1...
+
+ Finding node 0, currently on node 1
+  Checking 1's descendant1...
+  Checking 1's descendant2...
+  Finished on node 1
+  Checking 6's descendant2...
+
+ Finding node 0, currently on node 0
+  Found it!
+  Checking 0's descendant1...
+  Checking 0's descendant2...
+  Finished on node 0
+  Finished on node 6
+  Finished on node 8
+  Finished on node 10
+Finding anc node: 6
+
+ Finding node 6, currently on node 10
+  Checking 10's descendant1...
+
+ Finding node 6, currently on node 4
+  Checking 4's descendant1...
+  Checking 4's descendant2...
+  Finished on node 4
+  Checking 10's descendant2...
+
+ Finding node 6, currently on node 8
+  Checking 8's descendant1...
+
+ Finding node 6, currently on node 5
+  Checking 5's descendant1...
+
+ Finding node 6, currently on node 3
+  Checking 3's descendant1...
+  Checking 3's descendant2...
+  Finished on node 3
+  Checking 5's descendant2...
+
+ Finding node 6, currently on node 2
+  Checking 2's descendant1...
+  Checking 2's descendant2...
+  Finished on node 2
+  Finished on node 5
+  Checking 8's descendant2...
+
+ Finding node 6, currently on node 6
+  Found it!
+  Checking 6's descendant1...
+
+ Finding node 6, currently on node 1
+  Checking 1's descendant1...
+  Checking 1's descendant2...
+  Finished on node 1
+  Checking 6's descendant2...
+
+ Finding node 6, currently on node 0
+  Checking 0's descendant1...
+  Checking 0's descendant2...
+  Finished on node 0
+  Finished on node 6
+  Finished on node 8
+  Finished on node 10
+Finding des node: 0
+
+ Finding node 0, currently on node 10
+  Checking 10's descendant1...
+
+ Finding node 0, currently on node 4
+  Checking 4's descendant1...
+  Checking 4's descendant2...
+  Finished on node 4
+  Checking 10's descendant2...
+
+ Finding node 0, currently on node 8
+  Checking 8's descendant1...
+
+ Finding node 0, currently on node 5
+  Checking 5's descendant1...
+
+ Finding node 0, currently on node 3
+  Checking 3's descendant1...
+  Checking 3's descendant2...
+  Finished on node 3
+  Checking 5's descendant2...
+
+ Finding node 0, currently on node 2
+  Checking 2's descendant1...
+  Checking 2's descendant2...
+  Finished on node 2
+  Finished on node 5
+  Checking 8's descendant2...
+
+ Finding node 0, currently on node 6
+  Checking 6's descendant1...
+
+ Finding node 0, currently on node 1
+  Checking 1's descendant1...
+  Checking 1's descendant2...
+  Finished on node 1
+  Checking 6's descendant2...
+
+ Finding node 0, currently on node 0
+  Found it!
+  Checking 0's descendant1...
+  Checking 0's descendant2...
+  Finished on node 0
+  Finished on node 6
+  Finished on node 8
+  Finished on node 10
+Branch exists
+Tree needs rerooting...
+Created new root node
+New root node, desc1=6 and desc2=0
+Starting iterations...
+Currently rerooting node: 6
+ with rearranged descendents 1 and 8
+  and ancestor 8
+   which is changed to 6
+Currently rerooting node: 8
+ with rearranged descendents 5 and 10
+  and ancestor 10
+   which is changed to 6
+
+Exited while loop, node_to_reroot is 10
+Node_to_reroot descs are 4 and 8
+Old desc: 8
+
+Tree's root node is: 10
+Reached old root
+Descendent 2 is last rerooted node (future ancestor)
+
+ so switching descendent 1 (4)'s ancestor (10) to 8
+Also switching desc2 (10) of node 8 to 4
+Current node:10, Descendent 1: 6, Descendent 2: 0, 
+Current node: 6, Descendent 1: 1, Descendent 2: 8, 
+Current node: 1,  
+Current node: 8, Descendent 1: 5, Descendent 2: 4, 
+Current node: 5, Descendent 1: 3, Descendent 2: 2, 
+Current node: 3,  
+Current node: 2,  
+Current node: 4,  
+Current node: 0,  Finished rerooting tree
+Calculated cost: 1000.000000
+
+
+REJOINING
+Reattaching as sister to node 6 on branch 8 to 6
+
+
+Starting join_trees function:
+Copying ntaxa
+Copied ntaxa
+Copying ntaxa
+Copied ntaxa
+
+ Finding node 6, currently on node 10
+  Checking 10's descendant1...
+
+ Finding node 6, currently on node 4
+  Checking 4's descendant1...
+  Checking 4's descendant2...
+  Finished on node 4
+  Checking 10's descendant2...
+
+ Finding node 6, currently on node 8
+  Checking 8's descendant1...
+
+ Finding node 6, currently on node 2
+  Checking 2's descendant1...
+  Checking 2's descendant2...
+  Finished on node 2
+  Checking 8's descendant2...
+
+ Finding node 6, currently on node 6
+  Found it!
+  Checking 6's descendant1...
+
+ Finding node 6, currently on node 1
+  Checking 1's descendant1...
+  Checking 1's descendant2...
+  Finished on node 1
+  Checking 6's descendant2...
+
+ Finding node 6, currently on node 0
+  Checking 0's descendant1...
+  Checking 0's descendant2...
+  Finished on node 0
+  Finished on node 6
+  Finished on node 8
+  Finished on node 10
+Joining trees, to sister node 6
+Sisters ancestor is 8
+11
+14
+--10-- 4
+-- 8  -- 2
+  -- 5    -- 3
+    -- 6      -- 1
+      -- 0
+Joined tree: Root node's ancestor is NULL
+
+  Print of joined tree:
+--10-- 4
+-- 8  -- 2
+  -- 5    -- 3
+    -- 6      -- 1
+      -- 0
+
+Starting rerooting on node 0
+Current root is 10
+
+Current node:10, Descendent 1: 4, Descendent 2: 8, 
+Current node: 4,  
+Current node: 8, Descendent 1: 2, Descendent 2: 5, 
+Current node: 2,  
+Current node: 5, Descendent 1: 3, Descendent 2: 6, 
+Current node: 3,  
+Current node: 6, Descendent 1: 1, Descendent 2: 0, 
+Current node: 1,  
+Current node: 0,  
+ Finding node 0, currently on node 10
+  Checking 10's descendant1...
+
+ Finding node 0, currently on node 4
+  Checking 4's descendant1...
+  Checking 4's descendant2...
+  Finished on node 4
+  Checking 10's descendant2...
+
+ Finding node 0, currently on node 8
+  Checking 8's descendant1...
+
+ Finding node 0, currently on node 2
+  Checking 2's descendant1...
+  Checking 2's descendant2...
+  Finished on node 2
+  Checking 8's descendant2...
+
+ Finding node 0, currently on node 5
+  Checking 5's descendant1...
+
+ Finding node 0, currently on node 3
+  Checking 3's descendant1...
+  Checking 3's descendant2...
+  Finished on node 3
+  Checking 5's descendant2...
+
+ Finding node 0, currently on node 6
+  Checking 6's descendant1...
+
+ Finding node 0, currently on node 1
+  Checking 1's descendant1...
+  Checking 1's descendant2...
+  Finished on node 1
+  Checking 6's descendant2...
+
+ Finding node 0, currently on node 0
+  Found it!
+  Checking 0's descendant1...
+  Checking 0's descendant2...
+  Finished on node 0
+  Finished on node 6
+  Finished on node 5
+  Finished on node 8
+  Finished on node 10
+Finding anc node: 6
+
+ Finding node 6, currently on node 10
+  Checking 10's descendant1...
+
+ Finding node 6, currently on node 4
+  Checking 4's descendant1...
+  Checking 4's descendant2...
+  Finished on node 4
+  Checking 10's descendant2...
+
+ Finding node 6, currently on node 8
+  Checking 8's descendant1...
+
+ Finding node 6, currently on node 2
+  Checking 2's descendant1...
+  Checking 2's descendant2...
+  Finished on node 2
+  Checking 8's descendant2...
+
+ Finding node 6, currently on node 5
+  Checking 5's descendant1...
+
+ Finding node 6, currently on node 3
+  Checking 3's descendant1...
+  Checking 3's descendant2...
+  Finished on node 3
+  Checking 5's descendant2...
+
+ Finding node 6, currently on node 6
+  Found it!
+  Checking 6's descendant1...
+
+ Finding node 6, currently on node 1
+  Checking 1's descendant1...
+  Checking 1's descendant2...
+  Finished on node 1
+  Checking 6's descendant2...
+
+ Finding node 6, currently on node 0
+  Checking 0's descendant1...
+  Checking 0's descendant2...
+  Finished on node 0
+  Finished on node 6
+  Finished on node 5
+  Finished on node 8
+  Finished on node 10
+Finding des node: 0
+
+ Finding node 0, currently on node 10
+  Checking 10's descendant1...
+
+ Finding node 0, currently on node 4
+  Checking 4's descendant1...
+  Checking 4's descendant2...
+  Finished on node 4
+  Checking 10's descendant2...
+
+ Finding node 0, currently on node 8
+  Checking 8's descendant1...
+
+ Finding node 0, currently on node 2
+  Checking 2's descendant1...
+  Checking 2's descendant2...
+  Finished on node 2
+  Checking 8's descendant2...
+
+ Finding node 0, currently on node 5
+  Checking 5's descendant1...
+
+ Finding node 0, currently on node 3
+  Checking 3's descendant1...
+  Checking 3's descendant2...
+  Finished on node 3
+  Checking 5's descendant2...
+
+ Finding node 0, currently on node 6
+  Checking 6's descendant1...
+
+ Finding node 0, currently on node 1
+  Checking 1's descendant1...
+  Checking 1's descendant2...
+  Finished on node 1
+  Checking 6's descendant2...
+
+ Finding node 0, currently on node 0
+  Found it!
+  Checking 0's descendant1...
+  Checking 0's descendant2...
+  Finished on node 0
+  Finished on node 6
+  Finished on node 5
+  Finished on node 8
+  Finished on node 10
+Branch exists
+Tree needs rerooting...
+Created new root node
+New root node, desc1=6 and desc2=0
+Starting iterations...
+Currently rerooting node: 6
+ with rearranged descendents 1 and 8
+  and ancestor 8
+   which is changed to 6
+Currently rerooting node: 8
+ with rearranged descendents 2 and 10
+  and ancestor 10
+   which is changed to 6
+
+Exited while loop, node_to_reroot is 10
+Node_to_reroot descs are 4 and 8
+Old desc: 8
+
+Tree's root node is: 10
+Reached old root
+Descendent 2 is last rerooted node (future ancestor)
+
+ so switching descendent 1 (4)'s ancestor (10) to 8
+Also switching desc2 (10) of node 8 to 4
+Current node:10, Descendent 1: 6, Descendent 2: 0, 
+Current node: 6, Descendent 1: 1, Descendent 2: 8, 
+Current node: 1,  
+Current node: 8, Descendent 1: 2, Descendent 2: 4, 
+Current node: 2,  
+Current node: 4,  
+Current node: 0,  Finished rerooting tree
+Calculated cost: 1000.000000
+
+
+REJOINING
+Reattaching as sister to node 1 on branch 6 to 1
+
+
+Starting join_trees function:
+Copying ntaxa
+Copied ntaxa
+Copying ntaxa
+Copied ntaxa
+
+ Finding node 1, currently on node 10
+  Checking 10's descendant1...
+
+ Finding node 1, currently on node 4
+  Checking 4's descendant1...
+  Checking 4's descendant2...
+  Finished on node 4
+  Checking 10's descendant2...
+
+ Finding node 1, currently on node 8
+  Checking 8's descendant1...
+
+ Finding node 1, currently on node 2
+  Checking 2's descendant1...
+  Checking 2's descendant2...
+  Finished on node 2
+  Checking 8's descendant2...
+
+ Finding node 1, currently on node 6
+  Checking 6's descendant1...
+
+ Finding node 1, currently on node 1
+  Found it!
+  Checking 1's descendant1...
+  Checking 1's descendant2...
+  Finished on node 1
+  Checking 6's descendant2...
+
+ Finding node 1, currently on node 0
+  Checking 0's descendant1...
+  Checking 0's descendant2...
+  Finished on node 0
+  Finished on node 6
+  Finished on node 8
+  Finished on node 10
+Joining trees, to sister node 1
+Sisters ancestor is 6
+11
+14
+--10-- 4
+-- 8  -- 2
+  -- 6    -- 5      -- 3
+      -- 1
+    -- 0
+Joined tree: Root node's ancestor is NULL
+
+  Print of joined tree:
+--10-- 4
+-- 8  -- 2
+  -- 6    -- 5      -- 3
+      -- 1
+    -- 0
+
+Starting rerooting on node 0
+Current root is 10
+
+Current node:10, Descendent 1: 4, Descendent 2: 8, 
+Current node: 4,  
+Current node: 8, Descendent 1: 2, Descendent 2: 6, 
+Current node: 2,  
+Current node: 6, Descendent 1: 5, Descendent 2: 0, 
+Current node: 5, Descendent 1: 3, Descendent 2: 1, 
+Current node: 3,  
+Current node: 1,  
+Current node: 0,  
+ Finding node 0, currently on node 10
+  Checking 10's descendant1...
+
+ Finding node 0, currently on node 4
+  Checking 4's descendant1...
+  Checking 4's descendant2...
+  Finished on node 4
+  Checking 10's descendant2...
+
+ Finding node 0, currently on node 8
+  Checking 8's descendant1...
+
+ Finding node 0, currently on node 2
+  Checking 2's descendant1...
+  Checking 2's descendant2...
+  Finished on node 2
+  Checking 8's descendant2...
+
+ Finding node 0, currently on node 6
+  Checking 6's descendant1...
+
+ Finding node 0, currently on node 5
+  Checking 5's descendant1...
+
+ Finding node 0, currently on node 3
+  Checking 3's descendant1...
+  Checking 3's descendant2...
+  Finished on node 3
+  Checking 5's descendant2...
+
+ Finding node 0, currently on node 1
+  Checking 1's descendant1...
+  Checking 1's descendant2...
+  Finished on node 1
+  Finished on node 5
+  Checking 6's descendant2...
+
+ Finding node 0, currently on node 0
+  Found it!
+  Checking 0's descendant1...
+  Checking 0's descendant2...
+  Finished on node 0
+  Finished on node 6
+  Finished on node 8
+  Finished on node 10
+Finding anc node: 6
+
+ Finding node 6, currently on node 10
+  Checking 10's descendant1...
+
+ Finding node 6, currently on node 4
+  Checking 4's descendant1...
+  Checking 4's descendant2...
+  Finished on node 4
+  Checking 10's descendant2...
+
+ Finding node 6, currently on node 8
+  Checking 8's descendant1...
+
+ Finding node 6, currently on node 2
+  Checking 2's descendant1...
+  Checking 2's descendant2...
+  Finished on node 2
+  Checking 8's descendant2...
+
+ Finding node 6, currently on node 6
+  Found it!
+  Checking 6's descendant1...
+
+ Finding node 6, currently on node 5
+  Checking 5's descendant1...
+
+ Finding node 6, currently on node 3
+  Checking 3's descendant1...
+  Checking 3's descendant2...
+  Finished on node 3
+  Checking 5's descendant2...
+
+ Finding node 6, currently on node 1
+  Checking 1's descendant1...
+  Checking 1's descendant2...
+  Finished on node 1
+  Finished on node 5
+  Checking 6's descendant2...
+
+ Finding node 6, currently on node 0
+  Checking 0's descendant1...
+  Checking 0's descendant2...
+  Finished on node 0
+  Finished on node 6
+  Finished on node 8
+  Finished on node 10
+Finding des node: 0
+
+ Finding node 0, currently on node 10
+  Checking 10's descendant1...
+
+ Finding node 0, currently on node 4
+  Checking 4's descendant1...
+  Checking 4's descendant2...
+  Finished on node 4
+  Checking 10's descendant2...
+
+ Finding node 0, currently on node 8
+  Checking 8's descendant1...
+
+ Finding node 0, currently on node 2
+  Checking 2's descendant1...
+  Checking 2's descendant2...
+  Finished on node 2
+  Checking 8's descendant2...
+
+ Finding node 0, currently on node 6
+  Checking 6's descendant1...
+
+ Finding node 0, currently on node 5
+  Checking 5's descendant1...
+
+ Finding node 0, currently on node 3
+  Checking 3's descendant1...
+  Checking 3's descendant2...
+  Finished on node 3
+  Checking 5's descendant2...
+
+ Finding node 0, currently on node 1
+  Checking 1's descendant1...
+  Checking 1's descendant2...
+  Finished on node 1
+  Finished on node 5
+  Checking 6's descendant2...
+
+ Finding node 0, currently on node 0
+  Found it!
+  Checking 0's descendant1...
+  Checking 0's descendant2...
+  Finished on node 0
+  Finished on node 6
+  Finished on node 8
+  Finished on node 10
+Branch exists
+Tree needs rerooting...
+Created new root node
+New root node, desc1=6 and desc2=0
+Starting iterations...
+Currently rerooting node: 6
+ with rearranged descendents 5 and 8
+  and ancestor 8
+   which is changed to 6
+Currently rerooting node: 8
+ with rearranged descendents 2 and 10
+  and ancestor 10
+   which is changed to 6
+
+Exited while loop, node_to_reroot is 10
+Node_to_reroot descs are 4 and 8
+Old desc: 8
+
+Tree's root node is: 10
+Reached old root
+Descendent 2 is last rerooted node (future ancestor)
+
+ so switching descendent 1 (4)'s ancestor (10) to 8
+Also switching desc2 (10) of node 8 to 4
+Current node:10, Descendent 1: 6, Descendent 2: 0, 
+Current node: 6, Descendent 1: 5, Descendent 2: 8, 
+Current node: 5, Descendent 1: 3, Descendent 2: 1, 
+Current node: 3,  
+Current node: 1,  
+Current node: 8, Descendent 1: 2, Descendent 2: 4, 
+Current node: 2,  
+Current node: 4,  
+Current node: 0,  Finished rerooting tree
+Calculated cost: 1000.000000
+
+
+REJOINING
+Reattaching as sister to node 0 on branch 6 to 0
+
+
+Starting join_trees function:
+Copying ntaxa
+Copied ntaxa
+Copying ntaxa
+Copied ntaxa
+
+ Finding node 0, currently on node 10
+  Checking 10's descendant1...
+
+ Finding node 0, currently on node 4
+  Checking 4's descendant1...
+  Checking 4's descendant2...
+  Finished on node 4
+  Checking 10's descendant2...
+
+ Finding node 0, currently on node 8
+  Checking 8's descendant1...
+
+ Finding node 0, currently on node 2
+  Checking 2's descendant1...
+  Checking 2's descendant2...
+  Finished on node 2
+  Checking 8's descendant2...
+
+ Finding node 0, currently on node 6
+  Checking 6's descendant1...
+
+ Finding node 0, currently on node 1
+  Checking 1's descendant1...
+  Checking 1's descendant2...
+  Finished on node 1
+  Checking 6's descendant2...
+
+ Finding node 0, currently on node 0
+  Found it!
+  Checking 0's descendant1...
+  Checking 0's descendant2...
+  Finished on node 0
+  Finished on node 6
+  Finished on node 8
+  Finished on node 10
+Joining trees, to sister node 0
+Sisters ancestor is 6
+11
+14
+--10-- 4
+-- 8  -- 2
+  -- 6    -- 1
+    -- 5      -- 3
+      -- 0
+Joined tree: Root node's ancestor is NULL
+
+  Print of joined tree:
+--10-- 4
+-- 8  -- 2
+  -- 6    -- 1
+    -- 5      -- 3
+      -- 0
+
+Starting rerooting on node 0
+Current root is 10
+
+Current node:10, Descendent 1: 4, Descendent 2: 8, 
+Current node: 4,  
+Current node: 8, Descendent 1: 2, Descendent 2: 6, 
+Current node: 2,  
+Current node: 6, Descendent 1: 1, Descendent 2: 5, 
+Current node: 1,  
+Current node: 5, Descendent 1: 3, Descendent 2: 0, 
+Current node: 3,  
+Current node: 0,  
+ Finding node 0, currently on node 10
+  Checking 10's descendant1...
+
+ Finding node 0, currently on node 4
+  Checking 4's descendant1...
+  Checking 4's descendant2...
+  Finished on node 4
+  Checking 10's descendant2...
+
+ Finding node 0, currently on node 8
+  Checking 8's descendant1...
+
+ Finding node 0, currently on node 2
+  Checking 2's descendant1...
+  Checking 2's descendant2...
+  Finished on node 2
+  Checking 8's descendant2...
+
+ Finding node 0, currently on node 6
+  Checking 6's descendant1...
+
+ Finding node 0, currently on node 1
+  Checking 1's descendant1...
+  Checking 1's descendant2...
+  Finished on node 1
+  Checking 6's descendant2...
+
+ Finding node 0, currently on node 5
+  Checking 5's descendant1...
+
+ Finding node 0, currently on node 3
+  Checking 3's descendant1...
+  Checking 3's descendant2...
+  Finished on node 3
+  Checking 5's descendant2...
+
+ Finding node 0, currently on node 0
+  Found it!
+  Checking 0's descendant1...
+  Checking 0's descendant2...
+  Finished on node 0
+  Finished on node 5
+  Finished on node 6
+  Finished on node 8
+  Finished on node 10
+Finding anc node: 6
+
+ Finding node 6, currently on node 10
+  Checking 10's descendant1...
+
+ Finding node 6, currently on node 4
+  Checking 4's descendant1...
+  Checking 4's descendant2...
+  Finished on node 4
+  Checking 10's descendant2...
+
+ Finding node 6, currently on node 8
+  Checking 8's descendant1...
+
+ Finding node 6, currently on node 2
+  Checking 2's descendant1...
+  Checking 2's descendant2...
+  Finished on node 2
+  Checking 8's descendant2...
+
+ Finding node 6, currently on node 6
+  Found it!
+  Checking 6's descendant1...
+
+ Finding node 6, currently on node 1
+  Checking 1's descendant1...
+  Checking 1's descendant2...
+  Finished on node 1
+  Checking 6's descendant2...
+
+ Finding node 6, currently on node 5
+  Checking 5's descendant1...
+
+ Finding node 6, currently on node 3
+  Checking 3's descendant1...
+  Checking 3's descendant2...
+  Finished on node 3
+  Checking 5's descendant2...
+
+ Finding node 6, currently on node 0
+  Checking 0's descendant1...
+  Checking 0's descendant2...
+  Finished on node 0
+  Finished on node 5
+  Finished on node 6
+  Finished on node 8
+  Finished on node 10
+Finding des node: 0
+
+ Finding node 0, currently on node 10
+  Checking 10's descendant1...
+
+ Finding node 0, currently on node 4
+  Checking 4's descendant1...
+  Checking 4's descendant2...
+  Finished on node 4
+  Checking 10's descendant2...
+
+ Finding node 0, currently on node 8
+  Checking 8's descendant1...
+
+ Finding node 0, currently on node 2
+  Checking 2's descendant1...
+  Checking 2's descendant2...
+  Finished on node 2
+  Checking 8's descendant2...
+
+ Finding node 0, currently on node 6
+  Checking 6's descendant1...
+
+ Finding node 0, currently on node 1
+  Checking 1's descendant1...
+  Checking 1's descendant2...
+  Finished on node 1
+  Checking 6's descendant2...
+
+ Finding node 0, currently on node 5
+  Checking 5's descendant1...
+
+ Finding node 0, currently on node 3
+  Checking 3's descendant1...
+  Checking 3's descendant2...
+  Finished on node 3
+  Checking 5's descendant2...
+
+ Finding node 0, currently on node 0
+  Found it!
+  Checking 0's descendant1...
+  Checking 0's descendant2...
+  Finished on node 0
+  Finished on node 5
+  Finished on node 6
+  Finished on node 8
+  Finished on node 10
+Branch exists
+Tree needs rerooting...
+Created new root node
+New root node, desc1=6 and desc2=0
+Starting iterations...
+Currently rerooting node: 6
+ with rearranged descendents 1 and 8
+  and ancestor 8
+   which is changed to 6
+Currently rerooting node: 8
+ with rearranged descendents 2 and 10
+  and ancestor 10
+   which is changed to 6
+
+Exited while loop, node_to_reroot is 10
+Node_to_reroot descs are 4 and 8
+Old desc: 8
+
+Tree's root node is: 10
+Reached old root
+Descendent 2 is last rerooted node (future ancestor)
+
+ so switching descendent 1 (4)'s ancestor (10) to 8
+Also switching desc2 (10) of node 8 to 4
+Current node:10, Descendent 1: 6, Descendent 2: 0, 
+Current node: 6, Descendent 1: 1, Descendent 2: 8, 
+Current node: 1,  
+Current node: 8, Descendent 1: 2, Descendent 2: 4, 
+Current node: 2,  
+Current node: 4,  
+Current node: 0,  Finished rerooting tree
+Calculated cost: 1000.000000
 
 
 
-
-2 - Starting SPR at branch 10 to 8
+1 - Starting SPR at branch 10 to 4
 
  Starting tree:
--- 5--10  -- 2
-  -- 8    -- 0
+-- 5--10  -- 4
+  -- 8    -- 2
     -- 6      -- 1
-      -- 3
---28345568
+      -- 0
+-- 3
 
 
- Splitting trees at branch 10 -> 8
+ Splitting trees at branch 10 -> 4
   Tree has 5 taxa
   Making list of branches to check that branch to split at exists.
 Final branch_count = 8
    Index: 0
    Branch 5 -> 10
    Index: 1
-   Branch 10 -> 2
+   Branch 10 -> 4
    Index: 2
    Branch 10 -> 8
    Index: 3
-   Branch 8 -> 0
+   Branch 8 -> 2
    Index: 4
    Branch 8 -> 6
    Index: 5
    Branch 6 -> 1
    Index: 6
-   Branch 6 -> 3
+   Branch 6 -> 0
    Index: 7
-   Branch 5 -> 28345568
-Branch to split at = 10 -> 8
+   Branch 5 -> 3
+Branch to split at = 10 -> 4
 Copying ntaxa
 Copied ntaxa
 Copy of original tree within split tree function:
---28345588
+-- 5--10  -- 4
+  -- 8    -- 2
+    -- 6      -- 1
+      -- 0
+-- 3
 
-Current node:28345588,  
+Current node: 5, Descendent 1:10, Descendent 2: 3, 
+Current node:10, Descendent 1: 4, Descendent 2: 8, 
+Current node: 4,  
+Current node: 8, Descendent 1: 2, Descendent 2: 6, 
+Current node: 2,  
+Current node: 6, Descendent 1: 1, Descendent 2: 0, 
+Current node: 1,  
+Current node: 0,  
+Current node: 3,  
 Created subtrees via malloc, finding node to remove with id: 10
- Finding node 30, currently on node 28345588
+
+ Finding node 10, currently on node 5
+  Checking 5's descendant1...
+
+ Finding node 10, currently on node 10
+  Found it!
+  Checking 10's descendant1...
+
+ Finding node 10, currently on node 4
+  Checking 4's descendant1...
+  Checking 4's descendant2...
+  Finished on node 4
+  Checking 10's descendant2...
+
+ Finding node 10, currently on node 8
+  Checking 8's descendant1...
+
+ Finding node 10, currently on node 2
+  Checking 2's descendant1...
+  Checking 2's descendant2...
+  Finished on node 2
+  Checking 8's descendant2...
+
+ Finding node 10, currently on node 6
+  Checking 6's descendant1...
+
+ Finding node 10, currently on node 1
+  Checking 1's descendant1...
+  Checking 1's descendant2...
+  Finished on node 1
+  Checking 6's descendant2...
+
+ Finding node 10, currently on node 0
+  Checking 0's descendant1...
+  Checking 0's descendant2...
+  Finished on node 0
+  Finished on node 6
+  Finished on node 8
+  Finished on node 10
+  Checking 5's descendant2...
+
+ Finding node 10, currently on node 3
+  Checking 3's descendant1...
+  Checking 3's descendant2...
+  Finished on node 3
+  Finished on node 5
+Found node to remove, id: 10
+Splitting tree at interior node 10
+Node_to_remove_anc is: 5
+Node_to_shorten is: 8
+subtree1 root assigned to node 5subtree2 root assigned to node 4subtree1 has 4 taxa
+
+Current node: 5, Descendent 1: 8, Descendent 2: 3, 
+Current node: 8, Descendent 1: 2, Descendent 2: 6, 
+Current node: 2,  
+Current node: 6, Descendent 1: 1, Descendent 2: 0, 
+Current node: 1,  
+Current node: 0,  
+Current node: 3,  subtree2 has 1 taxa
+
+Current node: 4,  
+ Created subtrees, with 4 and 1 taxa
+Final branch_count = 6
+
+
+REJOINING
+Reattaching as sister to node 8 on branch 5 to 8
+
+
+Starting join_trees function:
+Copying ntaxa
+Copied ntaxa
+Copying ntaxa
+Copied ntaxa
+
+ Finding node 8, currently on node 5
+  Checking 5's descendant1...
+
+ Finding node 8, currently on node 8
+  Found it!
+  Checking 8's descendant1...
+
+ Finding node 8, currently on node 2
+  Checking 2's descendant1...
+  Checking 2's descendant2...
+  Finished on node 2
+  Checking 8's descendant2...
+
+ Finding node 8, currently on node 6
+  Checking 6's descendant1...
+
+ Finding node 8, currently on node 1
+  Checking 1's descendant1...
+  Checking 1's descendant2...
+  Finished on node 1
+  Checking 6's descendant2...
+
+ Finding node 8, currently on node 0
+  Checking 0's descendant1...
+  Checking 0's descendant2...
+  Finished on node 0
+  Finished on node 6
+  Finished on node 8
+  Checking 5's descendant2...
+
+ Finding node 8, currently on node 3
+  Checking 3's descendant1...
+  Checking 3's descendant2...
+  Finished on node 3
+  Finished on node 5
+Joining trees, to sister node 8
+Sisters ancestor is 5
+11
+14
+-- 5--10  -- 4
+  -- 8    -- 2
+    -- 6      -- 1
+      -- 0
+-- 3
+Error with root node's ancestor: Root nodes ancestor is: 5

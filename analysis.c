@@ -12,7 +12,8 @@ float get_cost(Tree *t, Matrix *m){
 }
 
 void spr(Tree *start_tree, Matrix *m, float current_best_cost){
-
+    printf("Checking start tree\n");
+    tree_is_correct(start_tree);
     int *all_branches = get_branch_list(start_tree);
     for (int idx=0; idx < 2*start_tree->ntaxa-2 ; idx++){
         int branch_anc = all_branches[2*idx];
@@ -41,14 +42,14 @@ void spr(Tree *start_tree, Matrix *m, float current_best_cost){
         if (subtrees[0]->ntaxa > 1){  // if subtree 1 has more than 1 tip:
             int *branches_to_attach_to = get_branch_list(subtrees[0]);
             
-            for (int idx=0; idx < 2*subtrees[0]->ntaxa-2; idx++){  // for branch in subtree branches
-                //printf("\n\nREJOINING\nReattaching as sister to node %i ", branches_to_attach_to[idx*2+1]);
-                //printf("on branch %i to %i\n", branches_to_attach_to[idx*2], branches_to_attach_to[idx*2+1]);
+            for (int idx=0; idx < 2*subtrees[0]->ntaxa-2 ; idx++){  // for branch in subtree branches
+                printf("\n\nREJOINING\nReattaching as sister to node %i ", branches_to_attach_to[idx*2+1]);
+                printf("on branch %i to %i\n", branches_to_attach_to[idx*2], branches_to_attach_to[idx*2+1]);
                 //printf("\n  Print of Start tree after copying subtrees but before joing them:\n");
                 //print_tree(start_tree, start_tree->root_node, 0);
                 
                 // reattach subt2 at this branch
-                //printf("\n\nStarting join_trees function:\n");
+                printf("\n\nStarting join_trees function:\n");
                 Tree *rearranged_tree = join_trees(subtrees[0], subtrees[1], branches_to_attach_to[2*idx+1], branch_anc);
                 printf("\n  Print of joined tree:\n");
                 print_tree(rearranged_tree, rearranged_tree->root_node, 0);
@@ -58,7 +59,7 @@ void spr(Tree *start_tree, Matrix *m, float current_best_cost){
                 
                 // make sure it is rooted in the right place
                 reroot(rearranged_tree, 0);
-                //printf("Rerooted tree\n");
+                printf("Finished rerooting tree\n");
                 //printf("\n  Print of Start tree:\n");
                 //print_tree(start_tree, start_tree->root_node, 0);
                 
