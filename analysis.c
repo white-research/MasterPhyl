@@ -4,10 +4,43 @@
 
 #include "matrix.h"
 #include "tree.h"
+#include "dynamic_homology.h"
+
+#define DEBUG 1 //0 means no debugging output, 1 means basic debugging, 2 means detailed debugging
+
+int discrete_optimization(Tree *t, Partition *p){
+    return 1;
+}
+
+float continuous_optimization(Tree *t, Partition *p){
+    return 1.0;
+}
+
+
+
+
 
 
 float get_cost(Tree *t, Matrix *m){
+    print_matrix(m);
     float total_cost = 1000.0;
+    for (int idx = 0; idx < m->npart; idx++){
+        printf("Working on partition %i of type %i\n", idx+1, m->partitions[idx]->data_type);
+        if (m->partitions[idx]->data_type == 0){
+            total_cost = total_cost+discrete_optimization(t, m->partitions[idx]);
+        } else {
+            if (m->partitions[idx]->data_type == 1){
+                total_cost = total_cost+continuous_optimization(t, m->partitions[idx]);
+            } else{
+                if (m->partitions[idx]->data_type == 2){
+                    total_cost = total_cost+dynamic_homology(t, m->partitions[idx], 1.0);
+                }
+                else{
+                    assert(!"Unknown partition type");
+                }
+            }
+        }
+    }
     return total_cost;
 }
 
@@ -15,7 +48,7 @@ void spr(Tree *start_tree, Matrix *m, float current_best_cost){
     printf("Checking start tree\n");
     tree_is_correct(start_tree);
     int *all_branches = get_branch_list(start_tree);
-    for (int idx=0; idx < 2*start_tree->ntaxa-2 ; idx++){
+    for (int idx=0; idx < 1 /*2*start_tree->ntaxa-2 */; idx++){
         int branch_anc = all_branches[2*idx];
         int branch_des = all_branches[2*idx+1];
         
@@ -42,7 +75,7 @@ void spr(Tree *start_tree, Matrix *m, float current_best_cost){
         if (subtrees[0]->ntaxa > 1){  // if subtree 1 has more than 1 tip:
             int *branches_to_attach_to = get_branch_list(subtrees[0]);
             
-            for (int idx=0; idx < 2*subtrees[0]->ntaxa-2 ; idx++){  // for branch in subtree branches
+            for (int idx=0; idx < 1 /* 2*subtrees[0]->ntaxa-2 */; idx++){  // for branch in subtree branches
                 printf("\n\nREJOINING\nReattaching as sister to node %i ", branches_to_attach_to[idx*2+1]);
                 printf("on branch %i to %i\n", branches_to_attach_to[idx*2], branches_to_attach_to[idx*2+1]);
                 //printf("\n  Print of Start tree after copying subtrees but before joing them:\n");

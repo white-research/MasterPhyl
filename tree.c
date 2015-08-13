@@ -114,12 +114,11 @@ void add_taxon_randomly(Tree *t, int id, int max_taxa){
             printf("Done.\n\n");
         }
         else{
-            t->max_id++;
             printf("\nAbout to insert new node into tree\n");
             Node *old_desc1 = t->root_node->desc1;
             printf("Inserting onto branch from %i to %i\n", old_desc1->anc->id, old_desc1->id);
             Node *new_internal_node = malloc(sizeof(Node));
-            new_internal_node->id = t->max_id;
+            new_internal_node->id = t->max_id+1;
             new_internal_node->anc = t->root_node;
             t->root_node->desc1 = new_internal_node;
             old_desc1->anc = new_internal_node;
@@ -567,7 +566,6 @@ void reroot_branch(Tree *t, int branch_anc, int branch_des){
         
         Node *node_to_reroot = anc_node;
         Node *old_desc = des_node;
-        Node *old_anc = node_to_reroot->anc;
         Node *new_anc = new_root;
         Node *next_node_to_reroot = node_to_reroot->anc;
         printf("Starting iterations...\n");

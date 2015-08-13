@@ -11,7 +11,7 @@ typedef struct partitionTag {
 
 typedef struct matrixTag {
     int ntaxa, nchar, npart;
-    Partition *partitions[10]; // discrete, continuous, and serial
+    Partition *partitions[10]; // discrete - 0, continuous - 1, and serial - 2
 } Matrix;
 
 

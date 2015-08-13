@@ -8,6 +8,7 @@
 #include "analysis.h"
 
 
+
 int main(void){
     srand(time(NULL));
     printf("Working\n");
@@ -31,7 +32,7 @@ int main(void){
     printf("\n");
     print_matrix(new_m);
     printf("\n");
-    Tree *rand_tree = make_random_tree(5);
+    Tree *rand_tree = make_random_tree(3);
     assert(tree_is_correct(rand_tree));
     spr(rand_tree, new_m, 20.0);
     free_tree(rand_tree);
