@@ -11,6 +11,12 @@ typedef struct {
     Node *root_node, *first_taxon; // delete first_taxon pointer?
 } Tree;
 
+typedef struct {
+    int ntrees;
+    float tcost;
+    Tree *trees[100];
+} TreeSet;
+
 extern int get_children(int node, int phyl[], int num_vertices, int children[2]);
 extern int get_ancestor(int node, int phyl[], int num_vertices);
 

@@ -5,7 +5,7 @@
 #include "matrix.h"
 
 
-Partition *create_partition(int d, int c, int t, int *segs, float *s){
+Partition *create_partition(int d, int c, int t, int *segs, float **s){
     Partition *new_partition = malloc(sizeof(Partition));
     assert(new_partition != NULL);
     
@@ -51,7 +51,11 @@ void print_matrix(Matrix *m){
     for(int p_count=0; p_count < m->npart; p_count++){
         printf("  Partition %i\n", p_count+1);
         printf("    Num. chars: %i\n",  m->partitions[p_count]->nchar);
-        printf("    First state: %f\n", *(m->partitions[p_count]->states) );
+        printf("    States:\n");
+        for (int t_count = 0; t_count < m->ntaxa; t_count++){
+            float *t_states = m->partitions[p_count]->states[t_count];
+            printf("     %f\n", t_states[0]);
+        }
         if (m->partitions[p_count]->data_type == 2){
             printf("    Segments per taxon: ");
             for (int idx=0; idx < m->ntaxa; idx++){
@@ -64,9 +68,16 @@ void print_matrix(Matrix *m){
 
 
 void Partition_destroy(Partition *p){
+    printf("Destroying partition with dtype %i\n", p->data_type);
     if (p->data_type == 2){
+        printf(" Freeing segments\n");
         free(p->segments);
     }
+    for (int idx = 0; idx < p->ntaxa; idx++){
+        printf(" Freeing states for taxon %i\n", idx);
+        free(p->states[idx]);
+    }
+    printf("Free main states array\n");
     free(p->states);
     free(p);
 }
@@ -74,8 +85,10 @@ void Partition_destroy(Partition *p){
 
 void Matrix_destroy(Matrix *m){
     for(int p_count=0; p_count < m->npart; p_count++){
+        printf("Destroying partition %i\n", p_count);
         Partition_destroy(m->partitions[p_count]);
     }
+    printf("Free matrix\n");
     free(m);
 }
 
@@ -83,21 +96,69 @@ void Matrix_destroy(Matrix *m){
 Matrix *make_matrix(int ntaxa, int nchar, int npart, int part_types[], int chars_per_part[], int segs_per_taxon_per_part[], int chars_per_seg[], float all_states[]){
     Matrix *m = create_matrix(ntaxa, nchar);
     int partition_start=0;
+    
     for (int p_count = 0; p_count < npart; p_count++){
+        printf("Making array for partition %i\n", p_count);
         Partition *new_partition;
         assert(part_types[p_count] == 0 || part_types[p_count] == 1 || part_types[p_count] == 2);
         if (part_types[p_count] == 0 || part_types[p_count] == 1){
+            float **seq_array = (float **)malloc( ntaxa * sizeof(float *));
+            int *segs = NULL;
+            float *states;
+            int partition_length = ntaxa*chars_per_part[p_count]*2;
+            printf("Total length of partition is %i\n", partition_length);
+            int taxon_start_tracker = 0;
+            for (int idx=0; idx<ntaxa; idx++){
+                printf("On taxon %i :", idx);
+                states = malloc(sizeof(float)*chars_per_part[p_count]*2);
+                assert(states != NULL);
+                for (int idx2 = 0; idx2 < chars_per_part[p_count]*2; idx2++) {
+                    states[idx2] = all_states[partition_start+taxon_start_tracker+idx2];
+                    printf("%1.3f ", all_states[partition_start+taxon_start_tracker+idx2]);
+                }
+                printf("\n");
+                taxon_start_tracker += chars_per_part[p_count]*2;
+                seq_array[idx] = states;
+            }
+            
+            /*
             int partition_length = ntaxa*chars_per_part[p_count]*2;
             float *states = malloc(sizeof(float)*partition_length);
             for (int idx = 0; idx < partition_length; idx++){
                 states[idx] = all_states[partition_start+idx];
                 printf("%1.3f ", all_states[partition_start+idx]);
             }
+            */
+            
             printf("\n");
-            new_partition = create_partition(part_types[p_count], chars_per_part[p_count], ntaxa, NULL, states);
+            new_partition = create_partition(part_types[p_count], chars_per_part[p_count], ntaxa, segs, seq_array);
             partition_start += partition_length;
+            assert(partition_length == taxon_start_tracker);
         }
         else {
+            float **seq_array = (float **)malloc( ntaxa * sizeof(float *));
+            assert(seq_array != NULL);
+            int *segs = malloc(sizeof(int)*ntaxa), taxon_length;
+            assert(segs != NULL);
+            int partition_length = 0; // track total length of partition and where each taxon starts
+            for (int idx=0; idx<ntaxa; idx++){ // loop through taxa
+                printf("On taxon %i :", idx);
+                segs[idx]=segs_per_taxon_per_part[idx+p_count*ntaxa]; // record number of segments in taxon
+                taxon_length = segs_per_taxon_per_part[idx+p_count*ntaxa]*chars_per_part[p_count]*2;
+                
+                float *states = malloc(sizeof(float)*taxon_length);
+                assert(states != NULL);
+                for (int idx2 = 0; idx2 < taxon_length; idx2++) {
+                    states[idx2] = all_states[partition_start+partition_length+idx2];
+                    printf("%1.3f ", all_states[partition_start+partition_length+idx2]);
+                }
+                printf("\n");
+                partition_length += taxon_length;
+                seq_array[idx] = states;
+            }
+            
+            
+            /*
             int partition_length = 0;
             int *segs = malloc(sizeof(int)*ntaxa);
             for (int idx=0; idx<ntaxa; idx++){
@@ -110,7 +171,9 @@ Matrix *make_matrix(int ntaxa, int nchar, int npart, int part_types[], int chars
                 printf("%1.3f ", all_states[partition_start+idx]);
             }
             printf("\n");
-            new_partition = create_partition(part_types[p_count], chars_per_part[p_count], ntaxa, segs, states);
+            */
+            
+            new_partition = create_partition(part_types[p_count], chars_per_part[p_count], ntaxa, segs, seq_array);
             partition_start += partition_length;
         }
         add_partition(m, new_partition);
@@ -118,19 +181,7 @@ Matrix *make_matrix(int ntaxa, int nchar, int npart, int part_types[], int chars
     return m;
 }
 
-void tests(){
-    int t = 10, c = 100;
-    Matrix *m = create_matrix(t, c);
-    print_matrix(m);
-    
-    float ss[4] = {1,2,3,4};
-    int seg_counts[2] = {2,2};
-    Partition *pp = create_partition(0, 10, 10, &seg_counts[0], &ss[0]);
-    add_partition(m, pp);
-    print_matrix(m);
-    printf("\n");
-    Matrix_destroy(m);
-}
+
 
 
 

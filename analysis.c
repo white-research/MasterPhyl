@@ -8,22 +8,64 @@
 
 #define DEBUG 1 //0 means no debugging output, 1 means basic debugging, 2 means detailed debugging
 
-int discrete_optimization(Tree *t, Partition *p){
-    return 1;
+float continuous_downpass(Tree *t, Partition *p, int char_idx, Node *n, float *node_states){
+    if (n->desc1 != NULL && n->desc2 != NULL){
+        float d1 = continuous_downpass(t, p, char_idx, n->desc1, node_states);
+        float d2 = continuous_downpass(t, p, char_idx, n->desc2, node_states);
+        printf(" On inner node %i, calculating...\n", n->id);
+        float d1_u, d1_l, d2_u, d2_l, c=0;
+        d1_l = node_states[n->desc1->id*2];
+        d1_u = node_states[n->desc1->id*2+1];
+        d2_l = node_states[n->desc2->id*2];
+        d2_u = node_states[n->desc2->id*2+1];
+        if (d1_l > d2_u){ // TODO check literature for case when node's state boundaries are equal ie 1-2 & 2-3
+            c = d1_l - d2_u;
+            node_states[n->id*2] = d2_u;
+            node_states[n->id*2+1] = d1_l;
+        } else{
+            if (d1_u < d2_l){
+                c = d2_l - d1_u;
+                node_states[n->id*2] = d1_u;
+                node_states[n->id*2+1] = d2_l;
+            } else{
+                if (d1_l > d2_l) node_states[n->id*2] = d1_l;
+                else node_states[n->id*2] = d2_l;
+                if (d1_u > d2_u) node_states[n->id*2+1] = d2_u;
+                else node_states[n->id*2] = d1_u;
+            }
+        }
+        return d1+d2+c;
+    } else{
+        printf(" On tip %i, entering values into arrays...\n", n->id);
+        node_states[n->id*2] = p->states[n->id][char_idx*2];
+        node_states[n->id*2+1] = p->states[n->id][char_idx*2+1];
+        return 0;
+    }
+    
 }
+
 
 float continuous_optimization(Tree *t, Partition *p){
-    return 1.0;
+    float cumulative_cost = 0.0;
+    for (int char_idx = 0; char_idx < p->nchar; char_idx++){
+        printf("Calculating char %i\n", char_idx);
+        float node_state_ranges[2*(t->ntaxa*2 - 1)];
+        cumulative_cost += continuous_downpass(t, p, char_idx, t->root_node, &node_state_ranges[0]);
+    }
+    return cumulative_cost;
 }
 
 
 
+int discrete_optimization(Tree *t, Partition *p){
+    return continuous_optimization(t, p);
+}
 
 
 
 float get_cost(Tree *t, Matrix *m){
     print_matrix(m);
-    float total_cost = 1000.0;
+    float total_cost = 0.0;
     for (int idx = 0; idx < m->npart; idx++){
         printf("Working on partition %i of type %i\n", idx+1, m->partitions[idx]->data_type);
         if (m->partitions[idx]->data_type == 0){
@@ -44,11 +86,13 @@ float get_cost(Tree *t, Matrix *m){
     return total_cost;
 }
 
-void spr(Tree *start_tree, Matrix *m, float current_best_cost){
+TreeSet spr(Tree *start_tree, Matrix *m, float current_best_cost){
+    TreeSet spr_trees;
+    spr_trees.ntrees = 0;
     printf("Checking start tree\n");
     tree_is_correct(start_tree);
     int *all_branches = get_branch_list(start_tree);
-    for (int idx=0; idx < 1 /*2*start_tree->ntaxa-2 */; idx++){
+    for (int idx=0; idx <  2*start_tree->ntaxa-2 ; idx++){
         int branch_anc = all_branches[2*idx];
         int branch_des = all_branches[2*idx+1];
         
@@ -75,7 +119,7 @@ void spr(Tree *start_tree, Matrix *m, float current_best_cost){
         if (subtrees[0]->ntaxa > 1){  // if subtree 1 has more than 1 tip:
             int *branches_to_attach_to = get_branch_list(subtrees[0]);
             
-            for (int idx=0; idx < 1 /* 2*subtrees[0]->ntaxa-2 */; idx++){  // for branch in subtree branches
+            for (int idx=0; idx < 2*subtrees[0]->ntaxa-2 ; idx++){  // for branch in subtree branches
                 printf("\n\nREJOINING\nReattaching as sister to node %i ", branches_to_attach_to[idx*2+1]);
                 printf("on branch %i to %i\n", branches_to_attach_to[idx*2], branches_to_attach_to[idx*2+1]);
                 //printf("\n  Print of Start tree after copying subtrees but before joing them:\n");
@@ -104,6 +148,24 @@ void spr(Tree *start_tree, Matrix *m, float current_best_cost){
                 if (tree_cost > current_best_cost){
                     free_tree(rearranged_tree);
                 }
+                else{
+                    if (tree_cost == current_best_cost){
+                        assert(spr_trees.ntrees < 99);
+                        // TODO check identical topology is not in existing spr_trees
+                        spr_trees.trees[spr_trees.ntrees] = rearranged_tree;
+                        spr_trees.ntrees++;
+                        spr_trees.tcost = tree_cost;
+                    } else{
+                        for(int idx=0; idx < spr_trees.ntrees; idx++){
+                            free_tree(spr_trees.trees[idx]);
+                            spr_trees.trees[idx] = NULL;
+                        }
+                        current_best_cost = tree_cost;
+                        spr_trees.trees[0] = rearranged_tree;
+                        spr_trees.ntrees = 1;
+                        spr_trees.tcost = tree_cost;
+                    }
+                }
             }
             
             free(branches_to_attach_to);
@@ -120,6 +182,7 @@ void spr(Tree *start_tree, Matrix *m, float current_best_cost){
     
     
     free(all_branches);
+    return spr_trees;
 }
 
 

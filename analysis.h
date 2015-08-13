@@ -4,8 +4,8 @@
 #include "matrix.h"
 #include "tree.h"
 
-extern void spr(Tree *start_tree, Matrix *m, float current_best_cost);
+extern TreeSet spr(Tree *start_tree, Matrix *m, float current_best_cost);
 
-
+float continuous_downpass(Tree *t, Partition *p, int char_idx, Node *n, float *node_states);
 
 #endif

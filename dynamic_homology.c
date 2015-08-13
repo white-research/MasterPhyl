@@ -5,7 +5,7 @@
 #include "matrix.h"
 #include "tree.h"
 
-#define DEBUG 1 //0 means no debugging output, 1 means basic debugging, 2 means detailed debugging
+#define DEBUG 0 //0 means no debugging output, 1 means basic debugging, 2 means detailed debugging
 
 
 void print_sequence(float *seq, int len)
@@ -398,7 +398,7 @@ float dynamic_homology(Tree *t, Partition *p, float gap_multiplier)
     
     int segments[num_nodes];
     float costs[num_nodes];
-    int tip_counter, sequence_start_index = 0, char_counter;
+    int tip_counter; //, sequence_start_index = 0, char_counter;
     
     
     // TODO: put matrices into this form when making in matrix.c -> saves remaking it each tree
@@ -406,13 +406,14 @@ float dynamic_homology(Tree *t, Partition *p, float gap_multiplier)
         printf(" Making array for tip %i\n", tip_counter);
         printf("  with %i segments\n", p->segments[tip_counter]);
         printf("  and %i characters per segment\n", p->nchar);
-        seq_array[tip_counter] = (float *)malloc(p->segments[tip_counter] * p->nchar * 2 * sizeof(float));
-        for (char_counter = 0; char_counter < (p->segments[tip_counter] * p->nchar * 2); ++char_counter){
-            printf("  %i: %2.2f", char_counter, p->states[sequence_start_index+char_counter]);
-            seq_array[tip_counter][char_counter] = p->states[sequence_start_index+char_counter];
-        }
+        seq_array[tip_counter] = p->states[tip_counter];
+        //seq_array[tip_counter] = (float *)malloc(p->segments[tip_counter] * p->nchar * 2 * sizeof(float));
+        //for (char_counter = 0; char_counter < (p->segments[tip_counter] * p->nchar * 2); ++char_counter){
+        //    printf("  %i: %2.2f", char_counter, p->states[sequence_start_index+char_counter]);
+        //    seq_array[tip_counter][char_counter] = p->states[sequence_start_index+char_counter];
+        //}
         printf("\n");
-        sequence_start_index += p->segments[tip_counter] * p->nchar * 2;
+        //sequence_start_index += p->segments[tip_counter] * p->nchar * 2;
         segments[tip_counter] = p->segments[tip_counter];
         costs[tip_counter] = 0.0;
     }
@@ -420,10 +421,14 @@ float dynamic_homology(Tree *t, Partition *p, float gap_multiplier)
     tree_cost = do_downpass(t, t->root_node, gap_multiplier, seq_array, segments, p->nchar, costs, num_nodes);
     if (DEBUG >= 1) printf("\n\nTree cost is: %6.2f\n\n", tree_cost);
     
-    for (tip_counter = 0; tip_counter < num_nodes ; ++tip_counter)
+    for (int idx = 0; idx <num_tips; idx++){
+        seq_array[idx] = NULL;
+    }
+    
+    for (int idx = num_tips; idx < num_nodes ; ++idx)
     {
-        if (DEBUG >= 1) printf(" Freeing sequence of tip %i\n", tip_counter);
-        free(seq_array[tip_counter]);
+        if (DEBUG >= 1) printf(" Freeing sequence of tip %i\n", idx);
+        free(seq_array[idx]);
     }
     if (DEBUG >= 1) printf(" All individual sequences freed, freeing main sequence array\n");
     free(seq_array);

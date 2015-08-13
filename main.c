@@ -9,7 +9,7 @@
 
 
 
-int main(void){
+int main(void){ //TODO take arguments
     srand(time(NULL));
     printf("Working\n");
     float states[] = {//Partition 1
@@ -32,10 +32,27 @@ int main(void){
     printf("\n");
     print_matrix(new_m);
     printf("\n");
+    printf("Making random tree\n");
+    // TODO: read in data
+    // TODO: run_analysis function, which does all this as a pipeline 
     Tree *rand_tree = make_random_tree(3);
+    printf("Made random tree\n");
     assert(tree_is_correct(rand_tree));
-    spr(rand_tree, new_m, 20.0);
+    TreeSet final_trees = spr(rand_tree, new_m, 20.0); 
+    printf("Final cost of trees is %f\n\n", final_trees.tcost);
+    // TODO: Robinson Foulds comparison of trees to catch identical
+    // TODO: Merge non-identical into on set
+    
+    // TODO: write_trees function writes trees to file as newick
+    for (int idx = 0; idx < final_trees.ntrees; idx++){
+        print_tree(final_trees.trees[idx]);
+        printf("Freeing final tree %i\n", idx);
+        free_tree(final_trees.trees[idx]);
+    }
     free_tree(rand_tree);
+    printf("Free'd tree\n");
+    print_matrix(new_m);
+    printf("Destroying matrix\n");
     Matrix_destroy(new_m);
     return 1;
 }

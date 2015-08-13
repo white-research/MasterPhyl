@@ -5,7 +5,7 @@
 typedef struct partitionTag {
     int data_type, nchar, ntaxa;
     int *segments;
-    float *states;
+    float **states;
 } Partition;
 
 

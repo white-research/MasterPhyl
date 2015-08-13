@@ -5,6 +5,7 @@
 
 #include "tree.h"
 
+#define DEBUG 0
 
 int taxcount_uppass(Tree *t, Node *current_node, int count){
 //    printf("On node: %i, current count=%i\n", current_node->id, count);
@@ -21,42 +22,42 @@ int taxcount_uppass(Tree *t, Node *current_node, int count){
 }
 
 void check_nodes(Tree *t, Node *n){
-    printf("New node:");
-    printf("%i\n", n->id);
-    printf("Checking root node\n");
+    if (DEBUG == 1) printf("New node:");
+    if (DEBUG == 1) printf("%i\n", n->id);
+    if (DEBUG == 1) printf("Checking root node\n");
     if (n == t->root_node){
         if (n->anc != NULL){
-            printf("Root node does not have a null ancestor\n");
-            printf("Ancestor is: %i\n", n->anc->id);
+            if (DEBUG == 1) printf("Root node does not have a null ancestor\n");
+            if (DEBUG == 1) printf("Ancestor is: %i\n", n->anc->id);
             assert(!"Ancestor");
         }
     }
-    printf("Checking for matching NULL pointers\n");
+    if (DEBUG == 1) printf("Checking for matching NULL pointers\n");
     if (n->desc1 == NULL){
         if (n->desc2 != NULL){
-            printf("Desc1 is NULL, but desc2 points to node %i\n", n->desc2->id);
+            if (DEBUG == 1) printf("Desc1 is NULL, but desc2 points to node %i\n", n->desc2->id);
             assert(!"Not both descs pointing to NULL");
         }
     } else{
-        printf("Checking for pointers match with desc 1 (%i)\n", n->desc1->id);
+        if (DEBUG == 1) printf("Checking for pointers match with desc 1 (%i)\n", n->desc1->id);
         if (n->desc1->anc == NULL){
-            printf("Points to NULL...\n");
+            if (DEBUG == 1) printf("Points to NULL...\n");
         }
         if (n != n->desc1->anc){
-            printf("Desc1 points to node %i but that has ancestor %i\n", n->desc1->id, n->desc1->anc->id);
+            if (DEBUG == 1) printf("Desc1 points to node %i but that has ancestor %i\n", n->desc1->id, n->desc1->anc->id);
             assert(!"descendent and descendents ancestor don't match\n");
         }
     }
-    printf("Checking for matching NULL pointers part 2\n");
+    if (DEBUG == 1) printf("Checking for matching NULL pointers part 2\n");
     if (n->desc2 == NULL){
         if (n->desc1 != NULL){
-            printf("Desc2 is NULL, but desc1 points to node %i\n", n->desc1->id);
+            if (DEBUG == 1) printf("Desc2 is NULL, but desc1 points to node %i\n", n->desc1->id);
             assert(!"Not both descs pointing to NULL");
         }
     } else{
         printf("Checking for pointers match with desc 2\n");
         if (n != n->desc2->anc){
-            printf("Desc2 points to node %i but that has ancestor %i\n", n->desc2->id, n->desc2->anc->id);
+            if (DEBUG == 1) printf("Desc2 points to node %i but that has ancestor %i\n", n->desc2->id, n->desc2->anc->id);
             assert(!"descendent and descendents ancestor don't match\n");
         }
     }
@@ -69,7 +70,7 @@ void check_nodes(Tree *t, Node *n){
 }
 
 int tree_is_correct(Tree *t){
-    printf("Taxon count: %i\n", taxcount_uppass(t, t->root_node, 0));
+    if (DEBUG == 1) printf("Taxon count: %i\n", taxcount_uppass(t, t->root_node, 0));
     assert(taxcount_uppass(t, t->root_node, 0) == t->ntaxa);
     
     // check nodes and links
@@ -163,7 +164,7 @@ Tree *make_random_tree(int ntaxa){
     print_tree(newt, newt->root_node, 1);
     printf("\n");
     int *br = get_branch_list(newt);
-    printf("\n");
+    printf("Printed branches\n");
     free(br);
     return newt;
 }
@@ -241,33 +242,36 @@ int _fill_branch_list_recursive(Tree *t, int *branch_list, Node *current_node, i
 
 int *get_branch_list(Tree *t){
     int *branch_list = malloc(sizeof(int)*2*(2*t->ntaxa - 2));
-    
+    assert(branch_list !=NULL);
     int final_branch = _fill_branch_list_recursive(t, branch_list, t->root_node, 0);
     printf("Final branch_count = %i\n", final_branch);
     assert(final_branch == 2*t->ntaxa - 2);
-    for (int idx = 0; idx < 2*t->ntaxa - 2; idx++){
+//    for (int idx = 0; idx < 2*t->ntaxa - 2; idx++){
 //        printf("%2i -> %2i\n", branch_list[2*idx], branch_list[2*idx+1]);
-    }
+//    }
+    printf("Done\n");
+    
+    assert(branch_list !=NULL);
     return branch_list;
 }
 
 
 Node *find_node(Tree *t, int id, Node *current_node, Node *node_to_return){
-    printf("\n Finding node %i, currently on node %i\n", id, current_node->id);
+    if (DEBUG == 1) printf("\n Finding node %i, currently on node %i\n", id, current_node->id);
     if (current_node->id == id){
-        printf("  Found it!\n");
+        if (DEBUG == 1) printf("  Found it!\n");
         assert(node_to_return == NULL && "Node appears twice in tree");
         node_to_return = current_node;
     }
-    printf("  Checking %i's descendant1...\n", current_node->id);
+    if (DEBUG == 1) printf("  Checking %i's descendant1...\n", current_node->id);
     if (current_node->desc1 != NULL){
         node_to_return = find_node(t, id, current_node->desc1, node_to_return);
     }
-    printf("  Checking %i's descendant2...\n", current_node->id);
+    if (DEBUG == 1) printf("  Checking %i's descendant2...\n", current_node->id);
     if (current_node->desc2 != NULL){
         node_to_return = find_node(t, id, current_node->desc2, node_to_return);
     }
-    printf("  Finished on node %i\n", current_node->id);
+    if (DEBUG == 1) printf("  Finished on node %i\n", current_node->id);
     return node_to_return;
 }
 
