@@ -13,9 +13,9 @@ void print_sequence(float *seq, int len)
     int i;
     for (i=0; i<len; ++i)
     {
-        printf("%4.2f ", seq[i]);
+        if (DEBUG >= 1) printf("%4.2f ", seq[i]);
     }
-    printf("\n");
+    if (DEBUG >= 1) printf("\n");
 }
 
 
@@ -24,9 +24,9 @@ void print_NW_matrix(float M[], int r, int c)
     int i, j;
     for(i = 0; i < (r+1); ++i) {
         for(j = 0; j < (c+1) ; ++j) {
-            printf("%4.2f ", M[i*(c+1)+j]);
+            if (DEBUG >= 1) printf("%4.2f ", M[i*(c+1)+j]);
         }
-        printf("\n");
+        if (DEBUG >= 1) printf("\n");
     }
 }
 
@@ -71,7 +71,7 @@ float transformation_cost(float *seg1, float *seg2, int seg_len)
     float cost=0;
     if (seg1 == NULL || seg2 == NULL)
     {
-        printf("\n        Failed to align two segments\n");
+        if (DEBUG >= 1) printf("\n        Failed to align two segments\n");
         abort(); // no cost to align two gaps
     }
     int i;
@@ -209,7 +209,7 @@ int backtrack(float M[], float *s1, int s1_segs, int s1_counter, float *s2, int 
     }
     if (s1_counter < 1 || s2_counter < 1)
     {
-        printf("Error in backtrack function - outside bounds of Needleman-Wunsch matrix");
+        if (DEBUG >= 1) printf("Error in backtrack function - outside bounds of Needleman-Wunsch matrix");
         abort();
     }
     if (DEBUG == 1) printf("    On cell with indices %u, %u - ", s1_counter, s2_counter);
@@ -390,10 +390,10 @@ float dynamic_homology(Tree *t, Partition *p, float gap_multiplier)
     float tree_cost = 0;
     float **seq_array;
     
-    printf(" partition type is %i\n", p->data_type);
-    printf(" root index is %i\n", t->root_node->id);
+    if (DEBUG >= 1) printf(" partition type is %i\n", p->data_type);
+    if (DEBUG >= 1) printf(" root index is %i\n", t->root_node->id);
     
-    printf(" We calculate there are %i nodes\n", num_nodes);
+    if (DEBUG >= 1) printf(" We calculate there are %i nodes\n", num_nodes);
     seq_array = (float **)malloc( num_nodes * sizeof(float *));
     
     int segments[num_nodes];
@@ -403,16 +403,16 @@ float dynamic_homology(Tree *t, Partition *p, float gap_multiplier)
     
     // TODO: put matrices into this form when making in matrix.c -> saves remaking it each tree
     for (tip_counter = 0; tip_counter < num_tips; ++tip_counter){
-        printf(" Making array for tip %i\n", tip_counter);
-        printf("  with %i segments\n", p->segments[tip_counter]);
-        printf("  and %i characters per segment\n", p->nchar);
+        if (DEBUG >= 1) printf(" Making array for tip %i\n", tip_counter);
+        if (DEBUG >= 1) printf("  with %i segments\n", p->segments[tip_counter]);
+        if (DEBUG >= 1) printf("  and %i characters per segment\n", p->nchar);
         seq_array[tip_counter] = p->states[tip_counter];
         //seq_array[tip_counter] = (float *)malloc(p->segments[tip_counter] * p->nchar * 2 * sizeof(float));
         //for (char_counter = 0; char_counter < (p->segments[tip_counter] * p->nchar * 2); ++char_counter){
         //    printf("  %i: %2.2f", char_counter, p->states[sequence_start_index+char_counter]);
         //    seq_array[tip_counter][char_counter] = p->states[sequence_start_index+char_counter];
         //}
-        printf("\n");
+        //printf("\n");
         //sequence_start_index += p->segments[tip_counter] * p->nchar * 2;
         segments[tip_counter] = p->segments[tip_counter];
         costs[tip_counter] = 0.0;

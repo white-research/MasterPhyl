@@ -20,7 +20,7 @@ int test_function(int num1, int num2)
 
 void score(int B_count, int C_count, float N[], float *B, float *C, int gaps_in_B[], int gaps_in_C[], int chars_per_seg, float gap_cost)
 {
-    if (DEBUG == 1) printf(" - Starting score function\n");
+    if (DEBUG >= 1) printf(" - Starting score function\n");
     if (DEBUG == 1) printf("    - Filling matrix based on sequences:\n       ");
     if (DEBUG == 1) print_sequence(B, B_count*chars_per_seg*2);
     if (DEBUG == 1) printf("       ");
@@ -138,7 +138,7 @@ float transformation_cost(float *seg1, float *seg2, int seg_len)
     float cost=0;
     if (seg1 == NULL || seg2 == NULL)
     {
-        printf("\n        Failed to align two segments\n");
+        if (DEBUG >= 1) printf("\n        Failed to align two segments\n");
         abort(); // no cost to align two gaps
     }
     int i;
@@ -178,7 +178,7 @@ int backtrack(float M[], float *s1, int s1_segs, int s1_counter, float *s2, int 
     }
     if (s1_counter < 1 || s2_counter < 1)
     {
-        printf("Error in backtrack function - outside bounds of Needleman-Wunsch matrix");
+        if (DEBUG >= 1) printf("Error in backtrack function - outside bounds of Needleman-Wunsch matrix");
         abort();
     }
     if (DEBUG == 1) printf("    On cell with indices %u, %u - ", s1_counter, s2_counter);
@@ -421,9 +421,9 @@ void print_matrix(float M[], int r, int c)
     int i, j;
     for(i = 0; i < (r+1); ++i) {
         for(j = 0; j < (c+1) ; ++j) {
-            printf("%4.2f ", M[i*(c+1)+j]);
+            if (DEBUG >= 1) printf("%4.2f ", M[i*(c+1)+j]);
         }
-        printf("\n");
+        if (DEBUG >= 1) printf("\n");
     }
 }
 
@@ -432,9 +432,9 @@ void print_sequence(float *seq, int len)
     int i;
     for (i=0; i<len; ++i)
     {
-        printf("%4.2f ", seq[i]);
+        if (DEBUG >= 1) printf("%4.2f ", seq[i]);
     }
-    printf("\n");
+    if (DEBUG >= 1) printf("\n");
 }
 
 

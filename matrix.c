@@ -68,16 +68,16 @@ void print_matrix(Matrix *m){
 
 
 void Partition_destroy(Partition *p){
-    printf("Destroying partition with dtype %i\n", p->data_type);
+    //printf("Destroying partition with dtype %i\n", p->data_type);
     if (p->data_type == 2){
-        printf(" Freeing segments\n");
+        //printf(" Freeing segments\n");
         free(p->segments);
     }
     for (int idx = 0; idx < p->ntaxa; idx++){
-        printf(" Freeing states for taxon %i\n", idx);
+        //printf(" Freeing states for taxon %i\n", idx);
         free(p->states[idx]);
     }
-    printf("Free main states array\n");
+    //printf("Free main states array\n");
     free(p->states);
     free(p);
 }
@@ -85,10 +85,10 @@ void Partition_destroy(Partition *p){
 
 void Matrix_destroy(Matrix *m){
     for(int p_count=0; p_count < m->npart; p_count++){
-        printf("Destroying partition %i\n", p_count);
+        //printf("Destroying partition %i\n", p_count);
         Partition_destroy(m->partitions[p_count]);
     }
-    printf("Free matrix\n");
+    //printf("Free matrix\n");
     free(m);
 }
 

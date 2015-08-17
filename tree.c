@@ -55,7 +55,7 @@ void check_nodes(Tree *t, Node *n){
             assert(!"Not both descs pointing to NULL");
         }
     } else{
-        printf("Checking for pointers match with desc 2\n");
+        if (DEBUG >= 1) printf("Checking for pointers match with desc 2\n");
         if (n != n->desc2->anc){
             if (DEBUG == 1) printf("Desc2 points to node %i but that has ancestor %i\n", n->desc2->id, n->desc2->anc->id);
             assert(!"descendent and descendents ancestor don't match\n");
@@ -79,15 +79,15 @@ int tree_is_correct(Tree *t){
 }
 
 
-void add_taxon_randomly(Tree *t, int id, int max_taxa){
-    printf("\n\nAdding tip %i randomly\n", id);
+void add_taxon_nonrandomly(Tree *t, int id, int max_taxa){
+    if (DEBUG >= 1) printf("\n\nAdding tip %i randomly\n", id);
     Node *new_node = malloc(sizeof(Node));
     new_node->id = id;
     new_node->anc = NULL;
     new_node->desc1 = NULL;
     new_node->desc2 = NULL;
     if (t->ntaxa == 0){ // ADD INITIAL TAXON
-        printf("\nAdding first taxon\n");
+        if (DEBUG >= 1) printf("\nAdding first taxon\n");
         Node *root_node = malloc(sizeof(Node));
         root_node->anc = NULL;
         root_node->id = max_taxa;
@@ -97,27 +97,27 @@ void add_taxon_randomly(Tree *t, int id, int max_taxa){
         t->ntaxa = 1;
         t->max_id = max_taxa;
         t->root_node = root_node;
-        printf("Root node: id=%i, desc1 id=%i\n", t->root_node->id, t->root_node->desc1->id);
-        printf("Des1 node: id=%i, root  id=%i\n", new_node->id, new_node->anc->id);
+        if (DEBUG >= 1) printf("Root node: id=%i, desc1 id=%i\n", t->root_node->id, t->root_node->desc1->id);
+        if (DEBUG >= 1) printf("Des1 node: id=%i, root  id=%i\n", new_node->id, new_node->anc->id);
     }
     else {
         if (t->ntaxa == 1){ // ADD SECOND TAXON
-            printf("\nAbout to add root's descendent 2\n");
-            printf("Root:%i\n", t->root_node->id);
+            if (DEBUG >= 1) printf("\nAbout to add root's descendent 2\n");
+            if (DEBUG >= 1) printf("Root:%i\n", t->root_node->id);
             t->root_node->desc2 = new_node;
-            printf("About to add root as node's ancestor\n");
+            if (DEBUG >= 1) printf("About to add root as node's ancestor\n");
             new_node->anc = t->root_node;
-            printf("About to increment total taxa\n");
+            if (DEBUG >= 1) printf("About to increment total taxa\n");
             t->ntaxa++;
-            printf("Root node: id=%i, desc1 id=%i\n", t->root_node->id, t->root_node->desc1->id);
-            printf("Root node: id=%i, desc2 id=%i\n", t->root_node->id, t->root_node->desc2->id);
-            printf("Des1 node: id=%i, root  id=%i\n", new_node->id, new_node->anc->id);
-            printf("Done.\n\n");
+            if (DEBUG >= 1) printf("Root node: id=%i, desc1 id=%i\n", t->root_node->id, t->root_node->desc1->id);
+            if (DEBUG >= 1) printf("Root node: id=%i, desc2 id=%i\n", t->root_node->id, t->root_node->desc2->id);
+            if (DEBUG >= 1) printf("Des1 node: id=%i, root  id=%i\n", new_node->id, new_node->anc->id);
+            if (DEBUG >= 1) printf("Done.\n\n");
         }
         else{
-            printf("\nAbout to insert new node into tree\n");
+            if (DEBUG >= 1) printf("\nAbout to insert new node into tree\n");
             Node *old_desc1 = t->root_node->desc1;
-            printf("Inserting onto branch from %i to %i\n", old_desc1->anc->id, old_desc1->id);
+            if (DEBUG >= 1) printf("Inserting onto branch from %i to %i\n", old_desc1->anc->id, old_desc1->id);
             Node *new_internal_node = malloc(sizeof(Node));
             new_internal_node->id = t->max_id+1;
             new_internal_node->anc = t->root_node;
@@ -128,8 +128,107 @@ void add_taxon_randomly(Tree *t, int id, int max_taxa){
             new_node->anc = new_internal_node;
             t->ntaxa++;
             t->max_id++;
-            printf("New node: id=%i, anc id=%i\n", new_node->id, new_node->anc->id);
-            printf("total taxa in tree: %i\n\n", t->ntaxa);
+            if (DEBUG >= 1) printf("New node: id=%i, anc id=%i\n", new_node->id, new_node->anc->id);
+            if (DEBUG >= 1) printf("total taxa in tree: %i\n\n", t->ntaxa);
+        }
+    }
+}
+
+
+Tree *make_nonrandom_tree(int ntaxa){
+    int included[ntaxa];
+    for (int idx=0; idx<ntaxa; idx++){
+        included[idx] = 1;
+    }
+    Tree *newt = malloc(sizeof(Tree));
+    newt->ntaxa=0;
+    for(int taxa_left=ntaxa; taxa_left > 0; taxa_left--){
+        int r = rand() % taxa_left;
+        int counter = -1, idx = 0;
+        while (counter < r) {
+            counter += included[idx];
+            if (DEBUG >= 1) printf("%i:", idx);
+            if (DEBUG >= 1) printf("%i ", included[idx]);
+            idx++;
+        }
+        included[idx-1] = 0;
+//        printf("\nIncluded\n");
+        for (int idx=0; idx<ntaxa; idx++){
+            if (DEBUG >= 1) printf("%i ", included[idx]);
+        }
+//        printf("\nrandom int:%i - taxa left: %i\n", r, taxa_left);
+        add_taxon_nonrandomly(newt, idx-1, ntaxa);
+    }
+    if (DEBUG >= 1) print_nodes(newt, newt->root_node);
+    if (DEBUG >= 1) printf("\n");
+    if (DEBUG >= 1) print_tree(newt, newt->root_node, 1);
+    if (DEBUG >= 1) printf("\n");
+    int *br = get_branch_list(newt);
+    if (DEBUG >= 1) printf("Printed branches\n");
+    free(br);
+    return newt;
+}
+
+
+
+
+void add_taxon_randomly(Tree *t, int id, int max_taxa){
+    if (DEBUG >= 1) printf("\n\nAdding tip %i randomly\n", id);
+    Node *new_node = malloc(sizeof(Node));
+    new_node->id = id;
+    new_node->anc = NULL;
+    new_node->desc1 = NULL;
+    new_node->desc2 = NULL;
+    if (t->ntaxa == 0){ // ADD INITIAL TAXON
+        if (DEBUG >= 1) printf("\nAdding first taxon\n");
+        Node *root_node = malloc(sizeof(Node));
+        root_node->anc = NULL;
+        root_node->id = max_taxa;
+        root_node->desc1 = new_node;
+        root_node->desc2 = NULL;
+        new_node->anc = root_node;
+        t->ntaxa = 1;
+        t->max_id = max_taxa;
+        t->root_node = root_node;
+        if (DEBUG >= 1) printf("Root node: id=%i, desc1 id=%i\n", t->root_node->id, t->root_node->desc1->id);
+        if (DEBUG >= 1) printf("Des1 node: id=%i, root  id=%i\n", new_node->id, new_node->anc->id);
+    }
+    else {
+        if (t->ntaxa == 1){ // ADD SECOND TAXON
+            if (DEBUG >= 1) printf("\nAbout to add root's descendent 2\n");
+            if (DEBUG >= 1) printf("Root:%i\n", t->root_node->id);
+            t->root_node->desc2 = new_node;
+            if (DEBUG >= 1) printf("About to add root as node's ancestor\n");
+            new_node->anc = t->root_node;
+            if (DEBUG >= 1) printf("About to increment total taxa\n");
+            t->ntaxa++;
+            if (DEBUG >= 1) printf("Root node: id=%i, desc1 id=%i\n", t->root_node->id, t->root_node->desc1->id);
+            if (DEBUG >= 1) printf("Root node: id=%i, desc2 id=%i\n", t->root_node->id, t->root_node->desc2->id);
+            if (DEBUG >= 1) printf("Des1 node: id=%i, root  id=%i\n", new_node->id, new_node->anc->id);
+            if (DEBUG >= 1) printf("Done.\n\n");
+        }
+        else{
+            if (DEBUG >= 1) printf("\nAbout to insert new node into tree\n");
+            int rand_node = rand() %id;
+            Node *old_desc=NULL;
+            old_desc = find_node(t, rand_node, t->root_node, old_desc);
+            if (DEBUG >= 1) printf("Inserting onto branch from %i to %i\n", old_desc->anc->id, old_desc->id);
+            Node *new_internal_node = malloc(sizeof(Node));
+            new_internal_node->id = t->max_id+1;
+            new_internal_node->anc = old_desc->anc;
+            if (old_desc->anc->desc1 == old_desc) old_desc->anc->desc1 = new_internal_node;
+            else old_desc->anc->desc2 = new_internal_node;
+            
+            new_internal_node->desc1 = new_node;
+            new_node->anc = new_internal_node;
+            new_internal_node->desc2 = old_desc;
+            old_desc->anc = new_internal_node;
+            
+            t->ntaxa++;
+            t->max_id++;
+            if (DEBUG >= 1) printf("New node: id=%i, anc id=%i\n", new_node->id, new_node->anc->id);
+            if (DEBUG >= 1) printf("total taxa in tree: %i\n\n", t->ntaxa);
+            
         }
     }
 }
@@ -147,27 +246,29 @@ Tree *make_random_tree(int ntaxa){
         int counter = -1, idx = 0;
         while (counter < r) {
             counter += included[idx];
-            printf("%i:", idx);
-            printf("%i ", included[idx]);
+            if (DEBUG >= 1) printf("%i:", idx);
+            if (DEBUG >= 1) printf("%i ", included[idx]);
             idx++;
         }
         included[idx-1] = 0;
 //        printf("\nIncluded\n");
         for (int idx=0; idx<ntaxa; idx++){
-            printf("%i ", included[idx]);
+            if (DEBUG >= 1) printf("%i ", included[idx]);
         }
 //        printf("\nrandom int:%i - taxa left: %i\n", r, taxa_left);
-        add_taxon_randomly(newt, idx-1, ntaxa);
+        add_taxon_nonrandomly(newt, idx-1, ntaxa);
     }
-    print_nodes(newt, newt->root_node);
-    printf("\n");
-    print_tree(newt, newt->root_node, 1);
-    printf("\n");
+    if (DEBUG >= 1) print_nodes(newt, newt->root_node);
+    if (DEBUG >= 1) printf("\n");
+    if (DEBUG >= 1) print_tree(newt, newt->root_node, 1);
+    if (DEBUG >= 1) printf("\n");
     int *br = get_branch_list(newt);
-    printf("Printed branches\n");
+    if (DEBUG >= 1) printf("Printed branches\n");
     free(br);
     return newt;
 }
+
+
 
 
 void print_nodes(Tree *t, Node *current_node){
@@ -244,12 +345,12 @@ int *get_branch_list(Tree *t){
     int *branch_list = malloc(sizeof(int)*2*(2*t->ntaxa - 2));
     assert(branch_list !=NULL);
     int final_branch = _fill_branch_list_recursive(t, branch_list, t->root_node, 0);
-    printf("Final branch_count = %i\n", final_branch);
+    if (DEBUG >= 1) printf("Final branch_count = %i\n", final_branch);
     assert(final_branch == 2*t->ntaxa - 2);
 //    for (int idx = 0; idx < 2*t->ntaxa - 2; idx++){
 //        printf("%2i -> %2i\n", branch_list[2*idx], branch_list[2*idx+1]);
 //    }
-    printf("Done\n");
+    if (DEBUG >= 1) printf("Done\n");
     
     assert(branch_list !=NULL);
     return branch_list;
@@ -300,9 +401,9 @@ void copy_nodes_recur(Tree *orig_tree, Node *orig_tree_node, Node *subtree_node)
 
 Tree *copy_tree(Tree *orig_tree){
     Tree *new_tree = malloc(sizeof(Tree));
-    printf("Copying ntaxa\n");
+    if (DEBUG >= 1) printf("Copying ntaxa\n");
     new_tree->ntaxa = orig_tree->ntaxa;
-    printf("Copied ntaxa\n");
+    if (DEBUG >= 1) printf("Copied ntaxa\n");
     if (orig_tree->root_node != NULL){
         Node *new_root_node = malloc(sizeof(Node));
         new_tree->root_node = new_root_node;
@@ -339,9 +440,9 @@ void copy_nodes_inc_recur(Tree *orig_tree, Node *orig_tree_node, Node *subtree_n
 
 Tree *copy_tree_inc(Tree *orig_tree){
     Tree *new_tree = malloc(sizeof(Tree));
-    printf("Copying ntaxa\n");
+    if (DEBUG >= 1) printf("Copying ntaxa\n");
     new_tree->ntaxa = orig_tree->ntaxa;
-    printf("Copied ntaxa\n");
+    if (DEBUG >= 1) printf("Copied ntaxa\n");
     if (orig_tree->root_node != NULL){
         Node *new_root_node = malloc(sizeof(Node));
         new_tree->root_node = new_root_node;
@@ -371,13 +472,13 @@ int count_tips(Tree *t, Node *n){
 
 void split_tree(Tree *t, int anc_id, int des_id, Tree *subtree_array[2]){
     
-    printf("  Tree has %i taxa\n", t->ntaxa);
-    printf("  Making list of branches to check that branch to split at exists.\n");
+    if (DEBUG >= 1) printf("  Tree has %i taxa\n", t->ntaxa);
+    if (DEBUG >= 1) printf("  Making list of branches to check that branch to split at exists.\n");
     int *branches = get_branch_list(t);
     int branch_in_tree = 0;
     for (int idx = 0; idx < 2*t->ntaxa - 2; idx++){
-        printf("   Index: %i\n", idx);
-        printf("   Branch %i -> %i\n", branches[2*idx], branches[2*idx+1]);
+        if (DEBUG >= 1) printf("   Index: %i\n", idx);
+        if (DEBUG >= 1) printf("   Branch %i -> %i\n", branches[2*idx], branches[2*idx+1]);
         if (branches[2*idx] == anc_id){
             if (branches[2*idx+1] == des_id){
                 branch_in_tree = 1;
@@ -388,38 +489,38 @@ void split_tree(Tree *t, int anc_id, int des_id, Tree *subtree_array[2]){
     free(branches);
     
     
-    printf("Branch to split at = %i -> %i\n", anc_id, des_id);
+    if (DEBUG >= 1) printf("Branch to split at = %i -> %i\n", anc_id, des_id);
     
     Tree *copy_of_tree = copy_tree(t);
-    printf("Copy of original tree within split tree function:\n");
-    print_tree(copy_of_tree, copy_of_tree->root_node, 0);
-    print_nodes(copy_of_tree, copy_of_tree->root_node);
-    printf("\n");
+    if (DEBUG >= 1) printf("Copy of original tree within split tree function:\n");
+    if (DEBUG >= 1) print_tree(copy_of_tree, copy_of_tree->root_node, 0);
+    if (DEBUG >= 1) print_nodes(copy_of_tree, copy_of_tree->root_node);
+    if (DEBUG >= 1) printf("\n");
     tree_is_correct(copy_of_tree);
     Tree *subtree1 = malloc(sizeof(Tree));
     Tree *subtree2 = malloc(sizeof(Tree));
     
     
-    printf("Created subtrees via malloc, finding node to remove with id: %i\n", anc_id);
+    if (DEBUG >= 1) printf("Created subtrees via malloc, finding node to remove with id: %i\n", anc_id);
     Node *node_to_remove = NULL; 
     node_to_remove = find_node(copy_of_tree, anc_id, copy_of_tree->root_node, node_to_remove);
     assert(node_to_remove != NULL);
-    printf("Found node to remove, id: %i\n", node_to_remove->id);
+    if (DEBUG >= 1) printf("Found node to remove, id: %i\n", node_to_remove->id);
     assert(node_to_remove->desc1 != NULL && node_to_remove->desc2 != NULL && "Can't split tree at non-existent branch");
     
     if (node_to_remove->id == copy_of_tree->root_node->id){ // if splitting at root node
-        printf("Splitting tree at root node %i\n", node_to_remove->id);
+        if (DEBUG >= 1) printf("Splitting tree at root node %i\n", node_to_remove->id);
         subtree1->root_node = node_to_remove->desc1;
         subtree1->root_node->anc = NULL;
         subtree2->root_node = node_to_remove->desc2;
         subtree2->root_node->anc = NULL;
         free(node_to_remove);
     } else{ //if splitting at interior node other than root node
-        printf("Splitting tree at interior node %i\n", node_to_remove->id);
+        if (DEBUG >= 1) printf("Splitting tree at interior node %i\n", node_to_remove->id);
         Node *node_to_shorten;
         int d;
         Node *node_to_remove_anc = node_to_remove->anc;
-        printf("Node_to_remove_anc is: %i\n", node_to_remove_anc->id);
+        if (DEBUG >= 1) printf("Node_to_remove_anc is: %i\n", node_to_remove_anc->id);
         if (node_to_remove_anc->desc1->id == node_to_remove->id){
             d = 1;
         } else {
@@ -435,23 +536,23 @@ void split_tree(Tree *t, int anc_id, int des_id, Tree *subtree_array[2]){
             subtree2->root_node = node_to_remove->desc2;
             node_to_shorten = node_to_remove->desc1;
         }
-        printf("Node_to_shorten is: %i\n", node_to_shorten->id);
+        if (DEBUG >= 1) printf("Node_to_shorten is: %i\n", node_to_shorten->id);
         node_to_shorten->anc = node_to_remove_anc;
         if (d == 1){ node_to_remove_anc->desc1 = node_to_shorten; }
         else { node_to_remove_anc->desc2 = node_to_shorten; }
         subtree2->root_node->anc = NULL;
-        printf("subtree1 root assigned to node %i", subtree1->root_node->id);
-        printf("subtree2 root assigned to node %i", subtree2->root_node->id);
+        if (DEBUG >= 1) printf("subtree1 root assigned to node %i", subtree1->root_node->id);
+        if (DEBUG >= 1) printf("subtree2 root assigned to node %i", subtree2->root_node->id);
         
         free(node_to_remove);
     }
     
     subtree1->ntaxa = count_tips(subtree1, subtree1->root_node);
-    printf("subtree1 has %i taxa\n", subtree1->ntaxa);
-    print_nodes(subtree1, subtree1->root_node);
+    if (DEBUG >= 1) printf("subtree1 has %i taxa\n", subtree1->ntaxa);
+    if (DEBUG >= 1) print_nodes(subtree1, subtree1->root_node);
     subtree2->ntaxa = count_tips(subtree2, subtree2->root_node);
-    printf("subtree2 has %i taxa\n", subtree2->ntaxa);
-    print_nodes(subtree2, subtree2->root_node);
+    if (DEBUG >= 1) printf("subtree2 has %i taxa\n", subtree2->ntaxa);
+    if (DEBUG >= 1) print_nodes(subtree2, subtree2->root_node);
     
     copy_of_tree->root_node = NULL;
     free_tree(copy_of_tree);
@@ -467,21 +568,21 @@ void split_tree(Tree *t, int anc_id, int des_id, Tree *subtree_array[2]){
 
 Tree *join_trees(Tree *st1, Tree *st2, int sister_id, int new_node_id){ // inserts subtree2 into subtree1 next to node: new_sister_id
     Tree *subt1 = copy_tree(st1);
-    printf("\nChecking subtree 1\n");
+    if (DEBUG >= 1) printf("\nChecking subtree 1\n");
     tree_is_correct(subt1);
     Tree *subt2 = copy_tree(st2);
-    printf("\nChecking subtree 2\n");
+    if (DEBUG >= 1) printf("\nChecking subtree 2\n");
     tree_is_correct(subt2);
     Tree *joined_tree = malloc(sizeof(Tree));
     assert(subt1->ntaxa > 1 && "Cannot spr on size 1 tree");
     Node *sister = NULL;
     sister = find_node(subt1, sister_id, subt1->root_node, sister);
-    printf("Joining trees, to sister node %i\n", sister_id);
+    if (DEBUG >= 1) printf("Joining trees, to sister node %i\n", sister_id);
     Node *new_internal_node = malloc(sizeof(Node));
     new_internal_node->id = new_node_id;
     Node *sisters_anc = sister->anc;
     if (sisters_anc == NULL){
-        printf("NULL node\n");
+        if (DEBUG >= 1) printf("NULL node\n");
         new_internal_node->anc = NULL;
         joined_tree->root_node = new_internal_node;
         new_internal_node->desc1 = subt1->root_node;
@@ -489,7 +590,7 @@ Tree *join_trees(Tree *st1, Tree *st2, int sister_id, int new_node_id){ // inser
         new_internal_node->desc2 = subt2->root_node;
         new_internal_node->desc2->anc = new_internal_node;
     } else{
-        printf("Sisters ancestor is %i\n", sisters_anc->id);
+        if (DEBUG >= 1) printf("Sisters ancestor is %i\n", sisters_anc->id);
         
         new_internal_node->desc1 = subt2->root_node;
         subt2->root_node->anc = new_internal_node;
@@ -506,7 +607,7 @@ Tree *join_trees(Tree *st1, Tree *st2, int sister_id, int new_node_id){ // inser
         
         joined_tree->root_node = subt1->root_node;
         
-        printf("11\n");
+        if (DEBUG >= 1) printf("11\n");
     }
     joined_tree->ntaxa = count_tips(joined_tree, joined_tree->root_node);
     assert(joined_tree->ntaxa == subt1->ntaxa + subt2->ntaxa);
@@ -515,25 +616,25 @@ Tree *join_trees(Tree *st1, Tree *st2, int sister_id, int new_node_id){ // inser
     subt2->root_node = NULL;
     free_tree(subt1);
     free_tree(subt2);
-    printf("14\n");
+    if (DEBUG >= 1) printf("14\n");
     
-    print_tree(joined_tree, joined_tree->root_node, 0);
+    if (DEBUG >= 1) print_tree(joined_tree, joined_tree->root_node, 0);
     if (joined_tree->root_node->anc != NULL){
-        printf("Error with root node's ancestor: ");
-        printf("Root nodes ancestor is: %i\n", joined_tree->root_node->anc->id);
+        if (DEBUG >= 1) printf("Error with root node's ancestor: ");
+        if (DEBUG >= 1) printf("Root nodes ancestor is: %i\n", joined_tree->root_node->anc->id);
     }
-    else { printf("Joined tree: Root node's ancestor is NULL\n"); }
+    else { if (DEBUG >= 1) printf("Joined tree: Root node's ancestor is NULL\n"); }
     assert(joined_tree->root_node->anc == NULL);
-    printf("\nChecking joined tree\n");
+    if (DEBUG >= 1) printf("\nChecking joined tree\n");
     tree_is_correct(joined_tree);
     return joined_tree;
 }
 
 
 void reroot(Tree *t, int outgroup_id){
-    printf("\nStarting rerooting on node %i\n", outgroup_id);
-    printf("Current root is %i\n", t->root_node->id);
-    print_nodes(t, t->root_node);
+    if (DEBUG >= 1) printf("\nStarting rerooting on node %i\n", outgroup_id);
+    if (DEBUG >= 1) printf("Current root is %i\n", t->root_node->id);
+    if (DEBUG >= 1) print_nodes(t, t->root_node);
     Node *outgroup_node = NULL;
     outgroup_node = find_node(t, outgroup_id, t->root_node, outgroup_node);
     
@@ -543,88 +644,88 @@ void reroot(Tree *t, int outgroup_id){
 
 void reroot_branch(Tree *t, int branch_anc, int branch_des){
     
-    printf("Finding anc node: %i\n", branch_anc);
+    if (DEBUG >= 1) printf("Finding anc node: %i\n", branch_anc);
     Node *anc_node = NULL;
     anc_node = find_node(t, branch_anc, t->root_node, anc_node);
-    printf("Finding des node: %i\n", branch_des);
+    if (DEBUG >= 1) printf("Finding des node: %i\n", branch_des);
     Node *des_node = NULL;
     des_node = find_node(t, branch_des, t->root_node, des_node);
     
     assert(anc_node != NULL && des_node != NULL && "Cannot reroot on non-existent nodes");
     assert(des_node->anc == anc_node);
-    printf("Branch exists\n");
+    if (DEBUG >= 1) printf("Branch exists\n");
     
     Node *old_root = t->root_node;
     
     if (old_root != anc_node){
-        printf("Tree needs rerooting...\n");
+        if (DEBUG >= 1) printf("Tree needs rerooting...\n");
         Node *new_root = malloc(sizeof(Node));
-        printf("Created new root node\n");
+        if (DEBUG >= 1) printf("Created new root node\n");
         
         new_root->anc = NULL;
         new_root->id = t->ntaxa + 1;
         new_root->desc1 = anc_node;
         new_root->desc2 = des_node;
-        printf("New root node, desc1=%i and desc2=%i\n", new_root->desc1->id, new_root->desc2->id );
+        if (DEBUG >= 1) printf("New root node, desc1=%i and desc2=%i\n", new_root->desc1->id, new_root->desc2->id );
         des_node->anc = new_root;
         
         Node *node_to_reroot = anc_node;
         Node *old_desc = des_node;
         Node *new_anc = new_root;
         Node *next_node_to_reroot = node_to_reroot->anc;
-        printf("Starting iterations...\n");
+        if (DEBUG >= 1) printf("Starting iterations...\n");
         
         while (next_node_to_reroot != NULL){
-            printf("Currently rerooting node: %i\n", node_to_reroot->id);
+            if (DEBUG >= 1) printf("Currently rerooting node: %i\n", node_to_reroot->id);
             if (node_to_reroot->desc1 == old_desc){ node_to_reroot->desc1 = next_node_to_reroot; }
             else { node_to_reroot->desc2 = next_node_to_reroot; }
-            printf(" with rearranged descendents %i and %i\n", node_to_reroot->desc1->id, node_to_reroot->desc2->id);
-            printf("  and ancestor %i\n", node_to_reroot->anc->id);
+            if (DEBUG >= 1) printf(" with rearranged descendents %i and %i\n", node_to_reroot->desc1->id, node_to_reroot->desc2->id);
+            if (DEBUG >= 1) printf("  and ancestor %i\n", node_to_reroot->anc->id);
             node_to_reroot->anc = new_anc;
-            printf("   which is changed to %i\n", node_to_reroot->anc->id);
+            if (DEBUG >= 1) printf("   which is changed to %i\n", node_to_reroot->anc->id);
             new_anc = node_to_reroot;
             old_desc= node_to_reroot;
             node_to_reroot = next_node_to_reroot;            
             next_node_to_reroot = next_node_to_reroot->anc;
             
         }
-        printf("\nExited while loop, node_to_reroot is %i\n", node_to_reroot->id);
-        printf("Node_to_reroot descs are %i and %i\n", node_to_reroot->desc1->id, node_to_reroot->desc2->id);
-        printf("Old desc: %i\n", old_desc->id);
+        if (DEBUG >= 1) printf("\nExited while loop, node_to_reroot is %i\n", node_to_reroot->id);
+        if (DEBUG >= 1) printf("Node_to_reroot descs are %i and %i\n", node_to_reroot->desc1->id, node_to_reroot->desc2->id);
+        if (DEBUG >= 1) printf("Old desc: %i\n", old_desc->id);
         
-        printf("\nTree's root node is: %i\n", t->root_node->id);
+        if (DEBUG >= 1) printf("\nTree's root node is: %i\n", t->root_node->id);
         assert(node_to_reroot == t->root_node);
-        printf("Reached old root\n");
+        if (DEBUG >= 1) printf("Reached old root\n");
         if (node_to_reroot->desc1 == old_desc){
-            printf("Descendent 1 is last rerooted node (future ancestor)\n\n");
-            printf(" so switching descendent 2 (%i)'s ancestor (%i) to %i\n", node_to_reroot->desc2->id, node_to_reroot->desc2->anc->id, old_desc->id);
+            if (DEBUG >= 1) printf("Descendent 1 is last rerooted node (future ancestor)\n\n");
+            if (DEBUG >= 1) printf(" so switching descendent 2 (%i)'s ancestor (%i) to %i\n", node_to_reroot->desc2->id, node_to_reroot->desc2->anc->id, old_desc->id);
             
             //node_to_reroot->desc2->anc = old_desc;
             
             
             node_to_reroot->desc2->anc = old_desc;
             if (old_desc->desc1 == node_to_reroot){
-                printf("Also switching desc1 (%i) of node %i to %i", old_desc->desc1->id, old_desc->id, node_to_reroot->desc2->id);
+                if (DEBUG >= 1) printf("Also switching desc1 (%i) of node %i to %i", old_desc->desc1->id, old_desc->id, node_to_reroot->desc2->id);
                 old_desc->desc1 = node_to_reroot->desc2;
             } else{
-                printf("Also switching desc2 (%i) of node %i to %i", old_desc->desc2->id, old_desc->id, node_to_reroot->desc2->id);
+                if (DEBUG >= 1) printf("Also switching desc2 (%i) of node %i to %i", old_desc->desc2->id, old_desc->id, node_to_reroot->desc2->id);
                 old_desc->desc2 = node_to_reroot->desc2;
             }
         }else{
-            printf("Descendent 2 is last rerooted node (future ancestor)\n\n");
-            printf(" so switching descendent 1 (%i)'s ancestor (%i) to %i\n", node_to_reroot->desc1->id, node_to_reroot->desc1->anc->id, old_desc->id);
+            if (DEBUG >= 1) printf("Descendent 2 is last rerooted node (future ancestor)\n\n");
+            if (DEBUG >= 1) printf(" so switching descendent 1 (%i)'s ancestor (%i) to %i\n", node_to_reroot->desc1->id, node_to_reroot->desc1->anc->id, old_desc->id);
             node_to_reroot->desc1->anc = old_desc;
             if (old_desc->desc1 == node_to_reroot){
-                printf("Also switching desc1 (%i) of node %i to %i", old_desc->desc1->id, old_desc->id, node_to_reroot->desc1->id);
+                if (DEBUG >= 1) printf("Also switching desc1 (%i) of node %i to %i", old_desc->desc1->id, old_desc->id, node_to_reroot->desc1->id);
                 old_desc->desc1 = node_to_reroot->desc1;
             } else{
-                printf("Also switching desc2 (%i) of node %i to %i", old_desc->desc2->id, old_desc->id, node_to_reroot->desc1->id);
+                if (DEBUG >= 1) printf("Also switching desc2 (%i) of node %i to %i", old_desc->desc2->id, old_desc->id, node_to_reroot->desc1->id);
                 old_desc->desc2 = node_to_reroot->desc1;
             }
         }
         t->root_node = new_root;
         new_root->id = node_to_reroot->id;
-        print_nodes(t, t->root_node);
+        if (DEBUG >= 1) print_nodes(t, t->root_node);
         free(node_to_reroot);
         
         // Assign id to new root

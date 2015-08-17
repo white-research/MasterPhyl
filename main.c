@@ -6,6 +6,7 @@
 #include "matrix.h"
 #include "tree.h"
 #include "analysis.h"
+#include "output.h"
 
 
 
@@ -29,30 +30,25 @@ int main(void){ //TODO take arguments
       };
     int pt[] = {0,1,2};
     Matrix *new_m = make_matrix(3, 6, 3, pt, (int []){2,2,2},  (int []){0,0,0, 0,0,0, 2,3,2},  (int []){0,0,2}, states);
-    printf("\n");
     print_matrix(new_m);
     printf("\n");
     printf("Making random tree\n");
     // TODO: read in data
-    // TODO: run_analysis function, which does all this as a pipeline 
-    Tree *rand_tree = make_random_tree(3);
-    printf("Made random tree\n");
-    assert(tree_is_correct(rand_tree));
-    TreeSet final_trees = spr(rand_tree, new_m, 20.0); 
-    printf("Final cost of trees is %f\n\n", final_trees.tcost);
-    // TODO: Robinson Foulds comparison of trees to catch identical
-    // TODO: Merge non-identical into on set
     
-    // TODO: write_trees function writes trees to file as newick
+    TreeSet final_trees = run_analysis(new_m, 5, 100); 
+    
+    printf("Final cost of trees is %f\n\n", final_trees.tcost);
+    
+    FILE *f = fopen("output.tre", "w");
+    assert(f != NULL);
     for (int idx = 0; idx < final_trees.ntrees; idx++){
-        print_tree(final_trees.trees[idx]);
-        printf("Freeing final tree %i\n", idx);
+        char *tre = to_newick(final_trees.trees[idx], final_trees.trees[idx]->root_node);
+        printf("%s\n",  tre);
+        print_tree(final_trees.trees[idx], final_trees.trees[idx]->root_node, 0);
+        fprintf(f, "%s\n", tre);
         free_tree(final_trees.trees[idx]);
     }
-    free_tree(rand_tree);
-    printf("Free'd tree\n");
-    print_matrix(new_m);
-    printf("Destroying matrix\n");
+    fclose(f);
     Matrix_destroy(new_m);
     return 1;
 }

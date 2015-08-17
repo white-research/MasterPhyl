@@ -34,5 +34,6 @@ extern void print_tree(Tree *t, Node *current_node, int level);
 extern void print_nodes(Tree *t, Node *current_node);
 
 void free_node_recur(Node *n);
+Node *find_node(Tree *t, int id, Node *current_node, Node *node_to_return);
 
 #endif
