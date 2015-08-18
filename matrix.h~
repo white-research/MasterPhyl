@@ -15,7 +15,7 @@ typedef struct matrixTag {
 } Matrix;
 
 
-extern Matrix *make_matrix(int ntaxa, int nchar, int npart, int part_types[], int chars_per_part[], int segs_per_taxon_per_part[], int chars_per_seg[], float all_states[]); // TODO chars_per_seg is irrelevant, just use chars_per_part
+extern Matrix *make_matrix(int ntaxa, int nchar, int npart, int part_types[], int chars_per_part[], int segs_per_taxon_per_part[], int chars_per_seg[], float all_states[]);
 extern void Matrix_destroy(Matrix *m);
 extern void print_matrix(Matrix *m);
 

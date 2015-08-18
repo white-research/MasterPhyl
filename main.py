@@ -2,9 +2,9 @@
 """
 Created on Mon Jul 13 11:54:48 2015
 
-@author: dominic
+@author: Dominic White
 """
-import decimal
+import decimal, ctypes
 
 def parse_tnt(filename):
     f = open(filename,'r')
@@ -55,7 +55,7 @@ def parse_tnt(filename):
         
         if l[0]==';':  ### if line is end of matrix
             assert_partition_correct(ntaxa, matrix['taxon_names'], partition_taxa, partition_datatype, partition_chars)
-            matrix['taxon_names'] = partition_taxa.sort()
+            matrix['taxon_names'] = sorted(partition_taxa)
             partitions.append({'datatype':partition_datatype,
                                'chars':partition_chars,
                               })
@@ -66,7 +66,7 @@ def parse_tnt(filename):
             print '\n'
             if len(partitions) > 0 or len(partition_taxa) > 0:
                 assert_partition_correct(ntaxa, matrix['taxon_names'], partition_taxa, partition_datatype, partition_chars)
-                matrix['taxon_names'] = partition_taxa.sort()
+                matrix['taxon_names'] = sorted(partition_taxa)
                 partitions.append({'datatype':partition_datatype,
                                    'chars':partition_chars,
                                   })
@@ -77,6 +77,7 @@ def parse_tnt(filename):
         else:  ### if line contains data
             name_end = l.find(' ')
             taxon_name = l[:name_end]
+            print 'Name:', taxon_name
             partition_taxa.append(taxon_name)
             character_states = l[name_end+1:].strip()
             if partition_datatype == []:
@@ -183,7 +184,9 @@ def assert_partition_correct(ntaxa, existing_taxa, partition_taxa, partition_dat
     if len(partition_taxa)!=ntaxa:
         print partition_taxa
         raise Exception('Wrong number of taxa in partition')
-    if existing_taxa != [] and existing_taxa != partition_taxa.sort():
+    if existing_taxa != [] and existing_taxa != sorted(partition_taxa):
+        print existing_taxa
+        print partition_taxa.sort()
         raise Exception('Taxa do not match exisitng')
     
     ### go through and make sure all data matches for partition
@@ -247,15 +250,105 @@ def assert_partition_correct(ntaxa, existing_taxa, partition_taxa, partition_dat
 def assert_matrix_correct(matrix):
     return
 
-mat = parse_tnt('input')
-print '\n\n\n'
-for x in mat.keys():
-    if x == 'partitions':
-        for y in mat[x]:
-            print '\n',y['datatype']
-            print y['chars']
-    else:
-        print '\n',x, mat[x]
+def run_analysis(fname):
+    mat = parse_tnt(fname)
+    print '\n'
+    print mat
+    print '\n\n\n'
+    for x in mat.keys():
+        if x == 'partitions':
+            for y in mat[x]:
+                print '\n',y['datatype']
+                print y['chars']
+        else:
+            print '\n',x, mat[x]
+    
+    ntaxa = mat['ntaxa']
+    npart = len(mat['partitions'])
+    part_types = []
+    chars_per_part = []
+    segs_per_taxon_per_part = []
+    chars_per_seg = []
+    all_states = []
+    
+    for p in mat['partitions']:
+        if p['datatype'] == 'num':
+            part_types.append(0)
+            for t in mat['taxon_names']:
+                part_charnum = len(p['chars'][t])
+                for c in p['chars'][t]:
+                    if type(c)==list:
+                        all_states.append(float(c[0]))
+                        all_states.append(float(c[1]))
+                    elif c == '?':
+                        all_states.append(-1)
+                        all_states.append(-1)
+                    else:
+                        all_states.append(c)
+                        all_states.append(c)
+                segs_per_taxon_per_part.append(0)
+            chars_per_part.append(part_charnum)
+            chars_per_seg.append(0)
+        elif p['datatype'] == 'cont':
+            part_types.append(1)
+            for t in mat['taxon_names']:
+                part_charnum = len(p['chars'][t])
+                for c in p['chars'][t]:
+                    if type(c)==list:
+                        all_states.append(float(c[0]))
+                        all_states.append(float(c[1]))
+                    elif c == '?':
+                        all_states.append(-1)
+                        all_states.append(-1)
+                    else:
+                        all_states.append(c)
+                        all_states.append(c)
+                segs_per_taxon_per_part.append(0)
+            chars_per_part.append(part_charnum)
+            chars_per_seg.append(0)
+        elif p['datatype'] == 'serial':
+            part_types.append(2)
+            for t in mat['taxon_names']:
+                part_charnum = len(p['chars'][t][0])
+                taxon_segs = 0
+                for seg in p['chars'][t]:
+                    taxon_segs += 1
+                    for c in seg:
+                        if type(c)==list:
+                            all_states.append(float(c[0]))
+                            all_states.append(float(c[1]))
+                        elif c == '?':
+                            all_states.append(-1)
+                            all_states.append(-1)
+                        else:
+                            all_states.append(c)
+                            all_states.append(c)
+                segs_per_taxon_per_part.append(taxon_segs)
+            chars_per_part.append(part_charnum)
+            chars_per_seg.append(0)
+    
+    print all_states
+    print chars_per_part
+    nchar = sum(chars_per_part)
+    
+    
+    States = (ctypes.c_float * len(all_states))(*all_states)
+    NTaxa = ctypes.c_int(ntaxa)
+    NChar = ctypes.c_int(nchar)
+    NPart = ctypes.c_int(npart)
+    PartTypes = (ctypes.c_int * len(part_types))(*part_types)
+    CharsPerPart = (ctypes.c_int * len(chars_per_part))(*chars_per_part)
+    SegsPer = (ctypes.c_int * len(segs_per_taxon_per_part))(*segs_per_taxon_per_part)
+    CharsPerSeg = (ctypes.c_int * len(chars_per_seg))(*chars_per_seg)
+    SPR = ctypes.c_int(5)
+    
+    libnw = ctypes.cdll.LoadLibrary("/home/dominic/Programs/dynamic_homology/libdh.so")
+    libnw.run_analysis_shared.restype = ctypes.c_float
+    cost = libnw.run_analysis_shared(States, NTaxa, NChar, NPart, PartTypes, CharsPerPart,
+                                     SegsPer, CharsPerSeg, SPR)
+
+
+run_analysis('input')
 
 
 
