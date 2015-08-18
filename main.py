@@ -4,6 +4,23 @@ Created on Mon Jul 13 11:54:48 2015
 
 @author: Dominic White
 """
+
+#####################
+### CONFIGURATION ###
+#####################
+
+input_file = 'input2'
+number_of_spr_rounds = 5
+
+# TODO
+gap_cost = 1.0
+number_of_tbr_rounds = 5
+
+
+####################
+####  CODE #########
+####################
+
 import decimal, ctypes
 
 def parse_tnt(filename):
@@ -250,7 +267,7 @@ def assert_partition_correct(ntaxa, existing_taxa, partition_taxa, partition_dat
 def assert_matrix_correct(matrix):
     return
 
-def run_analysis(fname):
+def run_analysis(fname, spr):
     mat = parse_tnt(fname)
     print '\n'
     print mat
@@ -340,7 +357,7 @@ def run_analysis(fname):
     CharsPerPart = (ctypes.c_int * len(chars_per_part))(*chars_per_part)
     SegsPer = (ctypes.c_int * len(segs_per_taxon_per_part))(*segs_per_taxon_per_part)
     CharsPerSeg = (ctypes.c_int * len(chars_per_seg))(*chars_per_seg)
-    SPR = ctypes.c_int(5)
+    SPR = ctypes.c_int(spr)
     
     libnw = ctypes.cdll.LoadLibrary("/home/dominic/Programs/dynamic_homology/libdh.so")
     libnw.run_analysis_shared.restype = ctypes.c_float
@@ -348,7 +365,7 @@ def run_analysis(fname):
                                      SegsPer, CharsPerSeg, SPR)
 
 
-run_analysis('input')
+run_analysis(input_file, number_of_spr_rounds)
 
 
 

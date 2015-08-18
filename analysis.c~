@@ -291,7 +291,7 @@ void run_analysis_shared(float states[], int ntaxa, int nchar, int npart, int pa
     srand(time(NULL));
     Matrix *new_m = make_matrix(ntaxa, nchar, npart, part_types, chars_per_part, segs_per_taxon_per_part, chars_per_seg, states);
     TreeSet final_trees = run_analysis(new_m, spr_rounds, max_trees); 
-    printf("\n\nCost of %i tree(s) is %f\n\n", final_trees.ntrees, final_trees.tcost);
+    printf("Cost of %i tree(s) is %f\n\n", final_trees.ntrees, final_trees.tcost);
     FILE *f = fopen("output.tre", "w");
     assert(f != NULL);
     for (int idx = 0; idx < final_trees.ntrees; idx++){

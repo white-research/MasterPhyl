@@ -2,7 +2,7 @@ xread
 'Initial description
 on multiple
 lines'
-12 3
+5 3
 & [num]
 taxonA 000[12]1
 taxonB 01111
