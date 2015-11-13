@@ -3,3 +3,5 @@ dh
 mat
 read
 *.o
+*~
+*.so
