@@ -29,7 +29,7 @@ int main(void){ //TODO take arguments
       1,1, 1.3,1.3,   2,2, 2.6,2.6 //t3
       };
     int pt[] = {0,1,2};
-    Matrix *new_m = make_matrix(3, 6, 3, pt, (int []){2,2,2},  (int []){0,0,0, 0,0,0, 2,3,2},  (int []){0,0,2}, states);
+    Matrix *new_m = make_matrix(3, 6, 3, pt, new int[3] {2,2,2},  new int[9] {0,0,0, 0,0,0, 2,3,2}, new int[3] {0,0,2}, states);
     print_matrix(new_m);
     printf("\n");
     printf("Making random tree\n");

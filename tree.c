@@ -81,14 +81,14 @@ int tree_is_correct(Tree *t){
 
 void add_taxon_nonrandomly(Tree *t, int id, int max_taxa){
     if (DEBUG >= 1) printf("\n\nAdding tip %i randomly\n", id);
-    Node *new_node = malloc(sizeof(Node));
+    Node *new_node = (Node *)malloc(sizeof(Node));
     new_node->id = id;
     new_node->anc = NULL;
     new_node->desc1 = NULL;
     new_node->desc2 = NULL;
     if (t->ntaxa == 0){ // ADD INITIAL TAXON
         if (DEBUG >= 1) printf("\nAdding first taxon\n");
-        Node *root_node = malloc(sizeof(Node));
+        Node *root_node = (Node *)malloc(sizeof(Node));
         root_node->anc = NULL;
         root_node->id = max_taxa;
         root_node->desc1 = new_node;
@@ -118,7 +118,7 @@ void add_taxon_nonrandomly(Tree *t, int id, int max_taxa){
             if (DEBUG >= 1) printf("\nAbout to insert new node into tree\n");
             Node *old_desc1 = t->root_node->desc1;
             if (DEBUG >= 1) printf("Inserting onto branch from %i to %i\n", old_desc1->anc->id, old_desc1->id);
-            Node *new_internal_node = malloc(sizeof(Node));
+            Node *new_internal_node = (Node *)malloc(sizeof(Node));
             new_internal_node->id = t->max_id+1;
             new_internal_node->anc = t->root_node;
             t->root_node->desc1 = new_internal_node;
@@ -140,7 +140,7 @@ Tree *make_nonrandom_tree(int ntaxa){
     for (int idx=0; idx<ntaxa; idx++){
         included[idx] = 1;
     }
-    Tree *newt = malloc(sizeof(Tree));
+    Tree *newt = (Tree *)malloc(sizeof(Tree));
     newt->ntaxa=0;
     for(int taxa_left=ntaxa; taxa_left > 0; taxa_left--){
         int r = rand() % taxa_left;
@@ -174,14 +174,14 @@ Tree *make_nonrandom_tree(int ntaxa){
 
 void add_taxon_randomly(Tree *t, int id, int max_taxa){
     if (DEBUG >= 1) printf("\n\nAdding tip %i randomly\n", id);
-    Node *new_node = malloc(sizeof(Node));
+    Node *new_node = (Node *)malloc(sizeof(Node));
     new_node->id = id;
     new_node->anc = NULL;
     new_node->desc1 = NULL;
     new_node->desc2 = NULL;
     if (t->ntaxa == 0){ // ADD INITIAL TAXON
         if (DEBUG >= 1) printf("\nAdding first taxon\n");
-        Node *root_node = malloc(sizeof(Node));
+        Node *root_node = (Node *)malloc(sizeof(Node));
         root_node->anc = NULL;
         root_node->id = max_taxa;
         root_node->desc1 = new_node;
@@ -213,7 +213,7 @@ void add_taxon_randomly(Tree *t, int id, int max_taxa){
             Node *old_desc=NULL;
             old_desc = find_node(t, rand_node, t->root_node, old_desc);
             if (DEBUG >= 1) printf("Inserting onto branch from %i to %i\n", old_desc->anc->id, old_desc->id);
-            Node *new_internal_node = malloc(sizeof(Node));
+            Node *new_internal_node = (Node *)malloc(sizeof(Node));
             new_internal_node->id = t->max_id+1;
             new_internal_node->anc = old_desc->anc;
             if (old_desc->anc->desc1 == old_desc) old_desc->anc->desc1 = new_internal_node;
@@ -239,7 +239,7 @@ Tree *make_random_tree(int ntaxa){
     for (int idx=0; idx<ntaxa; idx++){
         included[idx] = 1;
     }
-    Tree *newt = malloc(sizeof(Tree));
+    Tree *newt = (Tree *)malloc(sizeof(Tree));
     newt->ntaxa=0;
     for(int taxa_left=ntaxa; taxa_left > 0; taxa_left--){
         int r = rand() % taxa_left;
@@ -342,7 +342,7 @@ int _fill_branch_list_recursive(Tree *t, int *branch_list, Node *current_node, i
 
 
 int *get_branch_list(Tree *t){
-    int *branch_list = malloc(sizeof(int)*2*(2*t->ntaxa - 2));
+    int *branch_list = (int *)malloc(sizeof(int)*2*(2*t->ntaxa - 2));
     assert(branch_list !=NULL);
     int final_branch = _fill_branch_list_recursive(t, branch_list, t->root_node, 0);
     if (DEBUG >= 1) printf("Final branch_count = %i\n", final_branch);
@@ -381,7 +381,7 @@ void copy_nodes_recur(Tree *orig_tree, Node *orig_tree_node, Node *subtree_node)
     subtree_node->id = orig_tree_node->id;
     //subtree_node->anc = orig_tree_node->anc;
     if (orig_tree_node->desc1 != NULL){
-        Node *new_desc1 = malloc(sizeof(Node));
+        Node *new_desc1 = (Node *)malloc(sizeof(Node));
         new_desc1->anc = subtree_node;
         subtree_node->desc1 = new_desc1;
         copy_nodes_recur(orig_tree, orig_tree_node->desc1, new_desc1);
@@ -389,7 +389,7 @@ void copy_nodes_recur(Tree *orig_tree, Node *orig_tree_node, Node *subtree_node)
         subtree_node->desc1 = NULL;
     }
     if (orig_tree_node->desc2 != NULL){
-        Node *new_desc2 = malloc(sizeof(Node));
+        Node *new_desc2 = (Node *)malloc(sizeof(Node));
         new_desc2->anc = subtree_node;
         subtree_node->desc2 = new_desc2;
         copy_nodes_recur(orig_tree, orig_tree_node->desc2, new_desc2);
@@ -400,12 +400,12 @@ void copy_nodes_recur(Tree *orig_tree, Node *orig_tree_node, Node *subtree_node)
 
 
 Tree *copy_tree(Tree *orig_tree){
-    Tree *new_tree = malloc(sizeof(Tree));
+    Tree *new_tree = (Tree *)malloc(sizeof(Tree));
     if (DEBUG >= 1) printf("Copying ntaxa\n");
     new_tree->ntaxa = orig_tree->ntaxa;
     if (DEBUG >= 1) printf("Copied ntaxa\n");
     if (orig_tree->root_node != NULL){
-        Node *new_root_node = malloc(sizeof(Node));
+        Node *new_root_node = (Node *)malloc(sizeof(Node));
         new_tree->root_node = new_root_node;
         new_tree->root_node->anc = NULL;
         copy_nodes_recur(orig_tree, orig_tree->root_node, new_root_node);
@@ -420,7 +420,7 @@ void copy_nodes_inc_recur(Tree *orig_tree, Node *orig_tree_node, Node *subtree_n
     subtree_node->id = orig_tree_node->id+20;
     //subtree_node->anc = orig_tree_node->anc;
     if (orig_tree_node->desc1 != NULL){
-        Node *new_desc1 = malloc(sizeof(Node));
+        Node *new_desc1 = (Node *)malloc(sizeof(Node));
         new_desc1->anc = subtree_node;
         subtree_node->desc1 = new_desc1;
         copy_nodes_inc_recur(orig_tree, orig_tree_node->desc1, new_desc1);
@@ -428,7 +428,7 @@ void copy_nodes_inc_recur(Tree *orig_tree, Node *orig_tree_node, Node *subtree_n
         subtree_node->desc1 = NULL;
     }
     if (orig_tree_node->desc2 != NULL){
-        Node *new_desc2 = malloc(sizeof(Node));
+        Node *new_desc2 = (Node *)malloc(sizeof(Node));
         new_desc2->anc = subtree_node;
         subtree_node->desc2 = new_desc2;
         copy_nodes_inc_recur(orig_tree, orig_tree_node->desc2, new_desc2);
@@ -439,12 +439,12 @@ void copy_nodes_inc_recur(Tree *orig_tree, Node *orig_tree_node, Node *subtree_n
 
 
 Tree *copy_tree_inc(Tree *orig_tree){
-    Tree *new_tree = malloc(sizeof(Tree));
+    Tree *new_tree = (Tree *) malloc(sizeof(Tree));
     if (DEBUG >= 1) printf("Copying ntaxa\n");
     new_tree->ntaxa = orig_tree->ntaxa;
     if (DEBUG >= 1) printf("Copied ntaxa\n");
     if (orig_tree->root_node != NULL){
-        Node *new_root_node = malloc(sizeof(Node));
+        Node *new_root_node = (Node *)malloc(sizeof(Node));
         new_tree->root_node = new_root_node;
         copy_nodes_inc_recur(orig_tree, orig_tree->root_node, new_root_node);
     } else{
@@ -497,8 +497,8 @@ void split_tree(Tree *t, int anc_id, int des_id, Tree *subtree_array[2]){
     if (DEBUG >= 1) print_nodes(copy_of_tree, copy_of_tree->root_node);
     if (DEBUG >= 1) printf("\n");
     tree_is_correct(copy_of_tree);
-    Tree *subtree1 = malloc(sizeof(Tree));
-    Tree *subtree2 = malloc(sizeof(Tree));
+    Tree *subtree1 = (Tree *)malloc(sizeof(Tree));
+    Tree *subtree2 = (Tree *)malloc(sizeof(Tree));
     
     
     if (DEBUG >= 1) printf("Created subtrees via malloc, finding node to remove with id: %i\n", anc_id);
@@ -573,12 +573,12 @@ Tree *join_trees(Tree *st1, Tree *st2, int sister_id, int new_node_id){ // inser
     Tree *subt2 = copy_tree(st2);
     if (DEBUG >= 1) printf("\nChecking subtree 2\n");
     tree_is_correct(subt2);
-    Tree *joined_tree = malloc(sizeof(Tree));
+    Tree *joined_tree = (Tree *)malloc(sizeof(Tree));
     assert(subt1->ntaxa > 1 && "Cannot spr on size 1 tree");
     Node *sister = NULL;
     sister = find_node(subt1, sister_id, subt1->root_node, sister);
     if (DEBUG >= 1) printf("Joining trees, to sister node %i\n", sister_id);
-    Node *new_internal_node = malloc(sizeof(Node));
+    Node *new_internal_node = (Node *)malloc(sizeof(Node));
     new_internal_node->id = new_node_id;
     Node *sisters_anc = sister->anc;
     if (sisters_anc == NULL){
@@ -659,7 +659,7 @@ void reroot_branch(Tree *t, int branch_anc, int branch_des){
     
     if (old_root != anc_node){
         if (DEBUG >= 1) printf("Tree needs rerooting...\n");
-        Node *new_root = malloc(sizeof(Node));
+        Node *new_root = (Node *)malloc(sizeof(Node));
         if (DEBUG >= 1) printf("Created new root node\n");
         
         new_root->anc = NULL;

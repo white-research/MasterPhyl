@@ -6,7 +6,7 @@
 
 
 Partition *create_partition(int d, int c, int t, int *segs, float **s){
-    Partition *new_partition = malloc(sizeof(Partition));
+    Partition *new_partition = (Partition *) malloc(sizeof(Partition));
     assert(new_partition != NULL);
     
     new_partition->data_type = d;
@@ -20,7 +20,7 @@ Partition *create_partition(int d, int c, int t, int *segs, float **s){
 
 
 Matrix *create_matrix(int t, int c){
-    Matrix *new_matrix = malloc(sizeof(Matrix));
+    Matrix *new_matrix = (Matrix *) malloc(sizeof(Matrix));
     assert(new_matrix != NULL);
     
     new_matrix->ntaxa = t;
@@ -110,7 +110,7 @@ Matrix *make_matrix(int ntaxa, int nchar, int npart, int part_types[], int chars
             int taxon_start_tracker = 0;
             for (int idx=0; idx<ntaxa; idx++){
                 printf("On taxon %i :", idx);
-                states = malloc(sizeof(float)*chars_per_part[p_count]*2);
+                states = (float *) malloc(sizeof(float)*chars_per_part[p_count]*2);
                 assert(states != NULL);
                 for (int idx2 = 0; idx2 < chars_per_part[p_count]*2; idx2++) {
                     states[idx2] = all_states[partition_start+taxon_start_tracker+idx2];
@@ -138,7 +138,7 @@ Matrix *make_matrix(int ntaxa, int nchar, int npart, int part_types[], int chars
         else {
             float **seq_array = (float **)malloc( ntaxa * sizeof(float *));
             assert(seq_array != NULL);
-            int *segs = malloc(sizeof(int)*ntaxa), taxon_length;
+            int *segs = (int *) malloc(sizeof(int)*ntaxa), taxon_length;
             assert(segs != NULL);
             int partition_length = 0; // track total length of partition and where each taxon starts
             for (int idx=0; idx<ntaxa; idx++){ // loop through taxa
@@ -146,7 +146,7 @@ Matrix *make_matrix(int ntaxa, int nchar, int npart, int part_types[], int chars
                 segs[idx]=segs_per_taxon_per_part[idx+p_count*ntaxa]; // record number of segments in taxon
                 taxon_length = segs_per_taxon_per_part[idx+p_count*ntaxa]*chars_per_part[p_count]*2;
                 
-                float *states = malloc(sizeof(float)*taxon_length);
+                float *states = (float *)malloc(sizeof(float)*taxon_length);
                 assert(states != NULL);
                 for (int idx2 = 0; idx2 < taxon_length; idx2++) {
                     states[idx2] = all_states[partition_start+partition_length+idx2];

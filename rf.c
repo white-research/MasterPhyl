@@ -8,7 +8,7 @@
 #define DEBUG 0
 
 int *relabel_tree(Tree *t){
-    int *labels = malloc(sizeof(int)*t->ntaxa);
+    int *labels = (int *)malloc(sizeof(int)*t->ntaxa);
     Node *node = t->root_node;
     if (DEBUG >= 1) printf("\nRoot node is %i\n", node->id);
     while (node->desc1 != NULL){
@@ -88,7 +88,7 @@ void tree_clusters_downpass(Tree *t, Node *node, int *labels, int **clusters){
         if (node->desc1->desc1 == NULL){ // if tip node
             if (DEBUG >= 1) printf(" Making array for tip node %i\n", node->desc1->id);
             assert(node->desc1->desc2 == NULL);
-            d1 = malloc(sizeof(int)*(t->ntaxa));
+            d1 = (int *)malloc(sizeof(int)*(t->ntaxa));
             for (int i=0; i<t->ntaxa; i++){
                 if (i == labels[node->desc1->id]){
                     d1[i] = 1;
@@ -103,7 +103,7 @@ void tree_clusters_downpass(Tree *t, Node *node, int *labels, int **clusters){
         
         if (node->desc2->desc1 == NULL){
             assert(node->desc2->desc2 == NULL);
-            d2 = malloc(sizeof(int)*(t->ntaxa));
+            d2 = (int *)malloc(sizeof(int)*(t->ntaxa));
             for (int i=0; i<t->ntaxa; i++){
                 if (i == labels[node->desc2->id]){
                     d2[i] = 1;
@@ -116,7 +116,7 @@ void tree_clusters_downpass(Tree *t, Node *node, int *labels, int **clusters){
             d2 = clusters[node->desc2->id];
         }
         
-        int *this_node = malloc(sizeof(int)*(t->ntaxa));
+        int *this_node = (int *)malloc(sizeof(int)*(t->ntaxa));
         for (int i=0; i<t->ntaxa; i++){
             if (d1[i]==1 || d2[i]==1){
                 this_node[i]=1;
@@ -140,7 +140,7 @@ int check_tree_diff(int *labels, int *cluster_list, Tree *t2, Node *node, int **
         if (node->desc1->desc1 == NULL){ // if tip node
             if (DEBUG >= 1) printf(" Making array for tip node %i\n", node->desc1->id);
             assert(node->desc1->desc2 == NULL);
-            d1 = malloc(sizeof(int)*(t2->ntaxa));
+            d1 = (int *)malloc(sizeof(int)*(t2->ntaxa));
             for (int i=0; i<t2->ntaxa; i++){
                 if (i == labels[node->desc1->id]){
                     d1[i] = 1;
@@ -156,7 +156,7 @@ int check_tree_diff(int *labels, int *cluster_list, Tree *t2, Node *node, int **
         if (node->desc2->desc1 == NULL){
             if (DEBUG >= 1) printf(" Making array for tip node %i\n", node->desc2->id);
             assert(node->desc2->desc2 == NULL);
-            d2 = malloc(sizeof(int)*(t2->ntaxa));
+            d2 = (int *)malloc(sizeof(int)*(t2->ntaxa));
             for (int i=0; i<t2->ntaxa; i++){
                 if (i == labels[node->desc2->id]){
                     d2[i] = 1;
@@ -169,7 +169,7 @@ int check_tree_diff(int *labels, int *cluster_list, Tree *t2, Node *node, int **
             d2 = clusters[node->desc2->id];
         }
         
-        int *this_node = malloc(sizeof(int)*(t2->ntaxa));
+        int *this_node = (int *)malloc(sizeof(int)*(t2->ntaxa));
         if (DEBUG >= 1) printf(" Making array for inner node %i\n", node->id);
         for (int i=0; i<t2->ntaxa; i++){
             if (d1[i]==1 || d2[i]==1){
@@ -226,7 +226,7 @@ int compare_clusters(int *clusters1, int *clusters2, int nclusters){
 
 int trees_different(Tree *t1, Tree *t2){
     int *t2_labels = relabel_tree(t2);
-    int **t2_clusters = malloc(sizeof(int *)*(2*t2->ntaxa-1));
+    int **t2_clusters = (int **)malloc(sizeof(int *)*(2*t2->ntaxa-1));
     tree_clusters_downpass(t2, t2->root_node, t2_labels, t2_clusters);
     for (int i=0; i<2*t2->ntaxa-1; i++){
         for (int j = 0; j < t2->ntaxa; j++){
@@ -235,7 +235,7 @@ int trees_different(Tree *t1, Tree *t2){
         //printf("\n");
     }
     
-    int *t2_cluster_list = malloc(sizeof(int)*2*( (2*t2->ntaxa-1) - t2->ntaxa));
+    int *t2_cluster_list = (int *)malloc(sizeof(int)*2*( (2*t2->ntaxa-1) - t2->ntaxa));
     
     //printf("Length of clusters is %i\n", 2*( (2*t2->ntaxa-1) - t2->ntaxa));
     
@@ -247,14 +247,14 @@ int trees_different(Tree *t1, Tree *t2){
     //}
     //printf("\n");
     
-    int **t1_clusters = malloc(sizeof(int *)*(2*t1->ntaxa-1));
+    int **t1_clusters = (int **)malloc(sizeof(int *)*(2*t1->ntaxa-1));
     for (int i = 0; i < (2*t1->ntaxa-1); i++){
             t1_clusters[i] = NULL;
         }
     //printf("\nStarting difference check\n");
     int is_diff = check_tree_diff(t2_labels, t2_cluster_list, t1, t1->root_node, t1_clusters);
     if (is_diff == 1){
-        int *t1_cluster_list = malloc(sizeof(int)*2*( (2*t1->ntaxa-1) - t1->ntaxa));
+        int *t1_cluster_list = (int *)malloc(sizeof(int)*2*( (2*t1->ntaxa-1) - t1->ntaxa));
         
         tree_clusters_process(t1, t1_clusters, t1_cluster_list);
         is_diff = compare_clusters(t1_cluster_list, t2_cluster_list, t1->ntaxa-1);
@@ -354,23 +354,4 @@ void main(void){
 
 
 */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
