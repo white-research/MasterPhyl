@@ -4,7 +4,7 @@
 #include <time.h>
 
 #include "matrix.h"
-#include "tree.h"
+#include "tree-orig.h"
 #include "dynamic_homology.h"
 #include "rf.h"
 #include "output.h"

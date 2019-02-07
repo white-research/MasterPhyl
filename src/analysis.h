@@ -2,7 +2,7 @@
 #define _analysis_h
 
 #include "matrix.h"
-#include "tree.h"
+#include "tree-orig.h"
 
 extern TreeSet spr(Tree *start_tree, Matrix *m, float current_best_cost, int max_trees);
 extern TreeSet run_analysis(Matrix *m, int spr_rounds, int max_trees);

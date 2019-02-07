@@ -3,7 +3,7 @@
 #include <string.h>
 #include <memory.h>
 
-#include "tree.h"
+#include "tree-orig.h"
 
 
 char *to_newick(Tree *t, Node *n){

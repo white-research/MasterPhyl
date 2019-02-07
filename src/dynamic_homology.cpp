@@ -3,7 +3,7 @@
 #include <assert.h>
 
 #include "matrix.h"
-#include "tree.h"
+#include "tree-orig.h"
 
 #define DEBUG 0 //0 means no debugging output, 1 means basic debugging, 2 means detailed debugging
 

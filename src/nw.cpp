@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
-#include "tree.h"
+#include "tree-orig.h"
 #include "nw.h"
 
 #define DEBUG 0 //0 means no debugging output, 1 means basic debugging, 2 means detailed debugging

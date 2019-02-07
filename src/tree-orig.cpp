@@ -3,7 +3,7 @@
 #include <assert.h>
 #include <stdbool.h>
 
-#include "tree.h"
+#include "tree-orig.h"
 
 #define DEBUG 0
 
@@ -816,6 +816,8 @@ int get_ancestor(int node, int phyl[], int num_vertices)
     return is_root;
 }
 
-
+int main(){
+    return 0;
+}
 
 

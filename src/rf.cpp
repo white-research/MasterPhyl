@@ -3,7 +3,7 @@
 #include <assert.h>
 #include <time.h>
 
-#include "tree.h"
+#include "tree-orig.h"
 
 #define DEBUG 0
 
