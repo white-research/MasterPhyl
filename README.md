@@ -1,18 +1,21 @@
 # README #
 
-MDH (Morphological Dynamic Homology) is a program for phylogenetic analysis of serially homologous morphological characters.
+MasterPhyl is a program for phylogenetic analysis of serially homologous 
+morphological characters.
 
-### MDH ###
+Note: MasterPhyl is currently being rewritten in C++. The original C version can
+be found in the legacy-c-version branch.
 
-* Version 0.9
+### Version ###
+
+* 0.10.0
 
 ### How do I get set up? ###
 
-* Clone Git repository: git clone https://bitbucket.org/DominicWhite/dynamic_homology.git
-* Compile C: make libdh.so
-* Put the matrix file in the source directory.
-* Edit the configuration settings at the top of the main.py file
-* Run the main.py file: python main.py
+* Clone Git repository: `git clone https://github.com/dominicwhite/masterphyl.git`
+* Configure using CMake: `cmake -H. -B_builds/Release -DCMAKE_BUILD_TYPE=Release`
+* Build: `cmake --build _builds/Debug`
+* Run tests: `./_builds/Debug/tests/unit_tests/Unit_Tests_run`
 
 ### Who do I talk to? ###
 
