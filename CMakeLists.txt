@@ -1,12 +1,25 @@
 cmake_minimum_required(VERSION 3.10)
-project(MasterPhyl)
-
+project(MasterPhyl
+        VERSION 0.10.0)
 set(CMAKE_CXX_STANDARD 11)
 
-add_library(${CMAKE_PROJECT_NAME}  src/matrix.cpp src/tree.cpp src/rf.cpp src/dynamic_homology.cpp src/output.cpp src/analysis.cpp)
 
-#
-#include_directories(src)
-#
-#add_subdirectory(src)
+########################################
+## BUILD MASTERPHYL CORE LIBRARY CODE ##
+########################################
+add_subdirectory(lib)
+
+########################################
+## BUILD SHARED MASTERPHYL LIBRARY #####
+########################################
+add_library(masterphyl SHARED lib/masterphyl_shared.cpp)
+target_link_libraries(masterphyl masterphyl_core)
+
+########################################
+## BUILD MASTERPHYL EXECUTABLE #########
+########################################
+add_executable(${CMAKE_PROJECT_NAME}  app/mock_main.cpp)
+
+
+
 add_subdirectory(tests)

@@ -3,7 +3,7 @@
 //
 
 #include "gtest/gtest.h"
-#include "../../src/tree.h"
+#include "../../lib/tree/tree.h"
 
 
 TEST(Example, Equals) {
