@@ -21,5 +21,7 @@ target_link_libraries(masterphyl masterphyl_core)
 add_executable(${CMAKE_PROJECT_NAME}  app/mock_main.cpp)
 
 
-
-add_subdirectory(tests)
+set(MasterPhyl_BUILD_TESTS "True" CACHE STRING "Build tests")
+if(MasterPhyl_BUILD_TESTS STREQUAL "True")
+  add_subdirectory(tests)
+endif()
