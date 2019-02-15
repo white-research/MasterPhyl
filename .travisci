@@ -1,0 +1,2 @@
+language: cpp
+script: cmake -H. -B_builds/Debug -DCMAKE_BUILD_TYPE=Debug && cmake --build _builds/Debug
