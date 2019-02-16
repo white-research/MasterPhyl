@@ -20,6 +20,9 @@ public:
     Tree();
 
 //    void add_node(Node* new_node, int parent_node);
+
+    int getNTaxa();
+    void addTipNode();
 };
 
 //class TreeSet
