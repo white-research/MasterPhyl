@@ -1,3 +1,16 @@
 language: cpp
-dist: xenial
+
+branches:
+  only:
+    - master
+
+matrix:
+  include:
+    # works on Precise and Trusty
+    - os: linux
+      dist: xenial
+      compiler:
+        - clang
+        - gcc
+
 script: cmake -H. -B_builds/Debug -DCMAKE_BUILD_TYPE=Debug && cmake --build _builds/Debug
