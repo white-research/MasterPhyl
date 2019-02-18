@@ -7,11 +7,6 @@ Node::Node(int id, Node *a, Node *d1, Node *d2) :id{id}, anc{a}, desc1{d1}, desc
 
 Tree::Tree() :ntips{0}, nnodes{0}, nbranches{0}, max_id{0} {}
 
-
-int Tree::getNTips() {
-    return ntips;
-}
-
 int Tree::addTipRandomly() {
     if (ntips == 0) {
         root_node = new Node(++max_id, nullptr, nullptr, nullptr);

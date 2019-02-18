@@ -14,15 +14,18 @@ public:
 class Tree {
 private:
     int max_id, ntips, nnodes, nbranches;
+
     int insertNodeAtBranch(int insert_number, int current_branch, Node* anc, Node* desc);
+
 public:
     Node *root_node; // *first_taxon -> present in original implementation...
 
     Tree();
 
-//    void add_node(Node* new_node, int parent_node);
+    int getNTips() {return ntips;};
+    int getNBranches() {return nbranches;};
+    int getNNodes() {return nnodes;};
 
-    int getNTips();
     int addTipRandomly();
 };
 
