@@ -24,21 +24,27 @@ TEST(TreeTests, CreateEmptyTree) {
 
 TEST(TreeTests, AddRootToEmptyTree) {
     Tree testTree = Tree();
-    testTree.addTipRandomly();
+    int tip_id = testTree.addTipRandomly();
     EXPECT_EQ(testTree.getNTips(), 1);
+    EXPECT_EQ(tip_id, 1);
 }
 
 TEST(TreeTests, CreateTwoTipTree) {
     Tree testTree = Tree();
-    testTree.addTipRandomly();
-    testTree.addTipRandomly();
+    int tip_id = testTree.addTipRandomly();
+    EXPECT_EQ(tip_id, 1);
+    tip_id = testTree.addTipRandomly();
+    EXPECT_EQ(tip_id, 3);
     EXPECT_EQ(testTree.getNTips(), 2);
 }
 
 TEST(TreeTests, CreateThreeTipTree) {
     Tree testTree = Tree();
-    testTree.addTipRandomly();
-    testTree.addTipRandomly();
-    testTree.addTipRandomly();
+    int tip_id = testTree.addTipRandomly();
+    EXPECT_EQ(tip_id, 1);
+    tip_id = testTree.addTipRandomly();
+    EXPECT_EQ(tip_id, 3);
+    tip_id = testTree.addTipRandomly();
+    EXPECT_EQ(tip_id, 5);
     EXPECT_EQ(testTree.getNTips(), 3);
 }

@@ -8,7 +8,7 @@ public:
     Node *anc, *desc1, *desc2;
 
     Node(int id, Node *a, Node *d1, Node *d2);
-    int get_id();
+    int get_id(){return id;}
 };
 
 class Tree {
@@ -23,7 +23,7 @@ public:
 //    void add_node(Node* new_node, int parent_node);
 
     int getNTips();
-    void addTipRandomly();
+    int addTipRandomly();
 };
 
 //class TreeSet
