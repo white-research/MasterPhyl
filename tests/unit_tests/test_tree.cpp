@@ -31,6 +31,7 @@ TEST(TreeTests, AddRootToEmptyTree) {
     EXPECT_EQ(testTree.getNBranches(), 0);
     EXPECT_EQ(testTree.getNNodes(), 1);
     EXPECT_EQ(tip_id, 1);
+    EXPECT_EQ(testTree.getRootID(), 1);
 }
 
 TEST(TreeTests, CreateTwoTipTree) {
@@ -41,6 +42,7 @@ TEST(TreeTests, CreateTwoTipTree) {
     EXPECT_EQ(testTree.getNTips(), 2);
     EXPECT_EQ(testTree.getNBranches(), 2);
     EXPECT_EQ(testTree.getNNodes(), 3);
+    EXPECT_EQ(testTree.getRootID(), 2);
 }
 
 TEST(TreeTests, CreateThreeTipTree) {
@@ -52,4 +54,5 @@ TEST(TreeTests, CreateThreeTipTree) {
     EXPECT_EQ(testTree.getNTips(), 3);
     EXPECT_EQ(testTree.getNBranches(), 4);
     EXPECT_EQ(testTree.getNNodes(), 5);
+    EXPECT_EQ(testTree.getRootID(), 2);
 }
