@@ -10,6 +10,8 @@ be found in the legacy-c-version branch.
 
 * 0.10.0
 
+[![Build Status](https://travis-ci.org/dominicwhite/MasterPhyl.svg?branch=master)](https://travis-ci.org/dominicwhite/MasterPhyl)
+
 ### How do I get set up? ###
 
 Requires CMake >= 3.10
@@ -23,6 +25,25 @@ To build for debugging:
 * Configure using CMake: `cmake -H. -B_builds/Debug -DCMAKE_BUILD_TYPE=Debug`
 * Build: `cmake --build _builds/Debug`
 * Run tests: `./_builds/Debug/tests/unit_tests/Unit_Tests_run`
+
+### Contibuting ###
+
+MasterPhyl follows the Google C++ style guide, and uses the following Git commit message conventions:
+
+FEAT	for new feature implementing commit
+FIX	for bug fix commit
+SECURE	for security issue fix commit
+PERF	for performance issue fix commit
+REFACT	for refactoring commit
+DOCS	for documentation commit
+EXAMPLE	for example code commit
+TEST	for testing commit
+DEPEND	for dependencies upgrading or downgrading commit
+CONFIG	for configuration commit
+BUILD	for packaging or bundling commit
+RELEASE	for publishing commit
+WIP	for work in progress commit
+CHORE	for other operations commit
 
 ### Who do I talk to? ###
 
