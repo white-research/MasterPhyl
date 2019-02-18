@@ -13,7 +13,8 @@ public:
 
 class Tree {
 private:
-    int max_id, ntaxa;
+    int max_id, ntips, nnodes, nbranches;
+    int insertNodeAtBranch(int insert_number, int current_branch, Node* anc, Node* desc);
 public:
     Node *root_node; // *first_taxon -> present in original implementation...
 
@@ -21,8 +22,8 @@ public:
 
 //    void add_node(Node* new_node, int parent_node);
 
-    int getNTaxa();
-    void addTipNode();
+    int getNTips();
+    void addTipRandomly();
 };
 
 //class TreeSet

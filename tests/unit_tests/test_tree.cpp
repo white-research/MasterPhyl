@@ -19,11 +19,26 @@ TEST(Example, NullNode_Test) {
 
 TEST(TreeTests, CreateEmptyTree) {
     Tree testTree = Tree();
-    EXPECT_EQ(testTree.getNTaxa(), 0);
+    EXPECT_EQ(testTree.getNTips(), 0);
 }
 
 TEST(TreeTests, AddRootToEmptyTree) {
     Tree testTree = Tree();
-    testTree.addTipNode();
-    EXPECT_EQ(testTree.getNTaxa(), 1);
+    testTree.addTipRandomly();
+    EXPECT_EQ(testTree.getNTips(), 1);
+}
+
+TEST(TreeTests, CreateTwoTipTree) {
+    Tree testTree = Tree();
+    testTree.addTipRandomly();
+    testTree.addTipRandomly();
+    EXPECT_EQ(testTree.getNTips(), 2);
+}
+
+TEST(TreeTests, CreateThreeTipTree) {
+    Tree testTree = Tree();
+    testTree.addTipRandomly();
+    testTree.addTipRandomly();
+    testTree.addTipRandomly();
+    EXPECT_EQ(testTree.getNTips(), 3);
 }
