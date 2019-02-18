@@ -1,11 +1,13 @@
+#include <array>
 #include <random>
+
 
 #include "tree.h"
 
 Node::Node(int id, Node *a, Node *d1, Node *d2) :id{id}, anc{a}, desc1{d1}, desc2{d2} {}
 
 
-Tree::Tree() :ntips{0}, nnodes{0}, nbranches{0}, max_id{0} {}
+Tree::Tree() :ntips{0}, nnodes{0}, nbranches{0}, max_id{0}, root_node{nullptr} {}
 
 int Tree::addTipRandomly() {
     if (ntips == 0) {
@@ -63,4 +65,31 @@ int Tree::insertNodeAtBranch(int insert_number, int current_branch, Node* anc, N
             return count;
         }
     }
+}
+
+int Tree::getRootID() {
+    if (!root_node){ return 0; }
+    return root_node->get_id();
+}
+
+void parseTree(std::vector<std::array<int, 2>> * branchList, Node * currentNode)
+{
+    if (currentNode->desc1 != nullptr) {
+        std::array<int, 2> branch1 = {currentNode->get_id(), currentNode->desc1->get_id()};
+        branchList->push_back(branch1);
+        parseTree(branchList, currentNode->desc1);
+    }
+    if (currentNode->desc2 != nullptr) {
+        std::array<int, 2> branch2 = {currentNode->get_id(), currentNode->desc2->get_id()};
+        branchList->push_back(branch2);
+        parseTree(branchList, currentNode->desc2);
+    }
+}
+
+std::vector<std::array<int, 2>> * Tree::getBranchList()
+{
+    if (!root_node) return nullptr;
+    std::vector<std::array<int, 2>> * branchList = new std::vector<std::array<int, 2>>;
+    parseTree(branchList, root_node);
+    return branchList;
 }

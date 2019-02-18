@@ -25,7 +25,8 @@ public:
     int getNTips() {return ntips;};
     int getNBranches() {return nbranches;};
     int getNNodes() {return nnodes;};
-    int getRootID() {return root_node->get_id();}
+    int getRootID();
+    std::vector<std::array<int, 2>> * getBranchList();
 
     int addTipRandomly();
 };
