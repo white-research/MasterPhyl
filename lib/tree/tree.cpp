@@ -5,9 +5,21 @@
 #include "tree.h"
 
 Node::Node(int id, Node *a, Node *d1, Node *d2) :id{id}, anc{a}, desc1{d1}, desc2{d2} {}
-
+Node::~Node()
+{
+    delete desc1;
+    desc1 = 0;
+    delete desc2;
+    desc2 = 0;
+}
 
 Tree::Tree() :ntips{0}, nnodes{0}, nbranches{0}, max_id{0}, root_node{nullptr} {}
+
+Tree::~Tree()
+{
+    delete root_node;
+    root_node = 0;
+}
 
 int Tree::addTipRandomly() {
     if (ntips == 0) {

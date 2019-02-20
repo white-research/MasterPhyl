@@ -8,6 +8,7 @@ public:
     Node *anc, *desc1, *desc2;
 
     Node(int id, Node *a, Node *d1, Node *d2);
+    ~Node(); // Note: deletes recursively (deleting its descendents before itself)
     int get_id(){return id;}
 };
 
@@ -21,6 +22,7 @@ private:
 public:
 
     Tree();
+    ~Tree();
 //TODO: copy constructor
 //TODO: destructor
 
@@ -28,6 +30,7 @@ public:
     int getNBranches() {return nbranches;};
     int getNNodes() {return nnodes;};
     int getRootID();
+    Node* getRootNode(){return root_node;};
     std::vector<std::array<int, 2>> * getBranchList();
 
     int addTipRandomly();

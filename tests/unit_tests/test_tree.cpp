@@ -77,3 +77,13 @@ TEST(TreeTests, TwoBranchListFromTree){
     EXPECT_EQ(branch2[0], 2);
     EXPECT_EQ(branch2[1], 3);
 }
+
+TEST(TreeTests, DestroyTree){
+    Tree *testTree = new Tree();
+    testTree->addTipRandomly();
+    testTree->addTipRandomly();
+    testTree->addTipRandomly();
+    Node *root = testTree->getRootNode();
+    delete testTree;
+    EXPECT_EQ(root, nullptr);
+}
