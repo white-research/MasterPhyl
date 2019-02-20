@@ -64,30 +64,21 @@ TEST(TreeTests, CreateThreeTipTree) {
 
 TEST(TreeTests, NullBranchListFromEmptyTree){
     Tree testTree = Tree();
-    EXPECT_EQ(testTree.getBranchList(), nullptr);
+    auto *bl = testTree.getBranchList();
+    EXPECT_EQ(bl->size(), 0);
 }
 
-//TEST(TreeTests, TwoBranchListFromTree){
-//    Tree testTree = Tree();
-//    testTree.addTipRandomly();
-//    testTree.addTipRandomly();
-//    std::vector<std::array<int, 2>> *branchList = testTree.getBranchList();
-//    EXPECT_EQ(branchList->size(), 2);
-//    // Check that branches are correct:
-//    std::array<int, 2> branch1 = (*branchList)[0];
-//    EXPECT_EQ(branch1[0], 2);
-//    EXPECT_EQ(branch1[1], 1);
-//    std::array<int, 2> branch2 = (*branchList)[1];
-//    EXPECT_EQ(branch2[0], 2);
-//    EXPECT_EQ(branch2[1], 3);
-//}
-//
-////TEST(TreeTests, DestroyTree){
-////    Tree *testTree = new Tree();
-////    testTree->addTipRandomly();
-////    testTree->addTipRandomly();
-////    testTree->addTipRandomly();
-////    Node *root = testTree->getRootNode();
-////    delete testTree;
-////    EXPECT_EQ(static_cast<bool>(testTree), false);
-////}
+TEST(TreeTests, TwoBranchListFromTree){
+    Tree testTree = Tree();
+    testTree.addTipRandomly();
+    testTree.addTipRandomly();
+    std::vector<std::array<int, 2>> *branchList = testTree.getBranchList();
+    EXPECT_EQ(branchList->size(), 2);
+    // Check that branches are correct:
+    std::array<int, 2> branch1 = (*branchList)[0];
+    EXPECT_EQ(branch1[0], 2);
+    EXPECT_EQ(branch1[1], 1);
+    std::array<int, 2> branch2 = (*branchList)[1];
+    EXPECT_EQ(branch2[0], 2);
+    EXPECT_EQ(branch2[1], 3);
+}

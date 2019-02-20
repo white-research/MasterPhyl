@@ -141,8 +141,9 @@ void parseTree(std::vector<std::array<int, 2>> * branchList, const std::shared_p
 
 std::vector<std::array<int, 2>> * Tree::getBranchList()
 {
-    if (!root_node) return nullptr;
-    std::vector<std::array<int, 2>> * branchList = new std::vector<std::array<int, 2>>;
-    parseTree(branchList, root_node);
+    auto * branchList = new std::vector<std::array<int, 2>>;
+    if (root_node != nullptr) {
+        parseTree(branchList, root_node);
+    }
     return branchList;
 }
