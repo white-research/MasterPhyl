@@ -94,7 +94,7 @@ int Tree::insertNodeAtBranch(int insert_number, int current_branch, std::shared_
 }
 
 
-void parseTree(std::vector<std::array<int, 2>> * branchList, std::shared_ptr<Node> currentNode)
+void parseTree(std::vector<std::array<int, 2>> * branchList, const std::shared_ptr<Node>& currentNode)
 {
     if (currentNode->desc1 != nullptr) {
         std::array<int, 2> branch1 = {currentNode->get_id(), currentNode->desc1->get_id()};
