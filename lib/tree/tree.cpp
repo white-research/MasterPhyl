@@ -30,6 +30,26 @@ Tree::Tree()
 }
 
 
+void deleteTree(const std::shared_ptr<Node>& n)
+{
+    if (n->desc1 != nullptr) {
+        deleteTree(n->desc1);
+        n->desc1 = nullptr;
+    }
+    if (n->desc2 != nullptr) {
+        deleteTree(n->desc2);
+        n->desc2 = nullptr;
+    }
+    n->anc = nullptr;
+}
+
+
+Tree::~Tree(){
+    if (root_node != nullptr)
+        deleteTree(root_node);
+}
+
+
 int Tree::getRootID() {
     if (!root_node){ return 0; }
     return root_node->get_id();

@@ -26,7 +26,7 @@ private:
 public:
 
     Tree();
-//    ~Tree()=default;
+    ~Tree();
 ////TODO: copy constructor
 ////TODO: destructor
 //
