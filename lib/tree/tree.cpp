@@ -112,11 +112,14 @@ int Tree::insertNodeAtBranch(int insert_number, int current_branch, std::shared_
         return current_branch;
     }
     else {
-        int count = insertNodeAtBranch(insert_number, current_branch+1, desc, desc->desc1);
-        if (count < insert_number){
-            count = insertNodeAtBranch(insert_number, count+1, desc, desc->desc2);
+        if (desc->hasDescendents()) {
+            int count = insertNodeAtBranch(insert_number, current_branch + 1, desc, desc->desc1);
+            if (count < insert_number) {
+                count = insertNodeAtBranch(insert_number, count + 1, desc, desc->desc2);
+            }
+            return count;
         }
-        return count;
+        return current_branch;
     }
 }
 
