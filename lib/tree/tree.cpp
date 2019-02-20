@@ -51,7 +51,8 @@ int Tree::addTipRandomly() {
         nbranches += 2;
         return new_tip->get_id();
     } else {
-        std::default_random_engine generator;
+        std::random_device dev;
+        std::default_random_engine generator(dev());
         std::uniform_int_distribution<int> distribution(1, nbranches);
         int insertion_branch = distribution(generator);
         int count = insertNodeAtBranch(insertion_branch, 1, root_node, root_node->desc1);
