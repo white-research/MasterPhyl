@@ -23,6 +23,13 @@ Node::Node(int id, std::shared_ptr<Node> a, std::shared_ptr<Node> d1, std::share
 }
 
 
+bool Node::hasDescendents()
+{
+    if(desc1) return true;
+    return false;
+}
+
+
 Tree::Tree()
 :max_id{0}, ntips{0}, nnodes{0}, nbranches{0}
 {

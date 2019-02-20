@@ -14,6 +14,8 @@ public:
     ~Node()=default; // Note: deletes recursively (deleting its descendents before itself)
 
     int get_id(){return id;}
+
+    bool hasDescendents();
 };
 
 class Tree {
