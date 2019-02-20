@@ -1,36 +1,50 @@
 #include <array>
+#include <memory>
 #include <random>
-
 
 #include "tree.h"
 
-Node::Node(int id, Node *a, Node *d1, Node *d2) :id{id}, anc{a}, desc1{d1}, desc2{d2} {}
-Node::~Node()
+
+Node::Node(int id)
+:id{id}
 {
-    delete desc1;
-    desc1 = 0;
-    delete desc2;
-    desc2 = 0;
+    anc = nullptr;
+    desc1 = nullptr;
+    desc2 = nullptr;
 }
 
-Tree::Tree() :ntips{0}, nnodes{0}, nbranches{0}, max_id{0}, root_node{nullptr} {}
 
-Tree::~Tree()
+Node::Node(int id, std::shared_ptr<Node> a, std::shared_ptr<Node> d1, std::shared_ptr<Node> d2)
+:id{id}
 {
-    delete root_node;
-    root_node = 0;
+    anc = a;
+    desc1 = d1;
+    desc2 = d2;
+}
+
+
+Tree::Tree()
+:max_id{0}, ntips{0}, nnodes{0}, nbranches{0}
+{
+    root_node = nullptr;
+}
+
+
+int Tree::getRootID() {
+    if (!root_node){ return 0; }
+    return root_node->get_id();
 }
 
 int Tree::addTipRandomly() {
     if (ntips == 0) {
-        root_node = new Node(++max_id, nullptr, nullptr, nullptr);
+        root_node.reset(new Node(++max_id));
         ntips++;
         nnodes++;
         return root_node->get_id();
     } else if (ntips == 1){
-        Node* first_tip = root_node;
-        root_node = new Node(++max_id, nullptr, first_tip, nullptr);
-        Node* new_tip = new Node(++max_id, nullptr, nullptr, nullptr);
+        auto first_tip = root_node;
+        root_node.reset(new Node(++max_id, nullptr, first_tip, nullptr));
+        auto new_tip = std::make_shared<Node>(Node(++max_id));
         root_node->desc2 = new_tip;
         ntips++;
         nnodes += 2;
@@ -48,10 +62,11 @@ int Tree::addTipRandomly() {
     }
 }
 
-int Tree::insertNodeAtBranch(int insert_number, int current_branch, Node* anc, Node* desc){
+
+int Tree::insertNodeAtBranch(int insert_number, int current_branch, std::shared_ptr<Node> anc, std::shared_ptr<Node> desc){
     if (insert_number == current_branch){
-        Node *new_internal_node = new Node(++max_id, anc, nullptr, nullptr);
-        Node *new_tip_node = new Node(++max_id, new_internal_node, nullptr, nullptr);
+        auto new_internal_node = std::make_shared<Node>(Node(++max_id, anc, nullptr, nullptr));
+        auto new_tip_node = std::make_shared<Node>(Node(++max_id, new_internal_node, nullptr, nullptr));
         if (anc->desc1 == desc) {
             anc->desc1 = new_internal_node;
             new_internal_node->desc1 = desc;
@@ -71,20 +86,14 @@ int Tree::insertNodeAtBranch(int insert_number, int current_branch, Node* anc, N
     else {
         int count = insertNodeAtBranch(insert_number, current_branch+1, desc, desc->desc1);
         if (count < insert_number){
-            insertNodeAtBranch(insert_number, count+1, desc, desc->desc2);
+            count = insertNodeAtBranch(insert_number, count+1, desc, desc->desc2);
         }
-        else {
-            return count;
-        }
+        return count;
     }
 }
 
-int Tree::getRootID() {
-    if (!root_node){ return 0; }
-    return root_node->get_id();
-}
 
-void parseTree(std::vector<std::array<int, 2>> * branchList, Node * currentNode)
+void parseTree(std::vector<std::array<int, 2>> * branchList, std::shared_ptr<Node> currentNode)
 {
     if (currentNode->desc1 != nullptr) {
         std::array<int, 2> branch1 = {currentNode->get_id(), currentNode->desc1->get_id()};
@@ -97,6 +106,7 @@ void parseTree(std::vector<std::array<int, 2>> * branchList, Node * currentNode)
         parseTree(branchList, currentNode->desc2);
     }
 }
+
 
 std::vector<std::array<int, 2>> * Tree::getBranchList()
 {
