@@ -81,6 +81,8 @@ int Tree::addTipRandomly() {
         root_node.reset(new Node(++max_id, nullptr, first_tip, nullptr));
         auto new_tip = std::make_shared<Node>(Node(++max_id));
         root_node->desc2 = new_tip;
+        first_tip->anc = root_node;
+        new_tip->anc = root_node;
         ntips++;
         nnodes += 2;
         nbranches += 2;
