@@ -1,7 +1,9 @@
 #include <array>
+#include <exception>
 #include <iostream>
 #include <memory>
 #include <random>
+#include <unordered_map>
 
 #include "tree.h"
 
@@ -35,6 +37,71 @@ Tree::Tree()
 :max_id{0}, ntips{0}, nnodes{0}, nbranches{0}
 {
     root_node = nullptr;
+}
+
+Tree::Tree(std::unique_ptr<std::vector<std::array<int, 2>>>& branch_list, int root_id)
+:max_id{0}, ntips{0}, nnodes{0}, nbranches{0}
+{
+    root_node = nullptr;
+    // TODO: check proper construction: no circular branches & no floating, disassociated nodes (i.e. binary rooted digraph)
+
+    // Add nodes, keeping a temporary Map to each.
+    std::unordered_map<int, std::shared_ptr<Node>> node_map {};
+    for (const auto& branch : *branch_list) {
+        if (branch[1] == root_id)
+            throw std::logic_error("Root node cannot have an ancestor");
+        std::shared_ptr<Node> anc, desc;
+
+        // Find or create branch's ancestor node
+        auto anc_search = node_map.find(branch[0]);
+        if (anc_search != node_map.end()) { // found
+            anc = anc_search->second;
+            if (!anc->hasDescendents())
+                ntips--;
+        }
+        else {
+            anc = std::make_shared<Node>(Node(branch[0]));
+            node_map[branch[0]] = anc;
+            nnodes++;
+            if (max_id < branch[0])
+                max_id = branch[0];
+            if (branch[0] == root_id) {
+                root_node = anc;
+            }
+        }
+
+        // Find or create branch's descendent node
+        auto desc_search = node_map.find(branch[1]);
+        if (desc_search != node_map.end()) { // found
+            desc = desc_search->second;
+        }
+        else {
+            desc = std::make_shared<Node>(Node(branch[1]));
+            node_map[branch[1]] = desc;
+            nnodes++;
+            ntips++;
+            if (max_id < branch[1])
+                max_id = branch[1];
+        }
+
+        // Create branch
+        if (anc->desc1 == nullptr) {
+            anc->desc1 = desc;
+        }
+        else if (anc->desc2 == nullptr) {
+            anc->desc2 = desc;
+        }
+        else {
+            throw std::logic_error("Cannot add more than 2 descendents to a node");
+        }
+        desc->anc = anc;
+        nbranches++;
+    }
+
+    // Check root_node was created properly
+    if (root_node == nullptr)
+        throw std::logic_error("Root node was never added");
+
 }
 
 

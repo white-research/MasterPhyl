@@ -117,3 +117,11 @@ TEST(TreeTests, NonexistantNodeCannotBeFoundInTree){
     auto tree = Tree::createRandomTree(10);
     EXPECT_EQ(tree->hasNode(20), false);
 }
+
+TEST(TreeTests, CreateTreeFromBranchList){
+    std::unique_ptr<std::vector<std::array<int, 2>>> branches = std::make_unique<std::vector<std::array<int, 2>>>();
+    branches->push_back(std::array<int, 2>{1,2});
+    branches->push_back(std::array<int, 2>{1,3});
+    Tree tree = Tree(branches, 1);
+    EXPECT_EQ(tree.getNTips(), 2);
+}
