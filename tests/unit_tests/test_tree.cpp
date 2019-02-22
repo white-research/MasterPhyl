@@ -64,7 +64,7 @@ TEST(TreeTests, CreateThreeTipTree) {
 
 TEST(TreeTests, NullBranchListFromEmptyTree){
     Tree testTree = Tree();
-    auto *bl = testTree.getBranchList();
+    std::unique_ptr<std::vector<std::array<int, 2>>> bl = testTree.getBranchList();
     EXPECT_EQ(bl->size(), 0);
 }
 
@@ -72,7 +72,7 @@ TEST(TreeTests, TwoBranchListFromTree){
     Tree testTree = Tree();
     testTree.addTipRandomly();
     testTree.addTipRandomly();
-    std::vector<std::array<int, 2>> *branchList = testTree.getBranchList();
+    std::unique_ptr<std::vector<std::array<int, 2>>> branchList = testTree.getBranchList();
     EXPECT_EQ(branchList->size(), 2);
     // Check that branches are correct:
     std::array<int, 2> branch1 = (*branchList)[0];

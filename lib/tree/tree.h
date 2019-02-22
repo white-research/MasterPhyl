@@ -30,14 +30,12 @@ public:
     Tree();
     ~Tree();
 ////TODO: copy constructor
-////TODO: destructor
-//
+
     int getNTips() {return ntips;};
     int getNBranches() {return nbranches;};
     int getNNodes() {return nnodes;};
-
     int getRootID();
-    std::vector<std::array<int, 2>> * getBranchList();
+    std::unique_ptr<std::vector<std::array<int, 2>>> getBranchList();
 
     int addTipRandomly();
 ////TODO: split tree: extern void split_tree(Tree *t, int anc_id, int des_id, Tree *subtree_array[2]);
