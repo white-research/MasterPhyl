@@ -57,6 +57,14 @@ Tree::~Tree(){
 }
 
 
+std::unique_ptr<Tree> Tree::createRandomTree(int ntaxa) {
+    auto tree = std::make_unique<Tree>();
+    for (int tip_count=0; tip_count < ntaxa; tip_count++){
+        tree->addTipRandomly();
+    }
+    return tree;
+}
+
 int Tree::getRootID() {
     if (!root_node){ return 0; }
     return root_node->get_id();

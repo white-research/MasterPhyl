@@ -30,6 +30,7 @@ public:
     Tree();
     ~Tree();
 ////TODO: copy constructor
+    static std::unique_ptr<Tree> createRandomTree(int ntaxa);
 
     int getNTips() {return ntips;};
     int getNBranches() {return nbranches;};

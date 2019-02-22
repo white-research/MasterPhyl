@@ -82,3 +82,9 @@ TEST(TreeTests, TwoBranchListFromTree){
     EXPECT_EQ(branch2[0], 2);
     EXPECT_EQ(branch2[1], 3);
 }
+
+TEST(TreeTests, CreateRandomTree){
+    auto tree = Tree::createRandomTree(10);
+    EXPECT_EQ(tree->getNTips(), 10);
+    EXPECT_EQ(tree->getNBranches(), 18);
+}
