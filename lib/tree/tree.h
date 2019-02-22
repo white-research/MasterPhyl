@@ -23,6 +23,7 @@ private:
     int max_id, ntips, nnodes, nbranches;
     std::shared_ptr<Node> root_node;
 
+    std::shared_ptr<Node> getNode(int node_id, std::shared_ptr<Node> current_node);
     int insertNodeAtBranch(int insert_number, int current_branch, std::shared_ptr<Node> anc, std::shared_ptr<Node> desc);
 
 public:
@@ -36,6 +37,7 @@ public:
     int getNBranches() {return nbranches;};
     int getNNodes() {return nnodes;};
     int getRootID();
+    bool hasNode(int node_id);
     std::unique_ptr<std::vector<std::array<int, 2>>> getBranchList();
 
     int addTipRandomly();

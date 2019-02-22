@@ -65,9 +65,35 @@ std::unique_ptr<Tree> Tree::createRandomTree(int ntaxa) {
     return tree;
 }
 
+std::shared_ptr<Node> Tree::getNode(int node_id, std::shared_ptr<Node> current_node) {
+    if (current_node->get_id() == node_id){
+        return current_node;
+    }
+    if (current_node->desc1 != nullptr) {
+        auto node = getNode(node_id, current_node->desc1);
+        if (node != nullptr) {
+            return node;
+        }
+    }
+    if (current_node->desc2 != nullptr) {
+        auto node = getNode(node_id, current_node->desc2);
+        if (node != nullptr) {
+            return node;
+        }
+    }
+    return nullptr;
+}
+
 int Tree::getRootID() {
     if (!root_node){ return 0; }
     return root_node->get_id();
+}
+
+bool Tree::hasNode(int node_id) {
+    if (getNode(node_id, root_node) != nullptr) {
+        return true;
+    }
+    return false;
 }
 
 int Tree::addTipRandomly() {

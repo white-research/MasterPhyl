@@ -88,3 +88,15 @@ TEST(TreeTests, CreateRandomTree){
     EXPECT_EQ(tree->getNTips(), 10);
     EXPECT_EQ(tree->getNBranches(), 18);
 }
+
+
+TEST(TreeTests, ExistingNodeCanBeFoundInTree){
+    auto tree = Tree::createRandomTree(10);
+    EXPECT_EQ(tree->hasNode(18), true);
+    EXPECT_EQ(tree->hasNode(19), true);
+}
+
+TEST(TreeTests, NonexistantNodeCannotBeFoundInTree){
+    auto tree = Tree::createRandomTree(10);
+    EXPECT_EQ(tree->hasNode(20), false);
+}
