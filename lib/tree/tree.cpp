@@ -1,4 +1,5 @@
 #include <array>
+#include <iostream>
 #include <memory>
 #include <random>
 
@@ -183,3 +184,63 @@ std::unique_ptr<std::vector<std::array<int, 2>>> Tree::getBranchList()
     }
     return branchList;
 }
+
+bool checkTreeNode(std::shared_ptr<Node> node, int& node_count, int& tip_count){
+    node_count++;
+    std::cout << "Checking node " << node->get_id() << "\n";
+    if (node->desc1 != nullptr) { // non-tip node
+        std::cout << " Checking that desc1->anc exists for desc1: " << node->desc1->get_id() << "\n";
+        if (node->desc1->anc == nullptr) {
+            std::cout << "No ancestor!\n";
+            return false;
+        }
+        std::cout << " Checking that anc->desc1 matches desc1->anc...\n";
+        if (node->desc1->anc->get_id() != node->get_id()) {
+            std::cout << "Invalid tree: desc1 and anc don't match on branch from node " << node->get_id() << "\n";
+            return false;
+        }
+        std::cout << " Checking that there are two descendents or none...\n";
+        if (node->desc2 == nullptr){
+            std::cout << "Invalid tree: Node has desc1 but not desc2\n";
+            return false;
+        } else {
+            if (node->desc2->anc != node) {
+                std::cout << "Invalid tree: desc2 and anc don't match on branch\n";
+                return false;
+            }
+        }
+        checkTreeNode(node->desc1, node_count, tip_count);
+        checkTreeNode(node->desc2, node_count, tip_count);
+    } else { // tip node
+        if (node->desc2 != nullptr) {
+            std::cout << "Invalid tree: Node has desc2 but not desc1\n";
+            return false;
+        }
+        tip_count++;
+        return true;
+    }
+    return true;
+}
+
+bool Tree::checkValid() {
+    int node_count = 0;
+    int tip_count = 0;
+    if (root_node->anc != nullptr) {
+        std::cout << "Invalid tree: Root node doesn't have null ancestor pointer\n";
+        return false;
+    }
+    bool status = checkTreeNode(root_node, node_count, tip_count);
+    if (!status) {
+        return status;
+    }
+    if (tip_count != getNTips()) {
+        std::cout << "Invalid tree: Could not access all tips.\n";
+        return false;
+    }
+    if (node_count != getNNodes()) {
+        std::cout << "Invalid tree: Could not access all nodes.\n";
+        return false;
+    }
+    return status;
+}
+

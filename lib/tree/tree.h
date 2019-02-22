@@ -40,6 +40,8 @@ public:
     bool hasNode(int node_id);
     std::unique_ptr<std::vector<std::array<int, 2>>> getBranchList();
 
+    bool checkValid();
+
     int addTipRandomly();
 ////TODO: split tree: extern void split_tree(Tree *t, int anc_id, int des_id, Tree *subtree_array[2]);
 ////TODO: join two trees: extern Tree *join_trees(Tree *subt1, Tree *subt2, int sister_id, int new_node_id);

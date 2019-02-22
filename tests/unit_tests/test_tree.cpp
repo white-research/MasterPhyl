@@ -89,6 +89,23 @@ TEST(TreeTests, CreateRandomTree){
     EXPECT_EQ(tree->getNBranches(), 18);
 }
 
+TEST(TreeTests, CheckTwoTipTreeValidity){
+    auto tree = Tree::createRandomTree(2);
+    bool is_valid = tree->checkValid();
+    EXPECT_EQ(is_valid, true);
+}
+
+TEST(TreeTests, CheckThreeTipTreeValidity){
+    auto tree = Tree::createRandomTree(3);
+    bool is_valid = tree->checkValid();
+    EXPECT_EQ(is_valid, true);
+}
+
+TEST(TreeTests, CheckTenTipTreeValidity){
+    auto tree = Tree::createRandomTree(10);
+    bool is_valid = tree->checkValid();
+    EXPECT_EQ(is_valid, true);
+}
 
 TEST(TreeTests, ExistingNodeCanBeFoundInTree){
     auto tree = Tree::createRandomTree(10);
