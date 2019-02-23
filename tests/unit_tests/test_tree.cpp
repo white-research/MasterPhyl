@@ -118,10 +118,60 @@ TEST(TreeTests, NonexistantNodeCannotBeFoundInTree){
     EXPECT_EQ(tree->hasNode(20), false);
 }
 
-TEST(TreeTests, CreateTreeFromBranchList){
+TEST(TreeTests, CreateTwoTipTreeFromTwoBranchList){
     std::unique_ptr<std::vector<std::array<int, 2>>> branches = std::make_unique<std::vector<std::array<int, 2>>>();
     branches->push_back(std::array<int, 2>{1,2});
     branches->push_back(std::array<int, 2>{1,3});
     Tree tree = Tree(branches, 1);
     EXPECT_EQ(tree.getNTips(), 2);
+    EXPECT_EQ(tree.checkValid(), true);
+}
+
+TEST(TreeTests, CreateFiveTipTreeFromFiveBranchList){
+    std::unique_ptr<std::vector<std::array<int, 2>>> branches = std::make_unique<std::vector<std::array<int, 2>>>();
+    branches->push_back(std::array<int, 2>{1,2});
+    branches->push_back(std::array<int, 2>{1,3});
+    branches->push_back(std::array<int, 2>{3,4});
+    branches->push_back(std::array<int, 2>{3,5});
+    branches->push_back(std::array<int, 2>{4,6});
+    branches->push_back(std::array<int, 2>{4,7});
+    branches->push_back(std::array<int, 2>{5,8});
+    branches->push_back(std::array<int, 2>{5,9});
+    Tree tree = Tree(branches, 1);
+    EXPECT_EQ(tree.getNTips(), 5);
+    EXPECT_EQ(tree.getNNodes(), 9);
+    EXPECT_EQ(tree.checkValid(), true);
+}
+
+TEST(TreeTests, FailTreeCreationFromInvalidBranchList){
+    std::unique_ptr<std::vector<std::array<int, 2>>> branches = std::make_unique<std::vector<std::array<int, 2>>>();
+    branches->push_back(std::array<int, 2>{1,2});
+    branches->push_back(std::array<int, 2>{1,3});
+    branches->push_back(std::array<int, 2>{3,4});
+    branches->push_back(std::array<int, 2>{3,5});
+    branches->push_back(std::array<int, 2>{3,6});
+    bool exceptionRaised = false;
+    try {
+        Tree tree = Tree(branches, 1);
+    }
+    catch (std::logic_error) {
+        exceptionRaised = true;
+    }
+    EXPECT_TRUE(exceptionRaised);
+}
+
+TEST(TreeTests, FailTreeCreationFromWrongRootNode){
+    std::unique_ptr<std::vector<std::array<int, 2>>> branches = std::make_unique<std::vector<std::array<int, 2>>>();
+    branches->push_back(std::array<int, 2>{1,2});
+    branches->push_back(std::array<int, 2>{1,3});
+    branches->push_back(std::array<int, 2>{3,4});
+    branches->push_back(std::array<int, 2>{3,5});
+    bool exceptionRaised = false;
+    try {
+        Tree tree = Tree(branches, 2);
+    }
+    catch (std::logic_error) {
+        exceptionRaised = true;
+    }
+    EXPECT_TRUE(exceptionRaised);
 }
