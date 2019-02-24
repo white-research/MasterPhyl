@@ -39,12 +39,13 @@ public:
     int getNNodes() {return nnodes;};
     int getRootID();
     bool hasNode(int node_id);
-    std::unique_ptr<std::vector<std::array<int, 2>>> getBranchList();
+    std::unique_ptr<std::vector<std::array<int, 2>>> getBranchList(int start_id = 0, int stop_id = 0);
 
     bool checkValid();
 
     int addTipRandomly();
-////TODO: split tree: extern void split_tree(Tree *t, int anc_id, int des_id, Tree *subtree_array[2]);
+
+    void splitTree(int anc_id, int desc_id, std::unique_ptr<std::array<std::unique_ptr<Tree>, 2>>& subtrees);
 ////TODO: join two trees: extern Tree *join_trees(Tree *subt1, Tree *subt2, int sister_id, int new_node_id);
 ////TODO: reroot tree: extern void reroot(Tree *t, int outgroup_id); & extern void reroot_branch(Tree *t, int branch_anc, int branch_des);
 //

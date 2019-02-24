@@ -83,6 +83,56 @@ TEST(TreeTests, TwoBranchListFromTree){
     EXPECT_EQ(branch2[1], 3);
 }
 
+TEST(TreeTests, EightBranchListFromTree){
+    std::unique_ptr<std::vector<std::array<int, 2>>> branches = std::make_unique<std::vector<std::array<int, 2>>>();
+    branches->push_back(std::array<int, 2>{1,2}); // 0
+    branches->push_back(std::array<int, 2>{1,3}); // 7
+    branches->push_back(std::array<int, 2>{3,4}); // 3
+    branches->push_back(std::array<int, 2>{4,6}); // 1
+    branches->push_back(std::array<int, 2>{4,7}); // 2
+    branches->push_back(std::array<int, 2>{3,5}); // 6
+    branches->push_back(std::array<int, 2>{5,8}); // 4
+    branches->push_back(std::array<int, 2>{5,9}); // 5
+    Tree tree = Tree(branches, 1);
+    std::unique_ptr<std::vector<std::array<int, 2>>> branchList = tree.getBranchList();
+    EXPECT_EQ(branchList->size(), 8);
+    // Check that branches are correct:
+    std::array<int, 2> branch1 = (*branchList)[0];
+    EXPECT_EQ(branch1[0], 1);
+    EXPECT_EQ(branch1[1], 2);
+    std::array<int, 2> branch2 = (*branchList)[1];
+    EXPECT_EQ(branch2[0], 4);
+    EXPECT_EQ(branch2[1], 6);
+    std::array<int, 2> branch3 = (*branchList)[5];
+    EXPECT_EQ(branch3[0], 5);
+    EXPECT_EQ(branch3[1], 9);
+}
+
+TEST(TreeTests, CreatBranchListUpToStopId){
+    std::unique_ptr<std::vector<std::array<int, 2>>> branches = std::make_unique<std::vector<std::array<int, 2>>>();
+    branches->push_back(std::array<int, 2>{1,2}); // 0
+    branches->push_back(std::array<int, 2>{1,3}); // 5
+    branches->push_back(std::array<int, 2>{3,4}); // 1
+    branches->push_back(std::array<int, 2>{4,6}); // stop
+    branches->push_back(std::array<int, 2>{4,7}); // stop
+    branches->push_back(std::array<int, 2>{3,5}); // 4
+    branches->push_back(std::array<int, 2>{5,8}); // 2
+    branches->push_back(std::array<int, 2>{5,9}); // 3
+    Tree tree = Tree(branches, 1);
+    std::unique_ptr<std::vector<std::array<int, 2>>> branchList = tree.getBranchList(0, 4); // Skip all branches from node 4
+    EXPECT_EQ(branchList->size(), 6);
+    // Check that branches are correct:
+    std::array<int, 2> branch1 = (*branchList)[0];
+    EXPECT_EQ(branch1[0], 1);
+    EXPECT_EQ(branch1[1], 2);
+    std::array<int, 2> branch2 = (*branchList)[3];
+    EXPECT_EQ(branch2[0], 5);
+    EXPECT_EQ(branch2[1], 9);
+    std::array<int, 2> branch3 = (*branchList)[5];
+    EXPECT_EQ(branch3[0], 1);
+    EXPECT_EQ(branch3[1], 3);
+}
+
 TEST(TreeTests, CreateRandomTree){
     auto tree = Tree::createRandomTree(10);
     EXPECT_EQ(tree->getNTips(), 10);
@@ -175,3 +225,32 @@ TEST(TreeTests, FailTreeCreationFromWrongRootNode){
     }
     EXPECT_TRUE(exceptionRaised);
 }
+
+TEST(TreeTests, TestCanSplitBasicTree){
+    std::unique_ptr<std::vector<std::array<int, 2>>> branches = std::make_unique<std::vector<std::array<int, 2>>>();
+    branches->push_back(std::array<int, 2>{1,2});
+    branches->push_back(std::array<int, 2>{1,3});
+    branches->push_back(std::array<int, 2>{3,4});
+    branches->push_back(std::array<int, 2>{3,5});
+    branches->push_back(std::array<int, 2>{4,6});
+    branches->push_back(std::array<int, 2>{4,7});
+    branches->push_back(std::array<int, 2>{5,8});
+    branches->push_back(std::array<int, 2>{5,9});
+    Tree tree = Tree(branches, 1);
+    auto subtrees = std::make_unique< std::array<std::unique_ptr<Tree>, 2> >();
+    tree.splitTree(3, 4, subtrees);
+    std::cout << "Checking tree 1, with " << (*subtrees)[0]->getNTips() << " tips\n";
+    EXPECT_TRUE((*subtrees)[0]->checkValid(true));
+    std::cout << "Checking tree 2, with " << (*subtrees)[1]->getNTips() << " tips\n";
+    EXPECT_TRUE((*subtrees)[1]->checkValid());
+    EXPECT_EQ((*subtrees)[0]->getNTips() + (*subtrees)[1]->getNTips(), tree.getNTips());
+}
+
+//TEST(TreeTests, SplitTwoTipTree){
+//    std::unique_ptr<std::vector<std::array<int, 2>>> branches = std::make_unique<std::vector<std::array<int, 2>>>();
+//    branches->push_back(std::array<int, 2>{1,2});
+//    branches->push_back(std::array<int, 2>{1,3});
+//    Tree tree = Tree(branches, 1);
+//    auto subtrees = std::make_unique< std::array<std::unique_ptr<Tree>, 2> >();
+//    tree.splitTree(1, 2, subtrees);
+//}

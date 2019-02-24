@@ -228,26 +228,38 @@ int Tree::insertNodeAtBranch(int insert_number, int current_branch, std::shared_
 }
 
 
-void parseTree(std::unique_ptr<std::vector<std::array<int, 2>>> & branchList, const std::shared_ptr<Node>& currentNode)
+void parseTree(std::unique_ptr<std::vector<std::array<int, 2>>> & branchList, const std::shared_ptr<Node>& currentNode, int stop_id)
 {
-    if (currentNode->desc1 != nullptr) {
-        std::array<int, 2> branch1 = {currentNode->get_id(), currentNode->desc1->get_id()};
-        branchList->push_back(branch1);
-        parseTree(branchList, currentNode->desc1);
-    }
-    if (currentNode->desc2 != nullptr) {
-        std::array<int, 2> branch2 = {currentNode->get_id(), currentNode->desc2->get_id()};
-        branchList->push_back(branch2);
-        parseTree(branchList, currentNode->desc2);
+    if (currentNode->get_id() != stop_id) {
+        if (currentNode->desc1 != nullptr) {
+//            if (currentNode->desc1->get_id() != stop_id) {
+                parseTree(branchList, currentNode->desc1, stop_id);
+//            }
+            std::array<int, 2> branch1 = {currentNode->get_id(), currentNode->desc1->get_id()};
+            branchList->push_back(branch1);
+        }
+        if (currentNode->desc2 != nullptr) {
+//            if (currentNode->desc2->get_id() != stop_id) {
+                parseTree(branchList, currentNode->desc2, stop_id);
+//            }
+            std::array<int, 2> branch2 = {currentNode->get_id(), currentNode->desc2->get_id()};
+            branchList->push_back(branch2);
+        }
     }
 }
 
 
-std::unique_ptr<std::vector<std::array<int, 2>>> Tree::getBranchList()
+std::unique_ptr<std::vector<std::array<int, 2>>> Tree::getBranchList(int start_id, int stop_id)
 {
     std::unique_ptr<std::vector<std::array<int, 2>>> branchList = std::make_unique<std::vector<std::array<int, 2>>>();
-    if (root_node != nullptr) {
-        parseTree(branchList, root_node);
+    if (start_id == 0 && root_node != nullptr) {
+        parseTree(branchList, root_node, stop_id);
+    }
+    else if (start_id > 0) {
+        std::shared_ptr<Node> start_node = getNode(start_id, root_node);
+        if (start_node != nullptr){
+            parseTree(branchList, start_node, stop_id);
+        }
     }
     return branchList;
 }
@@ -311,3 +323,45 @@ bool Tree::checkValid() {
     return status;
 }
 
+void Tree::splitTree(int anc_id, int desc_id, std::unique_ptr<std::array<std::unique_ptr<Tree>, 2>>& subtrees) {
+    std::shared_ptr<Node> anc_node = getNode(anc_id, root_node);
+    if (anc_node->desc1->get_id() != desc_id && anc_node->desc2->get_id() != desc_id) {
+        throw std::logic_error("Non-existent branch");
+    }
+    std::unique_ptr<std::vector<std::array<int, 2>>> st1_branches = getBranchList(0, desc_id);
+    int new_anc, new_desc;
+    for (long i = (*st1_branches).size() - 1; i >= 0; i--) {
+        std::cout << "Deleting from branch (" << (*st1_branches)[i][0] << "," << (*st1_branches)[i][1] << ")\n";
+        if ((*st1_branches)[i][0] == anc_id && (*st1_branches)[i][1] == desc_id) {
+            std::cout << " ...Matched non-tip!\n";
+            (*st1_branches).erase((*st1_branches).begin() + i);
+        }
+        else if ((*st1_branches)[i][1] == anc_id) {
+            std::cout << " ...Matched branch to middle node!\n";
+            new_anc = (*st1_branches)[i][0];
+            (*st1_branches).erase((*st1_branches).begin() + i);
+        }
+        else if ((*st1_branches)[i][0] == anc_id) {
+            std::cout << " ...Matched branch from middle node!\n";
+            new_desc = (*st1_branches)[i][1];
+            (*st1_branches).erase((*st1_branches).begin() + i);
+        }
+    }
+    auto new_branch = std::array<int, 2>{new_anc, new_desc};
+    (*st1_branches).push_back(new_branch);
+    std::unique_ptr<std::vector<std::array<int, 2>>> st2_branches = getBranchList(desc_id);
+    std::cout << "Making tree 1\n";
+    std::cout << "Branches: ";
+    for (auto b: *st1_branches){
+        std::cout << "(" << b[0] << "," << b[1] << ") ";
+    }
+    std::cout << "\n";
+    (*subtrees)[0] = std::make_unique<Tree>(st1_branches, root_node->get_id());
+    std::cout << "Making tree 2\n";
+    std::cout << "Branches: ";
+    for (auto b: *st2_branches){
+        std::cout << "(" << b[0] << "," << b[1] << ") ";
+    }
+    std::cout << "\n";
+    (*subtrees)[1] = std::make_unique<Tree>(st2_branches, desc_id);
+}
