@@ -60,7 +60,7 @@ Tree::Tree(std::unique_ptr<std::vector<std::array<int, 2>>>& branch_list, int ro
                 ntips--;
         }
         else {
-            anc = std::make_shared<Node>(Node(branch[0]));
+            anc = std::make_shared<Node>(branch[0]);
             node_map[branch[0]] = anc;
             nnodes++;
             if (max_id < branch[0])
@@ -76,7 +76,7 @@ Tree::Tree(std::unique_ptr<std::vector<std::array<int, 2>>>& branch_list, int ro
             desc = desc_search->second;
         }
         else {
-            desc = std::make_shared<Node>(Node(branch[1]));
+            desc = std::make_shared<Node>(branch[1]);
             node_map[branch[1]] = desc;
             nnodes++;
             ntips++;
@@ -173,7 +173,7 @@ int Tree::addTipRandomly() {
     } else if (ntips == 1){
         auto first_tip = root_node;
         root_node.reset(new Node(++max_id, nullptr, first_tip, nullptr));
-        auto new_tip = std::make_shared<Node>(Node(++max_id));
+        auto new_tip = std::make_shared<Node>(++max_id);
         root_node->desc2 = new_tip;
         first_tip->anc = root_node;
         new_tip->anc = root_node;
@@ -197,8 +197,8 @@ int Tree::addTipRandomly() {
 
 int Tree::insertNodeAtBranch(int insert_number, int current_branch, std::shared_ptr<Node> anc, std::shared_ptr<Node> desc){
     if (insert_number == current_branch){
-        auto new_internal_node = std::make_shared<Node>(Node(++max_id, anc, nullptr, nullptr));
-        auto new_tip_node = std::make_shared<Node>(Node(++max_id, new_internal_node, nullptr, nullptr));
+        auto new_internal_node = std::make_shared<Node>(++max_id, anc, nullptr, nullptr);
+        auto new_tip_node = std::make_shared<Node>(++max_id, new_internal_node, nullptr, nullptr);
         if (anc->desc1 == desc) {
             anc->desc1 = new_internal_node;
             new_internal_node->desc1 = desc;
