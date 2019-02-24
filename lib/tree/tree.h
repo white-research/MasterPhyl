@@ -41,7 +41,7 @@ public:
     bool hasNode(int node_id);
     std::unique_ptr<std::vector<std::array<int, 2>>> getBranchList(int start_id = 0, int stop_id = 0);
 
-    bool checkValid();
+    bool checkValid(bool verbose = false);
 
     int addTipRandomly();
 
