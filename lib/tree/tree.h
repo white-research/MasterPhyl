@@ -31,7 +31,7 @@ public:
     Tree();
     Tree(std::unique_ptr<std::vector<std::array<int, 2>>>& branch_list, int root_id);
     ~Tree();
-////TODO: copy constructor
+    //TODO: copy constructor, move constructor ?
     static std::unique_ptr<Tree> createRandomTree(int ntaxa);
 
     int getNTips() {return ntips;};
