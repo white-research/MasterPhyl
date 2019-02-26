@@ -390,61 +390,8 @@ bool Tree::checkValid(bool verbose) {
     return status;
 }
 
-void Tree::splitTree(int anc_id, int desc_id, std::unique_ptr<std::array<std::unique_ptr<Tree>, 2>>& subtrees) {
-    // TODO: refactor to avoid using branch lists
-    // Instead use a new function, copy_subtree, to avoid problems with junction nodes and single tips.
-    std::shared_ptr<Node> anc_node = getNode(anc_id, root_node);
-    if (anc_node->desc1->get_id() != desc_id && anc_node->desc2->get_id() != desc_id) {
-        throw std::logic_error("Non-existent branch");
-    }
 
-    // Get branches for first subtree
-    std::unique_ptr<std::vector<std::array<int, 2>>> st1_branches = getBranchList(0, desc_id);
-    int new_anc, new_desc;
-    for (long i = (*st1_branches).size() - 1; i >= 0; i--) {
-        std::cout << "Deleting from branch (" << (*st1_branches)[i][0] << "," << (*st1_branches)[i][1] << ")\n";
-        if ((*st1_branches)[i][0] == anc_id && (*st1_branches)[i][1] == desc_id) {
-            std::cout << " ...Matched non-tip!\n";
-            (*st1_branches).erase((*st1_branches).begin() + i);
-        }
-        else if ((*st1_branches)[i][1] == anc_id) {
-            std::cout << " ...Matched branch to middle node!\n";
-            new_anc = (*st1_branches)[i][0];
-            (*st1_branches).erase((*st1_branches).begin() + i);
-        }
-        else if ((*st1_branches)[i][0] == anc_id) {
-            std::cout << " ...Matched branch from middle node!\n";
-            new_desc = (*st1_branches)[i][1];
-            (*st1_branches).erase((*st1_branches).begin() + i);
-        }
-    }
-    auto new_branch = std::array<int, 2>{new_anc, new_desc};
-    (*st1_branches).push_back(new_branch);
-
-    // Get branches for 2nd subtree
-    std::unique_ptr<std::vector<std::array<int, 2>>> st2_branches = getBranchList(desc_id);
-    std::cout << "Making tree 1\n";
-    std::cout << "Branches: ";
-    for (auto b: *st1_branches){
-        std::cout << "(" << b[0] << "," << b[1] << ") ";
-    }
-    if ((*st2_branches).size() == 0) {
-        auto tip_branch = std::array<int, 2>{desc_id, 0};
-        (*st2_branches).push_back(tip_branch);
-    }
-
-    std::cout << "\n";
-    (*subtrees)[0] = std::make_unique<Tree>(st1_branches, root_node->get_id());
-    std::cout << "Making tree 2\n";
-    std::cout << "Branches: ";
-    for (auto b: *st2_branches){
-        std::cout << "(" << b[0] << "," << b[1] << ") ";
-    }
-    std::cout << "\n";
-    (*subtrees)[1] = std::make_unique<Tree>(st2_branches, desc_id);
-}
-
-void Tree::splitTree2(int anc_id, int desc_id, std::array<std::unique_ptr<Tree>, 2>& subtrees) {
+void Tree::splitTree(int anc_id, int desc_id, std::array<std::unique_ptr<Tree>, 2>& subtrees) {
     /* Check that anc and desc form a branch in the tree */
     std::shared_ptr<Node> anc_node = getNode(anc_id, root_node);
     if (anc_node->desc1->get_id() != desc_id && anc_node->desc2->get_id() != desc_id) {
@@ -477,12 +424,17 @@ void Tree::copySubtree(Tree& subtree, std::shared_ptr<Node>& subtree_node, Node&
             grand_descendent = *(original_node.desc2);
         }
         auto breaking_branch_sibling = std::make_shared<Node>(grand_descendent.get_id());
-        breaking_branch_sibling->anc = subtree_node->anc;
-        if (subtree_node->anc->desc1 == subtree_node) {
-            subtree_node->anc->desc1 = breaking_branch_sibling;
+        if (subtree_node->anc == nullptr) { // If the breaking branch ancestor is the root of the original tree,
+            // then delete the node and set its other descendent as the root
+            subtree.root_node = breaking_branch_sibling;
         }
-        else{
-            subtree_node->anc->desc2 = breaking_branch_sibling;
+        else { // If not the root, then "delete" the node by joining its ancestor with its other descendent
+            breaking_branch_sibling->anc = subtree_node->anc;
+            if (subtree_node->anc->desc1 == subtree_node) {
+                subtree_node->anc->desc1 = breaking_branch_sibling;
+            } else {
+                subtree_node->anc->desc2 = breaking_branch_sibling;
+            }
         }
         copySubtree(subtree, breaking_branch_sibling, grand_descendent, breaking_branch_anc, breaking_branch_desc);
     }

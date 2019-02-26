@@ -238,9 +238,9 @@ TEST(TreeTests, TestCanSplitBasicTree){
     branches->push_back(std::array<int, 2>{5,9});
     Tree tree = Tree(branches, 1);
     auto subtrees = std::array<std::unique_ptr<Tree>, 2>();
-    tree.splitTree2(3, 4, subtrees);
+    tree.splitTree(3, 4, subtrees);
     std::cout << "Checking tree 1, with " << subtrees[0]->getNTips() << " tips\n";
-    EXPECT_TRUE(subtrees[0]->checkValid(true));
+    EXPECT_TRUE(subtrees[0]->checkValid());
     std::cout << "Checking tree 2, with " << subtrees[1]->getNTips() << " tips\n";
     EXPECT_TRUE(subtrees[1]->checkValid());
     EXPECT_EQ(subtrees[0]->getNTips() + subtrees[1]->getNTips(), tree.getNTips());
@@ -253,13 +253,13 @@ TEST(TreeTests, TestCanSplitAlongTipBranch){
     branches->push_back(std::array<int, 2>{3,4});
     branches->push_back(std::array<int, 2>{3,5});
     Tree tree = Tree(branches, 1);
-    auto subtrees = std::make_unique< std::array<std::unique_ptr<Tree>, 2> >();
+    auto subtrees = std::array<std::unique_ptr<Tree>, 2>();
     tree.splitTree(3, 4, subtrees);
-    std::cout << "Checking tree 1, with " << (*subtrees)[0]->getNTips() << " tips\n";
-    EXPECT_TRUE((*subtrees)[0]->checkValid(true));
-    std::cout << "Checking tree 2, with " << (*subtrees)[1]->getNTips() << " tips\n";
-    EXPECT_TRUE((*subtrees)[1]->checkValid());
-    EXPECT_EQ((*subtrees)[0]->getNTips() + (*subtrees)[1]->getNTips(), tree.getNTips());
+    std::cout << "Checking tree 1, with " << subtrees[0]->getNTips() << " tips\n";
+    EXPECT_TRUE(subtrees[0]->checkValid());
+    std::cout << "Checking tree 2, with " << subtrees[1]->getNTips() << " tips\n";
+    EXPECT_TRUE(subtrees[1]->checkValid());
+    EXPECT_EQ(subtrees[0]->getNTips() + subtrees[1]->getNTips(), tree.getNTips());
 }
 
 TEST(TreeTests, TestCanSplitTwoTipTree){
@@ -267,11 +267,15 @@ TEST(TreeTests, TestCanSplitTwoTipTree){
     branches->push_back(std::array<int, 2>{1,2});
     branches->push_back(std::array<int, 2>{1,3});
     Tree tree = Tree(branches, 1);
-    auto subtrees = std::make_unique< std::array<std::unique_ptr<Tree>, 2> >();
+    auto subtrees = std::array<std::unique_ptr<Tree>, 2>();
+    std::cout << "Splitting 2 tip tree..." << std::endl;
     tree.splitTree(1, 2, subtrees);
-    std::cout << "Checking tree 1, with " << (*subtrees)[0]->getNTips() << " tips\n";
-    EXPECT_TRUE((*subtrees)[0]->checkValid(true));
-    std::cout << "Checking tree 2, with " << (*subtrees)[1]->getNTips() << " tips\n";
-    EXPECT_TRUE((*subtrees)[1]->checkValid());
-    EXPECT_EQ((*subtrees)[0]->getNTips() + (*subtrees)[1]->getNTips(), tree.getNTips());
+    std::cout << "Checking tree 1, with " << subtrees[0]->getNTips() << " tips\n";
+    EXPECT_TRUE(subtrees[0]->checkValid());
+    std::cout << "Checking tree 2, with " << subtrees[1]->getNTips() << " tips\n";
+    EXPECT_TRUE(subtrees[1]->checkValid());
+    EXPECT_EQ(subtrees[0]->getNTips(), 1);
+    EXPECT_EQ(subtrees[1]->getNTips(), 1);
+    EXPECT_EQ(subtrees[0]->getNNodes(), 1);
+    EXPECT_EQ(subtrees[1]->getNNodes(), 1);
 }
