@@ -47,55 +47,59 @@ Tree::Tree(std::unique_ptr<std::vector<std::array<int, 2>>>& branch_list, int ro
 
     // Add nodes, keeping a temporary Map to each.
     std::unordered_map<int, std::shared_ptr<Node>> node_map {};
-    for (const auto& branch : *branch_list) {
-        if (branch[1] == root_id)
-            throw std::logic_error("Root node cannot have an ancestor");
-        std::shared_ptr<Node> anc, desc;
+    if (branch_list->size() == 1) { // TODO: Shouldn't return if no branches... delete this after refactoring splitTree
+        root_node = std::make_shared<Node>((*branch_list)[0][0]);
+        max_id = (*branch_list)[0][0];
+        nnodes++;
+        ntips++;
+    }
+    else {
+        for (const auto &branch : *branch_list) {
+            if (branch[1] == root_id)
+                throw std::logic_error("Root node cannot have an ancestor");
+            std::shared_ptr<Node> anc, desc;
 
-        // Find or create branch's ancestor node
-        auto anc_search = node_map.find(branch[0]);
-        if (anc_search != node_map.end()) { // found
-            anc = anc_search->second;
-            if (!anc->hasDescendents())
-                ntips--;
-        }
-        else {
-            anc = std::make_shared<Node>(branch[0]);
-            node_map[branch[0]] = anc;
-            nnodes++;
-            if (max_id < branch[0])
-                max_id = branch[0];
-            if (branch[0] == root_id) {
-                root_node = anc;
+            // Find or create branch's ancestor node
+            auto anc_search = node_map.find(branch[0]);
+            if (anc_search != node_map.end()) { // found
+                anc = anc_search->second;
+                if (!anc->hasDescendents())
+                    ntips--;
+            } else {
+                anc = std::make_shared<Node>(branch[0]);
+                node_map[branch[0]] = anc;
+                nnodes++;
+                if (max_id < branch[0])
+                    max_id = branch[0];
+                if (branch[0] == root_id) {
+                    root_node = anc;
+                }
             }
-        }
 
-        // Find or create branch's descendent node
-        auto desc_search = node_map.find(branch[1]);
-        if (desc_search != node_map.end()) { // found
-            desc = desc_search->second;
-        }
-        else {
-            desc = std::make_shared<Node>(branch[1]);
-            node_map[branch[1]] = desc;
-            nnodes++;
-            ntips++;
-            if (max_id < branch[1])
-                max_id = branch[1];
-        }
+            // Find or create branch's descendent node
+            auto desc_search = node_map.find(branch[1]);
+            if (desc_search != node_map.end()) { // found
+                desc = desc_search->second;
+            } else {
+                desc = std::make_shared<Node>(branch[1]);
+                node_map[branch[1]] = desc;
+                nnodes++;
+                ntips++;
+                if (max_id < branch[1])
+                    max_id = branch[1];
+            }
 
-        // Create branch
-        if (anc->desc1 == nullptr) {
-            anc->desc1 = desc;
+            // Create branch
+            if (anc->desc1 == nullptr) {
+                anc->desc1 = desc;
+            } else if (anc->desc2 == nullptr) {
+                anc->desc2 = desc;
+            } else {
+                throw std::logic_error("Cannot add more than 2 descendents to a node");
+            }
+            desc->anc = anc;
+            nbranches++;
         }
-        else if (anc->desc2 == nullptr) {
-            anc->desc2 = desc;
-        }
-        else {
-            throw std::logic_error("Cannot add more than 2 descendents to a node");
-        }
-        desc->anc = anc;
-        nbranches++;
     }
 
     // Check root_node was created properly
@@ -163,6 +167,67 @@ bool Tree::hasNode(int node_id) {
     }
     return false;
 }
+
+
+//void Tree::addTipNextTo(int id, int sibling_id) {
+//    /* Check that parameters are valid */
+//    if (id > 0) {
+//        if (id <= max_id) {
+//            if (getNode(id, root_node) != nullptr) {
+//                throw std::logic_error("Cannot add node with duplicate ID");
+//            }
+//        }
+//    }
+//    else {
+//        id = ++max_id;
+//    }
+//    auto sibling = getNode(sibling_id, root_node);
+//    if (sibling != nullptr) {
+//        throw std::logic_error("Cannot find sibling node");
+//    }
+//
+//    addTip(id, sibling, nullptr);
+//}
+//
+void Tree::addTipFrom(int id, int anc_id) {
+    /* Check that parameters are valid */
+    if (id > 0) {
+        if (id <= max_id) {
+            if (getNode(id, root_node) != nullptr) {
+                throw std::logic_error("Cannot add node with duplicate ID");
+            }
+        }
+    }
+    else {
+        id = ++max_id;
+    }
+    /* anc_id of 0 indicates insertion of a root node into an empty tree */
+    if (anc_id == 0) {
+        if (getNNodes() != 0) {
+            throw std::logic_error("Cannot add root to non-empty tree");
+        }
+        root_node = std::make_shared<Node>(id);
+    }
+    else {
+//        auto ancestor = getNode(anc_id, )
+    }
+}
+//
+//void Tree::addTip(int id, std::shared_ptr<Node> sibling, std::shared_ptr<Node> ancestor) {
+//
+//    // If insertion position in tree is unspecified
+//    if (sibling == nullptr && ancestor == nullptr){
+//        // if empty tree, insert root
+//        // otherwise throw exception
+//    }
+//    else if (ancestor == nullptr) {
+//        // Add new inner node, and
+//    }
+//    else if (sibling == nullptr) { // Adding as sibling of another tip node
+//        // add as another descendent of the ancestor
+//    }
+//
+//}
 
 int Tree::addTipRandomly() {
     if (ntips == 0) {
@@ -251,6 +316,7 @@ void parseTree(std::unique_ptr<std::vector<std::array<int, 2>>> & branchList, co
 
 std::unique_ptr<std::vector<std::array<int, 2>>> Tree::getBranchList(int start_id, int stop_id)
 {
+    // TODO: refactor to avoid start and stop nodes
     std::unique_ptr<std::vector<std::array<int, 2>>> branchList = std::make_unique<std::vector<std::array<int, 2>>>();
     if (start_id == 0 && root_node != nullptr) {
         parseTree(branchList, root_node, stop_id);
@@ -325,10 +391,14 @@ bool Tree::checkValid(bool verbose) {
 }
 
 void Tree::splitTree(int anc_id, int desc_id, std::unique_ptr<std::array<std::unique_ptr<Tree>, 2>>& subtrees) {
+    // TODO: refactor to avoid using branch lists
+    // Instead use a new function, copy_subtree, to avoid problems with junction nodes and single tips.
     std::shared_ptr<Node> anc_node = getNode(anc_id, root_node);
     if (anc_node->desc1->get_id() != desc_id && anc_node->desc2->get_id() != desc_id) {
         throw std::logic_error("Non-existent branch");
     }
+
+    // Get branches for first subtree
     std::unique_ptr<std::vector<std::array<int, 2>>> st1_branches = getBranchList(0, desc_id);
     int new_anc, new_desc;
     for (long i = (*st1_branches).size() - 1; i >= 0; i--) {
@@ -350,12 +420,19 @@ void Tree::splitTree(int anc_id, int desc_id, std::unique_ptr<std::array<std::un
     }
     auto new_branch = std::array<int, 2>{new_anc, new_desc};
     (*st1_branches).push_back(new_branch);
+
+    // Get branches for 2nd subtree
     std::unique_ptr<std::vector<std::array<int, 2>>> st2_branches = getBranchList(desc_id);
     std::cout << "Making tree 1\n";
     std::cout << "Branches: ";
     for (auto b: *st1_branches){
         std::cout << "(" << b[0] << "," << b[1] << ") ";
     }
+    if ((*st2_branches).size() == 0) {
+        auto tip_branch = std::array<int, 2>{desc_id, 0};
+        (*st2_branches).push_back(tip_branch);
+    }
+
     std::cout << "\n";
     (*subtrees)[0] = std::make_unique<Tree>(st1_branches, root_node->get_id());
     std::cout << "Making tree 2\n";
@@ -366,3 +443,80 @@ void Tree::splitTree(int anc_id, int desc_id, std::unique_ptr<std::array<std::un
     std::cout << "\n";
     (*subtrees)[1] = std::make_unique<Tree>(st2_branches, desc_id);
 }
+
+void Tree::splitTree2(int anc_id, int desc_id, std::array<std::unique_ptr<Tree>, 2>& subtrees) {
+    /* Check that anc and desc form a branch in the tree */
+    std::shared_ptr<Node> anc_node = getNode(anc_id, root_node);
+    if (anc_node->desc1->get_id() != desc_id && anc_node->desc2->get_id() != desc_id) {
+        throw std::logic_error("Non-existent branch");
+    }
+
+    /* Parse the first subtree  */
+    subtrees[0] = std::make_unique<Tree>();
+    subtrees[0]->addTipFrom(root_node->get_id(), 0); // TODO: easier just to add constructor that takes a root_node id as param?
+    subtrees[0]->nnodes++;
+    subtrees[0]->max_id = root_node->get_id();
+    copySubtree(*subtrees[0], subtrees[0]->root_node, *root_node, anc_id, desc_id);
+    /* Parse the second subtree  */
+    subtrees[1] = std::make_unique<Tree>();
+    subtrees[1]->addTipFrom(desc_id, 0); // TODO: easier just to add constructor that takes a root_node id as param?
+    subtrees[1]->nnodes++;
+    subtrees[1]->max_id = desc_id;
+    Node& break_desc_node = anc_node->desc1->get_id() == desc_id ? *(anc_node->desc1) : *(anc_node->desc2);
+    copySubtree(*subtrees[1], subtrees[1]->root_node, break_desc_node, anc_id, desc_id);
+}
+
+void Tree::copySubtree(Tree& subtree, std::shared_ptr<Node>& subtree_node, Node& original_node, int breaking_branch_anc, int breaking_branch_desc) {
+    /* If this node == breaking_branch_anc */
+    /* Then join the other descendent of this node with this node's ancestor */
+    /* And skip to the other descendent */
+    if (original_node.get_id() == breaking_branch_anc) {
+        // Find node that is the sibling of the breaking branck
+        Node& grand_descendent = *(original_node.desc1);
+        if (original_node.desc1->get_id() == breaking_branch_desc) { // TODO: assert that desc2 == breaking_branch_anc instead
+            grand_descendent = *(original_node.desc2);
+        }
+        auto breaking_branch_sibling = std::make_shared<Node>(grand_descendent.get_id());
+        breaking_branch_sibling->anc = subtree_node->anc;
+        if (subtree_node->anc->desc1 == subtree_node) {
+            subtree_node->anc->desc1 = breaking_branch_sibling;
+        }
+        else{
+            subtree_node->anc->desc2 = breaking_branch_sibling;
+        }
+        copySubtree(subtree, breaking_branch_sibling, grand_descendent, breaking_branch_anc, breaking_branch_desc);
+    }
+    /* Otherwise, add each descendent and recursively parse them. */
+    /* TODO: Need to increment/decrement subtree values */
+    else {
+        if (subtree_node->get_id() > subtree.max_id) {
+            subtree.max_id = subtree_node->get_id();
+        }
+        if (original_node.hasDescendents()) {
+            auto desc1_copy = std::make_shared<Node>(original_node.desc1->get_id());
+            subtree_node->desc1 = desc1_copy;
+            desc1_copy->anc = subtree_node;
+            copySubtree(subtree, desc1_copy, *(original_node.desc1), breaking_branch_anc, breaking_branch_desc);
+            auto desc2_copy = std::make_shared<Node>(original_node.desc2->get_id());
+            subtree_node->desc2 = desc2_copy;
+            desc2_copy->anc = subtree_node;
+            copySubtree(subtree, desc2_copy, *(original_node.desc2), breaking_branch_anc, breaking_branch_desc);
+            subtree.nnodes += 2;
+            subtree.nbranches += 2;
+        }
+        else {
+            subtree.ntips++;
+        }
+    }
+
+}
+
+//void Tree::splitTree2(int anc_id, int desc_id, std::unique_ptr<std::array<std::unique_ptr<Tree>, 2>>& subtrees) {
+//    /* Check that the branch to split on exists in the Tree */
+//    std::shared_ptr<Node> anc_node = getNode(anc_id, root_node);
+//    if (anc_node->desc1->get_id() != desc_id && anc_node->desc2->get_id() != desc_id) {
+//        throw std::logic_error("Non-existent branch");
+//    }
+//
+//
+//}
