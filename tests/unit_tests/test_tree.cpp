@@ -278,4 +278,58 @@ TEST(TreeTests, TestCanSplitTwoTipTree){
     EXPECT_EQ(subtrees[1]->getNTips(), 1);
     EXPECT_EQ(subtrees[0]->getNNodes(), 1);
     EXPECT_EQ(subtrees[1]->getNNodes(), 1);
+    EXPECT_EQ(subtrees[0]->getNBranches(), 0);
+    EXPECT_EQ(subtrees[1]->getNBranches(), 0);
+}
+
+TEST(TreeTests, TestCanJoinTwoTreesAtTip) {
+    std::unique_ptr<std::vector<std::array<int, 2>>> branches1 = std::make_unique<std::vector<std::array<int, 2>>>();
+    branches1->push_back(std::array<int, 2>{1,2});
+    branches1->push_back(std::array<int, 2>{1,3});
+    Tree tree1 = Tree(branches1, 1);
+    std::unique_ptr<std::vector<std::array<int, 2>>> branches2 = std::make_unique<std::vector<std::array<int, 2>>>();
+    branches2->push_back(std::array<int, 2>{4,5});
+    branches2->push_back(std::array<int, 2>{4,6});
+    Tree tree2 = Tree(branches2, 4);
+    Tree combined_tree = Tree(tree1, tree2, 3, 7);
+    EXPECT_TRUE(combined_tree.checkValid());
+    EXPECT_EQ(combined_tree.getNBranches(), 6);
+    EXPECT_EQ(combined_tree.getNTips(), 4);
+    EXPECT_EQ(combined_tree.getNNodes(), 7);
+}
+
+TEST(TreeTests, TestCanJoinTwoTreesAtRoot) {
+    std::unique_ptr<std::vector<std::array<int, 2>>> branches1 = std::make_unique<std::vector<std::array<int, 2>>>();
+    branches1->push_back(std::array<int, 2>{1,2});
+    branches1->push_back(std::array<int, 2>{1,3});
+    Tree tree1 = Tree(branches1, 1);
+    std::unique_ptr<std::vector<std::array<int, 2>>> branches2 = std::make_unique<std::vector<std::array<int, 2>>>();
+    branches2->push_back(std::array<int, 2>{4,5});
+    branches2->push_back(std::array<int, 2>{4,6});
+    Tree tree2 = Tree(branches2, 4);
+    Tree combined_tree = Tree(tree1, tree2, 1, 7);
+    EXPECT_TRUE(combined_tree.checkValid());
+    EXPECT_EQ(combined_tree.getNBranches(), 6);
+    EXPECT_EQ(combined_tree.getNTips(), 4);
+    EXPECT_EQ(combined_tree.getNNodes(), 7);
+}
+
+TEST(TreeTests, TestCanJoinTwoTreesAtInnerBranch) {
+    std::unique_ptr<std::vector<std::array<int, 2>>> branches1 = std::make_unique<std::vector<std::array<int, 2>>>();
+    branches1->push_back(std::array<int, 2>{1,2});
+    branches1->push_back(std::array<int, 2>{1,3});
+    branches1->push_back(std::array<int, 2>{3,8});
+    branches1->push_back(std::array<int, 2>{3,9});
+    branches1->push_back(std::array<int, 2>{8,10});
+    branches1->push_back(std::array<int, 2>{8,11});
+    Tree tree1 = Tree(branches1, 1);
+    std::unique_ptr<std::vector<std::array<int, 2>>> branches2 = std::make_unique<std::vector<std::array<int, 2>>>();
+    branches2->push_back(std::array<int, 2>{4,5});
+    branches2->push_back(std::array<int, 2>{4,6});
+    Tree tree2 = Tree(branches2, 4);
+    Tree combined_tree = Tree(tree1, tree2, 8, 7);
+    EXPECT_TRUE(combined_tree.checkValid());
+    EXPECT_EQ(combined_tree.getNBranches(), 10);
+    EXPECT_EQ(combined_tree.getNTips(), 6);
+    EXPECT_EQ(combined_tree.getNNodes(), 11);
 }

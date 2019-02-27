@@ -27,11 +27,13 @@ private:
     std::shared_ptr<Node> getNode(int node_id, std::shared_ptr<Node> current_node);
     int insertNodeAtBranch(int insert_number, int current_branch, std::shared_ptr<Node> anc, std::shared_ptr<Node> desc);
     void copySubtree(Tree& subtree, std::shared_ptr<Node>& subtree_node, Node& original_node, int start_node, int stop_node);
+    void copyJoinedSubtrees(std::shared_ptr<Node>& new_tree_node, Node& copied_node, Tree& branch_tree, int sister_id, int new_node_id = 0);
 
 public:
 
     Tree();
     Tree(std::unique_ptr<std::vector<std::array<int, 2>>>& branch_list, int root_id);
+    Tree(Tree& base_tree, Tree& branch_tree, int sister_id, int new_node_id);
     ~Tree();
     //TODO: copy constructor, move constructor ?
     static std::unique_ptr<Tree> createRandomTree(int ntaxa);
@@ -53,7 +55,7 @@ public:
     // TODO: add tips in other ways.
 
     void splitTree(int anc_id, int desc_id, std::array<std::unique_ptr<Tree>, 2>& subtrees);
-
+    // Could also add faster detach/reattach subtree methods, which don't create copies of tree -> faster tree search?
 ////TODO: join two trees: extern Tree *join_trees(Tree *subt1, Tree *subt2, int sister_id, int new_node_id);
 ////TODO: reroot tree: extern void reroot(Tree *t, int outgroup_id); & extern void reroot_branch(Tree *t, int branch_anc, int branch_des);
 //

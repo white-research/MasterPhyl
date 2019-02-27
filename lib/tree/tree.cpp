@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <array>
 #include <exception>
 #include <iostream>
@@ -460,15 +461,86 @@ void Tree::copySubtree(Tree& subtree, std::shared_ptr<Node>& subtree_node, Node&
             subtree.ntips++;
         }
     }
-
 }
 
-//void Tree::splitTree2(int anc_id, int desc_id, std::unique_ptr<std::array<std::unique_ptr<Tree>, 2>>& subtrees) {
-//    /* Check that the branch to split on exists in the Tree */
-//    std::shared_ptr<Node> anc_node = getNode(anc_id, root_node);
-//    if (anc_node->desc1->get_id() != desc_id && anc_node->desc2->get_id() != desc_id) {
-//        throw std::logic_error("Non-existent branch");
-//    }
-//
-//
-//}
+void Tree::copyJoinedSubtrees(std::shared_ptr<Node>& new_tree_node, Node& copied_node, Tree& branch_tree, int sister_id, int new_node_id){
+    if (copied_node.hasDescendents() == false) { // branch is tip
+        ntips++;
+    }
+    else if (copied_node.desc1->get_id() == sister_id) { // Attach branch subtree on branch to descendent 1
+        // Insert new node
+        new_tree_node->desc1 = std::make_shared<Node>(new_node_id);
+        new_tree_node->desc1->anc = new_tree_node;
+        // Attach branch tree and original desc1 as new node's descendents
+        new_tree_node->desc1->desc1 = std::make_shared<Node>(branch_tree.root_node->get_id());
+        new_tree_node->desc1->desc1->anc = new_tree_node->desc1;
+        new_tree_node->desc1->desc2 = std::make_shared<Node>(copied_node.desc1->get_id());
+        new_tree_node->desc1->desc2->anc = new_tree_node->desc1;
+        // Copy desc2 as normal
+        new_tree_node->desc2 = std::make_shared<Node>(copied_node.desc2->get_id());
+        new_tree_node->desc2->anc = new_tree_node;
+        nnodes += 4;
+        nbranches += 4;
+        // Process all three descendents
+        copyJoinedSubtrees(new_tree_node->desc1->desc1, *(branch_tree.root_node), branch_tree, sister_id, new_node_id);
+        copyJoinedSubtrees(new_tree_node->desc1->desc2, *(copied_node.desc1), branch_tree, sister_id, new_node_id);
+        copyJoinedSubtrees(new_tree_node->desc2, *(copied_node.desc2), branch_tree, sister_id, new_node_id);
+    }
+    else if (copied_node.desc2->get_id() == sister_id) { // Attach branch subtree on branch to descendent 2
+        // Copy desc1 as normal
+        new_tree_node->desc1 = std::make_shared<Node>(copied_node.desc1->get_id());
+        new_tree_node->desc1->anc = new_tree_node;
+        // Insert new node on desc2 branch
+        new_tree_node->desc2 = std::make_shared<Node>(new_node_id);
+        new_tree_node->desc2->anc = new_tree_node;
+        // Attach branch tree and original desc2 as new node's descendents
+        new_tree_node->desc2->desc1 = std::make_shared<Node>(branch_tree.root_node->get_id());
+        new_tree_node->desc2->desc1->anc = new_tree_node->desc2;
+        new_tree_node->desc2->desc2 = std::make_shared<Node>(copied_node.desc2->get_id());
+        new_tree_node->desc2->desc2->anc = new_tree_node->desc2;
+        nnodes += 4;
+        nbranches += 4;
+        // Process all three descendents
+        copyJoinedSubtrees(new_tree_node->desc1, *(copied_node.desc1), branch_tree, sister_id, new_node_id);
+        copyJoinedSubtrees(new_tree_node->desc2->desc1, *(branch_tree.root_node), branch_tree, sister_id, new_node_id);
+        copyJoinedSubtrees(new_tree_node->desc2->desc2, *(copied_node.desc2), branch_tree, sister_id, new_node_id);
+    }
+    else { // Recursively process descendents
+        new_tree_node->desc1 = std::make_shared<Node>(copied_node.desc1->get_id());
+        new_tree_node->desc1->anc = new_tree_node;
+        new_tree_node->desc2 = std::make_shared<Node>(copied_node.desc2->get_id());
+        new_tree_node->desc2->anc = new_tree_node;
+        nnodes += 2;
+        nbranches += 2;
+        copyJoinedSubtrees(new_tree_node->desc1, *(copied_node.desc1), branch_tree, sister_id, new_node_id);
+        copyJoinedSubtrees(new_tree_node->desc2, *(copied_node.desc2), branch_tree, sister_id, new_node_id);
+    }
+}
+
+Tree::Tree(Tree& base_tree, Tree& branch_tree, int sister_id, int new_node_id) {
+    if (new_node_id == 0) {
+        new_node_id = std::max(base_tree.max_id, branch_tree.max_id) + 1;
+    }
+    max_id = std::max(std::max(base_tree.max_id, branch_tree.max_id), new_node_id);
+    // If joining subtrees as siblings of new root
+    if (sister_id == base_tree.root_node->get_id()) {
+        root_node = std::make_shared<Node>(new_node_id);
+        root_node->desc1 = std::make_shared<Node>(branch_tree.root_node->get_id());
+        root_node->desc1->anc = root_node;
+        root_node->desc2 = std::make_shared<Node>(base_tree.root_node->get_id());
+        root_node->desc2->anc = root_node;
+        nnodes = 3;
+        ntips = 0;
+        nbranches = 2;
+        copyJoinedSubtrees(root_node->desc1, *(branch_tree.root_node), branch_tree, sister_id, new_node_id);
+        copyJoinedSubtrees(root_node->desc2, *(base_tree.root_node), branch_tree, sister_id, new_node_id);
+    }
+    else {
+        root_node = std::make_shared<Node>(base_tree.root_node->get_id());
+        nnodes = 1;
+        ntips = 0;
+        nbranches = 0;
+        copyJoinedSubtrees(root_node, *base_tree.root_node, branch_tree, sister_id, new_node_id);
+    }
+
+}
