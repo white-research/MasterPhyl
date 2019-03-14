@@ -440,7 +440,7 @@ void Tree::copySubtree(Tree& subtree, std::shared_ptr<Node>& subtree_node, Node&
         copySubtree(subtree, breaking_branch_sibling, grand_descendent, breaking_branch_anc, breaking_branch_desc);
     }
     /* Otherwise, add each descendent and recursively parse them. */
-    /* TODO: Need to increment/decrement subtree values */
+    /* TODO: Need to increment/decrement subtree values --> max_id !!! */
     else {
         if (subtree_node->get_id() > subtree.max_id) {
             subtree.max_id = subtree_node->get_id();

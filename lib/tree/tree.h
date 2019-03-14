@@ -56,11 +56,8 @@ public:
 
     void splitTree(int anc_id, int desc_id, std::array<std::unique_ptr<Tree>, 2>& subtrees);
     // Could also add faster detach/reattach subtree methods, which don't create copies of tree -> faster tree search?
-////TODO: join two trees: extern Tree *join_trees(Tree *subt1, Tree *subt2, int sister_id, int new_node_id);
 ////TODO: reroot tree: extern void reroot(Tree *t, int outgroup_id); & extern void reroot_branch(Tree *t, int branch_anc, int branch_des);
-//
-////TODO: check tree is correct: extern int tree_is_correct(Tree *t);
-//
+
 };
 
 #endif
