@@ -1,6 +1,7 @@
 //
 // Created by dominic on 1/10/19.
 //
+#include <stdexcept>
 
 #include "gtest/gtest.h"
 #include "../../lib/tree/tree.h"
@@ -333,3 +334,49 @@ TEST(TreeTests, TestCanJoinTwoTreesAtInnerBranch) {
     EXPECT_EQ(combined_tree.getNTips(), 6);
     EXPECT_EQ(combined_tree.getNNodes(), 11);
 }
+
+TEST(TreeTests, TestCannotRerootOnNonexistantNode) {
+    std::unique_ptr<std::vector<std::array<int, 2>>> branches = std::make_unique<std::vector<std::array<int, 2>>>();
+    branches->push_back(std::array<int, 2>{1,2});
+    branches->push_back(std::array<int, 2>{1,3});
+    branches->push_back(std::array<int, 2>{3,4});
+    branches->push_back(std::array<int, 2>{3,5});
+    Tree tree = Tree(branches, 1);
+    try {
+        tree.reroot(7);
+        FAIL() << "Expected out of range error when rerooting on nonexistent node";
+    }
+    catch (std::out_of_range const & err){
+        EXPECT_STREQ(err.what(), "Cannot reroot on nonexistent node: 7");
+    }
+    catch (...){
+        FAIL() << "Expected out of range error when rerooting on nonexistent node";
+    }
+}
+
+TEST(TreeTests, TestCanRerootOnNodeInSimpleTree) {
+    std::unique_ptr<std::vector<std::array<int, 2>>> branches = std::make_unique<std::vector<std::array<int, 2>>>();
+    branches->push_back(std::array<int, 2>{1,2});
+    branches->push_back(std::array<int, 2>{1,3});
+    branches->push_back(std::array<int, 2>{3,4});
+    branches->push_back(std::array<int, 2>{3,5});
+    Tree tree = Tree(branches, 1);
+    tree.reroot(4);
+    auto branchList = tree.getBranchList();
+    // Check that the tree format is correct
+    EXPECT_TRUE(tree.checkValid());
+    // Check that branches are correct:
+    EXPECT_EQ(4, branchList->size());
+    std::array<int, 2> branch1 = (*branchList)[0];
+    EXPECT_EQ(branch1[0], 1);
+    EXPECT_EQ(branch1[1], 4);
+    std::array<int, 2> branch2 = (*branchList)[3];
+    EXPECT_EQ(branch2[0], 1);
+    EXPECT_EQ(branch2[1], 3);
+}
+
+// TODO: Add tests for:
+//        - reroot on inner node
+//        - reroot on root?
+//        - reroot on existing outgroup (or descendent of root)
+//        - reroot too small a tree (2 tips)
