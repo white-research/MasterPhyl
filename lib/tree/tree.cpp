@@ -548,9 +548,9 @@ Tree::Tree(Tree& base_tree, Tree& branch_tree, int sister_id, int new_node_id) {
 
 
 int Tree::recursive_reroot(std::shared_ptr<Node>& current_node, std::shared_ptr<Node>& new_outgroup) {
-    std::cout << "Moved up to Node: " << current_node->get_id() << "\n";
+    // TODO: refactor to improve code quality (currently lots of if-else blocks with repeated inner code)
+    //   - could change from recursion to a while loop from the new_outgroup -> root?
     if (current_node == new_outgroup){
-        std::cout << "  This is the outgroup node!\n";
         auto new_root = std::make_shared<Node>(1, nullptr, nullptr, nullptr);
         new_root->desc1 =  new_outgroup;
         new_root->desc2 = current_node->anc;
@@ -558,12 +558,10 @@ int Tree::recursive_reroot(std::shared_ptr<Node>& current_node, std::shared_ptr<
         return 3;
     }
     else if (!current_node->hasDescendents()) {
-        std::cout << "  Just a tip...\n";
         return 0;
     }
     else {
         int d1_result = recursive_reroot(current_node->desc1, new_outgroup);
-        std::cout << "Returned from D1 to: " << current_node->get_id() << " with status: " << d1_result << "\n";
         if (d1_result == 3) {
             if (current_node == root_node) {
                 current_node->desc1->anc->desc2 = current_node->desc2;
@@ -600,10 +598,7 @@ int Tree::recursive_reroot(std::shared_ptr<Node>& current_node, std::shared_ptr<
             return 1;
         }
         int d2_result = recursive_reroot(current_node->desc2, new_outgroup);
-        std::cout << "Returned from D2 to: " << current_node->get_id() << " with status: " << d2_result << "\n";
-//        std::cout << d2_result;
         if (d2_result == 3) {
-            std::cout << " Handling D2, status 3" << "\n";
             if (current_node == root_node) {
                 current_node->desc2->anc->desc2 = current_node->desc1;
                 current_node->desc1->anc = current_node->desc2->anc;
@@ -615,22 +610,18 @@ int Tree::recursive_reroot(std::shared_ptr<Node>& current_node, std::shared_ptr<
             return 2;
         }
         if (d2_result == 1) {
-            std::cout << " Handling D2, status 1" << "\n";
             if (current_node == root_node) {
-                std::cout << "  Which is a root..." << "\n";
                 current_node->desc2->desc1 = current_node->desc1;
                 current_node->desc2->desc1->anc = current_node->desc2;
                 root_node = new_outgroup->anc;
                 return 0;
             }
-            std::cout << "  Which is not a root..." << "\n";
             current_node->anc = current_node->desc2;
             current_node->desc2->desc1 = current_node;
             current_node->desc2 = nullptr;
             return 2;
         }
         if (d2_result == 2) {
-            std::cout << " Handling D2, status 2" << "\n";
             if (current_node == root_node) {
                 current_node->desc2->desc2 = current_node->desc1;
                 current_node->desc2->desc2->anc = current_node->desc2;
@@ -648,19 +639,12 @@ int Tree::recursive_reroot(std::shared_ptr<Node>& current_node, std::shared_ptr<
 }
 
 void Tree::reroot(int outgroup_node) {
-    // check node exists in Tree
     auto new_outgroup = getNode(outgroup_node, root_node);
     if (new_outgroup == nullptr) {
         throw std::out_of_range("Cannot reroot on nonexistent node: " + std::to_string(outgroup_node));
     }
     if (ntips < 3 || outgroup_node == root_node->get_id() || new_outgroup->anc == root_node){
-        return; // TODO: test this
+        return;
     }
     recursive_reroot(root_node, new_outgroup);
-
-
-    //TODO: finish this function:
-    //  - check that it's a tip node? maybe optional parameter in method to indicate if this is required. default = True
-    //  - go down tree, switching the orientation of the branches: while (node != root_node) {...}
-    //  - remove root, and pop it in as the descendent of the new outgroup and its new sibling. Remember to heal site of removal
 }

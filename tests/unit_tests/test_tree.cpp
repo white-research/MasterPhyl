@@ -375,8 +375,72 @@ TEST(TreeTests, TestCanRerootOnNodeInSimpleTree) {
     EXPECT_EQ(branch2[1], 3);
 }
 
-// TODO: Add tests for:
-//        - reroot on inner node
-//        - reroot on root?
-//        - reroot on existing outgroup (or descendent of root)
-//        - reroot too small a tree (2 tips)
+TEST(TreeTests, TestCanRerootOnInnerNode) {
+    std::unique_ptr<std::vector<std::array<int, 2>>> branches = std::make_unique<std::vector<std::array<int, 2>>>();
+    branches->push_back(std::array<int, 2>{1,2});
+    branches->push_back(std::array<int, 2>{1,3});
+    branches->push_back(std::array<int, 2>{3,4});
+    branches->push_back(std::array<int, 2>{3,5});
+    branches->push_back(std::array<int, 2>{4,6});
+    branches->push_back(std::array<int, 2>{4,7});
+    Tree tree = Tree(branches, 1);
+    tree.reroot(4);
+    auto branchList = tree.getBranchList();
+    // Check that the tree format is correct
+    EXPECT_TRUE(tree.checkValid());
+    std::vector<std::array<int, 2>> expectedBranches {{1,4}, {3,2}, {1,3}};
+    for (auto expectedBranch : expectedBranches) {
+        bool branchInTree = false;
+        for (auto b : *branchList) {
+            if (b[0] == expectedBranch[0] && b[1] == expectedBranch[1]) {
+                branchInTree = true;
+                break;
+            }
+        }
+        EXPECT_TRUE(branchInTree);
+    }
+}
+
+TEST(TreeTests, TestCannotRerootOnOldRoot) {
+    // TODO: Should this fail with an exception? After all, the default behaviour is to leave the tree unchanged,
+    // rather than making the root an outgroup.
+    std::unique_ptr<std::vector<std::array<int, 2>>> branches = std::make_unique<std::vector<std::array<int, 2>>>();
+    branches->push_back(std::array<int, 2>{1,2});
+    branches->push_back(std::array<int, 2>{1,3});
+    branches->push_back(std::array<int, 2>{3,4});
+    branches->push_back(std::array<int, 2>{3,5});
+    Tree tree = Tree(branches, 1);
+    tree.reroot(1);
+    auto branchList = tree.getBranchList();
+    // Check that the tree format is correct
+    EXPECT_TRUE(tree.checkValid());
+    // Check that branches are correct:
+    EXPECT_EQ(4, branchList->size());
+    std::array<int, 2> branch1 = (*branchList)[0];
+    EXPECT_EQ(branch1[0], 1);
+    EXPECT_EQ(branch1[1], 2);
+    std::array<int, 2> branch2 = (*branchList)[3];
+    EXPECT_EQ(branch2[0], 1);
+    EXPECT_EQ(branch2[1], 3);
+}
+
+TEST(TreeTests, TestRerootOnExitingOutgroup) {
+    std::unique_ptr<std::vector<std::array<int, 2>>> branches = std::make_unique<std::vector<std::array<int, 2>>>();
+    branches->push_back(std::array<int, 2>{1,2});
+    branches->push_back(std::array<int, 2>{1,3});
+    branches->push_back(std::array<int, 2>{3,4});
+    branches->push_back(std::array<int, 2>{3,5});
+    Tree tree = Tree(branches, 1);
+    tree.reroot(3);
+    auto branchList = tree.getBranchList();
+    // Check that the tree format is correct
+    EXPECT_TRUE(tree.checkValid());
+    // Check that branches are correct (and unchanged):
+    EXPECT_EQ(4, branchList->size());
+    std::array<int, 2> branch1 = (*branchList)[0];
+    EXPECT_EQ(branch1[0], 1);
+    EXPECT_EQ(branch1[1], 2);
+    std::array<int, 2> branch2 = (*branchList)[3];
+    EXPECT_EQ(branch2[0], 1);
+    EXPECT_EQ(branch2[1], 3);
+}
