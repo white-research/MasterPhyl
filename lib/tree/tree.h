@@ -2,6 +2,7 @@
 #define MASTERPHYL_TREE_H
 
 #include <memory>
+#include <vector>
 
 class Node {
 private:

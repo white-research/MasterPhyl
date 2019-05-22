@@ -1,3 +1,5 @@
+#include "tree.h"
+
 //#include <stdlib.h>
 //#include <stdio.h>
 //#include <assert.h>
@@ -224,6 +226,11 @@
 //}
 //
 //
+
+int robinsonFouldsDistance(Tree& t1, Tree& t2) {
+    return 1;
+}
+
 //int trees_different(Tree *t1, Tree *t2){
 //    int *t2_labels = relabel_tree(t2);
 //    int **t2_clusters = (int **)malloc(sizeof(int *)*(2*t2->ntaxa-1));
