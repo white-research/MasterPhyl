@@ -1,1 +1,1 @@
-add_library(tree tree.cpp tree.h)
+add_library(tree tree.cpp tree.h rf.cpp rf.h)

@@ -1,6 +1,6 @@
-#ifndef _rh_h
-#define _rh_h
+#ifndef MASTERPHYL_TREE_RF_H
+#define MASTERPHYL_TREE_RF_H
 
-extern int trees_different(Tree *t1, Tree *t2);
+extern bool trees_different(Tree *t1, Tree *t2);
 
 #endif
