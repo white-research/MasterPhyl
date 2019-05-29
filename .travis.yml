@@ -6,7 +6,6 @@ branches:
 
 matrix:
   include:
-    # works on Precise and Trusty
     - os: linux
       dist: xenial
       compiler:
@@ -17,10 +16,10 @@ matrix:
       compiler:
         - gcc
 
-    - os: osx
-      osx_image: xcode10.1
-
-    - os: osx
-      osx_image: xcode7.0
+#    - os: osx
+#      osx_image: xcode10.1
+#
+#    - os: osx
+#      osx_image: xcode7.0
 
 script: cmake -H. -B_builds/Debug -DCMAKE_BUILD_TYPE=Debug && cmake --build _builds/Debug

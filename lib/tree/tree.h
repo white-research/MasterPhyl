@@ -1,52 +1,63 @@
 #ifndef MASTERPHYL_TREE_H
 #define MASTERPHYL_TREE_H
 
+#include <memory>
+
 class Node {
 private:
     int id;
 public:
-    Node *anc, *desc1, *desc2;
+    std::shared_ptr<Node> anc, desc1, desc2;
 
-    Node(int id, Node *a, Node *d1, Node *d2);
-    int get_id();
+    explicit Node(int id);
+    Node(int id, std::shared_ptr<Node> a, std::shared_ptr<Node> d1, std::shared_ptr<Node> d2);
+    ~Node()=default; // Note: deletes recursively (deleting its descendents before itself)
+
+    int get_id(){return id;}
+
+    bool hasDescendents();
 };
 
+// TODO: template class that accepts different types of nodes -> branch lengths, and variable descendent numbers
 class Tree {
 private:
-    int max_id, ntaxa;
+    int max_id, ntips, nnodes, nbranches;
+    std::shared_ptr<Node> root_node;
+
+    std::shared_ptr<Node> getNode(int node_id, std::shared_ptr<Node> current_node);
+    int insertNodeAtBranch(int insert_number, int current_branch, std::shared_ptr<Node> anc, std::shared_ptr<Node> desc);
+    void copySubtree(Tree& subtree, std::shared_ptr<Node>& subtree_node, Node& original_node, int start_node, int stop_node);
+    void copyJoinedSubtrees(std::shared_ptr<Node>& new_tree_node, Node& copied_node, Tree& branch_tree, int sister_id, int new_node_id = 0);
+    int recursive_reroot(std::shared_ptr<Node>& current_node, std::shared_ptr<Node>& new_outgroup);
 public:
-    Node *root_node; // *first_taxon -> present in original implementation...
 
     Tree();
+    Tree(std::unique_ptr<std::vector<std::array<int, 2>>>& branch_list, int root_id);
+    Tree(Tree& base_tree, Tree& branch_tree, int sister_id, int new_node_id);
+    ~Tree();
+    //TODO: copy constructor, move constructor ?
+    static std::unique_ptr<Tree> createRandomTree(int ntaxa);
 
-//    void add_node(Node* new_node, int parent_node);
+    int getNTips() {return ntips;};
+    int getNBranches() {return nbranches;};
+    int getNNodes() {return nnodes;};
+    int getRootID();
+    bool hasNode(int node_id);
+    // std::vector<int> getTips();
+    // std::vector<int> getNodes();
+    std::unique_ptr<std::vector<std::array<int, 2>>> getBranchList(int start_id = 0, int stop_id = 0);
+
+    bool checkValid(bool verbose = false);
+
+//    void addTipNextTo(int id, int sibling_id);
+    void addTipFrom(int id, int anc_id); // TODO: test this method better
+    int addTipRandomly();
+    // TODO: add tips in other ways.
+
+    void splitTree(int anc_id, int desc_id, std::array<std::unique_ptr<Tree>, 2>& subtrees);
+    // Could also add faster detach/reattach subtree methods, which don't create copies of tree -> faster tree search?
+    // TODO: reattach subtrees?
+    void reroot(int outgroup_node);
 };
-
-//class TreeSet
-
-//typedef struct {
-//    int ntrees;
-//    float tcost;
-//    Tree *trees[100];
-//} TreeSet;
-//
-//extern int get_children(int node, int phyl[], int num_vertices, int children[2]);
-//extern int get_ancestor(int node, int phyl[], int num_vertices);
-//
-//
-//extern Tree *make_random_tree(int ntaxa);
-//extern void split_tree(Tree *t, int anc_id, int des_id, Tree *subtree_array[2]);
-//extern Tree *join_trees(Tree *subt1, Tree *subt2, int sister_id, int new_node_id);
-//extern int tree_is_correct(Tree *t);
-//extern void free_tree(Tree *t);
-//extern int *get_branch_list(Tree *t);
-//extern Tree *copy_tree(Tree *orig_tree);
-//extern void reroot(Tree *t, int outgroup_id);
-//extern void reroot_branch(Tree *t, int branch_anc, int branch_des);
-//extern void print_tree(Tree *t, Node *current_node, int level);
-//extern void print_nodes(Tree *t, Node *current_node);
-//
-//void free_node_recur(Node *n);
-//Node *find_node(Tree *t, int id, Node *current_node, Node *node_to_return);
 
 #endif
