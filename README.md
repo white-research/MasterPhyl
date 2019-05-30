@@ -28,7 +28,7 @@ To build for debugging:
 
 ### Contibuting ###
 
-MasterPhyl follows the Google C++ style guide, and uses the following Git commit message conventions:
+MasterPhyl uses the following Git commit message conventions:
 
 Tag | Purpose
 --- | ---

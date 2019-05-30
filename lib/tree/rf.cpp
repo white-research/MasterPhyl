@@ -228,6 +228,8 @@
 //
 
 int robinsonFouldsDistance(Tree& t1, Tree& t2) {
+    relabel_tree(t2);
+
     return 1;
 }
 
