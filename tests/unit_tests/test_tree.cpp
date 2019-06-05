@@ -2,6 +2,7 @@
 // Created by dominic on 1/10/19.
 //
 #include <stdexcept>
+#include <array>
 
 #include "gtest/gtest.h"
 #include "../../lib/tree/tree.h"
