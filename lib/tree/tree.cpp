@@ -648,3 +648,8 @@ void Tree::reroot(int outgroup_node) {
     }
     recursive_reroot(root_node, new_outgroup);
 }
+
+
+std::shared_ptr<Node> Tree::getRootNode(){
+    return root_node;
+}

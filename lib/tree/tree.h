@@ -59,6 +59,8 @@ public:
     // Could also add faster detach/reattach subtree methods, which don't create copies of tree -> faster tree search?
     // TODO: reattach subtrees?
     void reroot(int outgroup_node);
+
+    std::shared_ptr<Node> getRootNode(); //TODO: add tests
 };
 
 #endif
