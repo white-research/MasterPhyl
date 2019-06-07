@@ -1,14 +1,43 @@
 #include "tree.h"
+#include <iostream>
+#include <map>
 
-//#include <stdlib.h>
-//#include <stdio.h>
-//#include <assert.h>
-//#include <time.h>
-//
-//#include "tree-orig.h"
-//
-//#define DEBUG 0
-//
+std::map<int, int> relabelTree(Tree& tree) {
+    std::map<int, int> labels {};
+    std::shared_ptr<Node> node = tree.getRootNode();
+    std::shared_ptr<Node> last_node = nullptr;
+    int label_counter = 1;
+    // Find left-most child (end desc1)
+    while (node->desc1 != nullptr) {
+        node = node->desc1;
+    }
+    // Iterate through tips from left to right.
+    // If tip, record new label in labels[node_id]. First tip -> 1, 2nd tip ->2, etc.
+    while (node != nullptr){
+        if (node->desc1 == nullptr && node->desc2 == nullptr){
+            labels.emplace(node->get_id(), label_counter++);
+            last_node = node;
+            node = node->anc;
+        }
+        else {
+            if (last_node == node->desc1){
+                last_node = node;
+                node = node->desc2;
+            } else {
+                if (last_node ==node->desc2){
+                    last_node = node;
+                    node = node->anc;
+                }
+                else{
+                    last_node = node;
+                    node = node->desc1;
+                }
+            }
+        }
+    }
+    return labels;
+}
+
 //int *relabel_tree(Tree *t){
 //    int *labels = (int *)malloc(sizeof(int)*t->ntaxa);
 //    Node *node = t->root_node;
@@ -228,7 +257,8 @@
 //
 
 int robinsonFouldsDistance(Tree& t1, Tree& t2) {
-    relabel_tree(t2);
+
+    relabelTree(t2);
 
     return 1;
 }
