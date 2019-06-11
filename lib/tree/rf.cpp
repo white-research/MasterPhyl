@@ -1,8 +1,10 @@
 #include "tree.h"
+#include <array>
 #include <iostream>
 #include <map>
 
 std::map<int, int> relabelTree(Tree& tree) {
+    // Relabel nodes from 1 to number_tips
     std::map<int, int> labels {};
     std::shared_ptr<Node> node = tree.getRootNode();
     std::shared_ptr<Node> last_node = nullptr;
@@ -38,56 +40,6 @@ std::map<int, int> relabelTree(Tree& tree) {
     return labels;
 }
 
-//int *relabel_tree(Tree *t){
-//    int *labels = (int *)malloc(sizeof(int)*t->ntaxa);
-//    Node *node = t->root_node;
-//    if (DEBUG >= 1) printf("\nRoot node is %i\n", node->id);
-//    while (node->desc1 != NULL){
-//        node = node->desc1;
-//        if (DEBUG >= 1) printf(" On node %i\n", node->id);
-//    }
-//    int label_counter = 0;
-//    Node *last_node = NULL;
-//    int n_count = 0;
-//    while (node != NULL){
-//        if (DEBUG >= 1) printf("On node %i\n", node->id);
-//        //printf(" Last node %i\n", last_node->id);
-//
-//        if (node->desc1 == NULL && node->desc2 == NULL){
-//            if (DEBUG >= 1) printf("  Sit 1\n");
-//            assert(node->id < t->ntaxa);
-//            labels[node->id] = label_counter++;
-//            last_node = node;
-//            node = node->anc;
-//        } else{
-//            if (DEBUG >= 1) printf(" Desc1 %i\n", node->desc1->id);
-//            if (last_node == node->desc1){
-//                if (DEBUG >= 1) printf("  Sit 2\n");
-//                last_node = node;
-//                node = node->desc2;
-//            } else{
-//                if (last_node ==node->desc2){
-//                    if (DEBUG >= 1) printf("  Sit 3\n");
-//                    last_node = node;
-//                    node = node->anc;
-//                }
-//                else{
-//                    if (DEBUG >= 1) printf("  Sit 4\n");
-//                    last_node = node;
-//                    node = node->desc1;
-//                }
-//            }
-//        }
-//        n_count++;
-//    }
-//    for(int i=0; i<t->ntaxa; i++){
-//        if (DEBUG >= 1) printf("%i ", labels[i]);
-//    }
-//    if (DEBUG >= 1) printf("\n");
-//    return labels;
-//}
-//
-//
 //void tree_clusters_process(Tree *t, int **clusters, int *cluster_list){
 //    for (int i = t->ntaxa; i < 2*t->ntaxa-1; i++){
 //        if (DEBUG >= 1) printf("on row %i\n", i);
@@ -105,59 +57,30 @@ std::map<int, int> relabelTree(Tree& tree) {
 //        cluster_list[2*(i-t->ntaxa)+1] = end;
 //    }
 //}
-//
-//
-//void tree_clusters_downpass(Tree *t, Node *node, int *labels, int **clusters){
-//    if (node->desc1 != NULL && node->desc2 != NULL){
-//        tree_clusters_downpass(t, node->desc1, labels, clusters);
-//        tree_clusters_downpass(t, node->desc2, labels, clusters);
-//
-//        if (DEBUG >= 1) printf(" On inner node %i\n", node->id);
-//
-//        int *d1, *d2;
-//
-//        if (node->desc1->desc1 == NULL){ // if tip node
-//            if (DEBUG >= 1) printf(" Making array for tip node %i\n", node->desc1->id);
-//            assert(node->desc1->desc2 == NULL);
-//            d1 = (int *)malloc(sizeof(int)*(t->ntaxa));
-//            for (int i=0; i<t->ntaxa; i++){
-//                if (i == labels[node->desc1->id]){
-//                    d1[i] = 1;
-//                } else{
-//                    d1[i] = 0;
-//                }
-//            }
-//            clusters[node->desc1->id] = d1;
-//        } else {
-//            d1 = clusters[node->desc1->id];
-//        }
-//
-//        if (node->desc2->desc1 == NULL){
-//            assert(node->desc2->desc2 == NULL);
-//            d2 = (int *)malloc(sizeof(int)*(t->ntaxa));
-//            for (int i=0; i<t->ntaxa; i++){
-//                if (i == labels[node->desc2->id]){
-//                    d2[i] = 1;
-//                } else{
-//                    d2[i] = 0;
-//                }
-//            }
-//            clusters[node->desc2->id] = d2;
-//        } else {
-//            d2 = clusters[node->desc2->id];
-//        }
-//
-//        int *this_node = (int *)malloc(sizeof(int)*(t->ntaxa));
-//        for (int i=0; i<t->ntaxa; i++){
-//            if (d1[i]==1 || d2[i]==1){
-//                this_node[i]=1;
-//            } else this_node[i] = 0;
-//        }
-//        clusters[node->id]=this_node;
-//    }
-//}
-//
-//
+
+//void tree_clusters_downpass(Tree *t, Node *node, int *labels, int **clusters)
+void treeClusters(Tree& tree, Node& node, std::map<int,int>& labels, std::vector<std::vector<int>>& clusters) {
+    if (node.hasDescendents()) {
+        treeClusters(tree, *(node.desc1), labels, clusters);
+        treeClusters(tree, *(node.desc2), labels, clusters);
+        for (int i=0; i < tree.getNTips(); i++) {
+            if (clusters[node.desc1->get_id() - 1][i] || clusters[node.desc2->get_id() - 1][i]){
+                clusters[node.get_id() - 1][i] = 1;
+            }
+        }
+    }
+    else {
+        for (int i=1; i <= tree.getNTips(); i++) {
+            std::cout << i;
+            if (i == labels[node.get_id()]) {
+                clusters[node.get_id() - 1][i-1] = 1;
+            }
+        }
+        std::cout << "\n";
+    }
+}
+
+
 //int check_tree_diff(int *labels, int *cluster_list, Tree *t2, Node *node, int **clusters){
 //    if (node->desc1 != NULL && node->desc2 != NULL){
 //        if (DEBUG >= 1) printf("On node %i\n", node->id);
@@ -258,7 +181,9 @@ std::map<int, int> relabelTree(Tree& tree) {
 
 int robinsonFouldsDistance(Tree& t1, Tree& t2) {
 
-    relabelTree(t2);
+    auto labels = relabelTree(t2);
+    std::vector<std::vector<int>> clusters(t2.getNNodes(), std::vector<int>(t2.getNTips()));
+
 
     return 1;
 }

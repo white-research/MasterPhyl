@@ -7,5 +7,6 @@ int robinsonFouldsDistance(Tree& t1, Tree& t2);
 
 // TODO: internal functions -> don't export except for tests
 std::map<int, int> relabelTree(Tree& tree);
+void treeClusters(Tree& tree, Node& node, std::map<int,int>& labels, std::vector<std::vector<int>>& clusters);
 
 #endif
