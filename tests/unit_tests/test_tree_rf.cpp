@@ -57,3 +57,27 @@ TEST(RobinsonFoulds, ClusterCreationTest) {
     }
 }
 
+TEST(RobinsonFoulds, ClusterProcessTest) {
+    std::unique_ptr<std::vector<std::array<int, 2>>> branches = std::make_unique<std::vector<std::array<int, 2>>>();
+    branches->push_back(std::array<int, 2>{1,2});
+    branches->push_back(std::array<int, 2>{1,3});
+    branches->push_back(std::array<int, 2>{3,4});
+    branches->push_back(std::array<int, 2>{3,5});
+    branches->push_back(std::array<int, 2>{4,6});
+    branches->push_back(std::array<int, 2>{4,7});
+    branches->push_back(std::array<int, 2>{5,8});
+    branches->push_back(std::array<int, 2>{5,9});
+    Tree tree = Tree(branches, 1);
+    std::map<int,int> labels = relabelTree(tree);
+    std::vector<std::vector<int>> clusters(tree.getNNodes(), std::vector<int>(tree.getNTips()));
+    treeClusters(tree, *(tree.getRootNode()), labels, clusters);
+    std::vector<std::array<int, 2>> cluster_list(tree.getNNodes()-tree.getNTips(), std::array<int,2>({0,0}));
+    processClusters(tree, clusters, cluster_list);
+    EXPECT_EQ(cluster_list.size(), 4);
+    EXPECT_EQ(cluster_list[0][0], 1);
+    EXPECT_EQ(cluster_list[0][1], 5);
+    EXPECT_EQ(cluster_list[3][0], 4);
+    EXPECT_EQ(cluster_list[3][1], 5);
+}
+
+

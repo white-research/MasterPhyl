@@ -40,23 +40,24 @@ std::map<int, int> relabelTree(Tree& tree) {
     return labels;
 }
 
-//void tree_clusters_process(Tree *t, int **clusters, int *cluster_list){
-//    for (int i = t->ntaxa; i < 2*t->ntaxa-1; i++){
-//        if (DEBUG >= 1) printf("on row %i\n", i);
-//        int start=-1, end=-1;
-//        for (int j=0; j < t->ntaxa; j++){
-//            if (DEBUG >= 1) printf("%i=%i ", i, clusters[i][j]);
-//            if (clusters[i][j] == 1){
-//                if (start==-1) start = j;
-//                end = j;
-//            }
-//        }
-//        if (DEBUG >= 1) printf("\n");
-//        if (DEBUG >= 1) printf("Inserting %i and %i at %i\n", start, end, 2*(i-t->ntaxa));
-//        cluster_list[2*(i-t->ntaxa)] = start;
-//        cluster_list[2*(i-t->ntaxa)+1] = end;
-//    }
-//}
+//void tree_clusters_process(Tree *t, int **clusters, int *cluster_list)
+void processClusters(Tree& tree, std::vector<std::vector<int>>& clusters, std::vector<std::array<int, 2>>& cluster_list){
+    int inner_node = 0;
+    for (int i = 0; i < tree.getNNodes(); i++) {
+        int start = -1, end = -1;
+        for (int j = 0; j < tree.getNTips(); j++) {
+            if (clusters[i][j] == 1){
+                if (start == -1) start = j;
+                end = j;
+            }
+        }
+        if (start != end) {
+            cluster_list[inner_node][0] = start + 1;
+            cluster_list[inner_node][1] = end + 1;
+            inner_node++;
+        }
+    }
+}
 
 //void tree_clusters_downpass(Tree *t, Node *node, int *labels, int **clusters)
 void treeClusters(Tree& tree, Node& node, std::map<int,int>& labels, std::vector<std::vector<int>>& clusters) {
@@ -71,12 +72,10 @@ void treeClusters(Tree& tree, Node& node, std::map<int,int>& labels, std::vector
     }
     else {
         for (int i=1; i <= tree.getNTips(); i++) {
-            std::cout << i;
             if (i == labels[node.get_id()]) {
                 clusters[node.get_id() - 1][i-1] = 1;
             }
         }
-        std::cout << "\n";
     }
 }
 
@@ -182,8 +181,10 @@ void treeClusters(Tree& tree, Node& node, std::map<int,int>& labels, std::vector
 int robinsonFouldsDistance(Tree& t1, Tree& t2) {
 
     auto labels = relabelTree(t2);
-    std::vector<std::vector<int>> clusters(t2.getNNodes(), std::vector<int>(t2.getNTips()));
-
+    std::vector<std::vector<int>> t2_clusters(t2.getNNodes(), std::vector<int>(t2.getNTips()));
+    treeClusters(t2, *(t2.getRootNode()), labels, t2_clusters);
+    std::vector<std::array<int, 2>> t2_cluster_list(t2.getNNodes()-t2.getNTips(), std::array<int,2>({0,0}));
+    processClusters(t2, t2_clusters, t2_cluster_list);
 
     return 1;
 }
