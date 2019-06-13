@@ -25,5 +25,11 @@ add_executable(${CMAKE_PROJECT_NAME}  app/mock_main.cpp)
 
 set(MasterPhyl_BUILD_TESTS "True" CACHE STRING "Build tests")
 if(MasterPhyl_BUILD_TESTS STREQUAL "True")
+#  find_library(libatomic NAMES atomic 
+#libatomic.a)
+  set(CMAKE_REQUIRED_FLAGS 
+"${CMAKE_REQUIRED_FLAGS}  
+-u __atomic_fetch_add_4 -latomic")
+  link_libraries("-latomic")
   add_subdirectory(tests)
 endif()
