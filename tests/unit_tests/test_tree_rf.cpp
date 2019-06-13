@@ -72,12 +72,113 @@ TEST(RobinsonFoulds, ClusterProcessTest) {
     std::vector<std::vector<int>> clusters(tree.getNNodes(), std::vector<int>(tree.getNTips()));
     treeClusters(tree, *(tree.getRootNode()), labels, clusters);
     std::vector<std::array<int, 2>> cluster_list(tree.getNNodes()-tree.getNTips(), std::array<int,2>({0,0}));
-    processClusters(tree, clusters, cluster_list);
+    int cluster_count = processClusters(tree, clusters, cluster_list);
     EXPECT_EQ(cluster_list.size(), 4);
+    EXPECT_EQ(cluster_count, 4);
     EXPECT_EQ(cluster_list[0][0], 1);
     EXPECT_EQ(cluster_list[0][1], 5);
     EXPECT_EQ(cluster_list[3][0], 4);
     EXPECT_EQ(cluster_list[3][1], 5);
+}
+
+
+TEST(RobinsonFoulds, RFDistIdenticalTreesTest) {
+    std::unique_ptr<std::vector<std::array<int, 2>>> branches = std::make_unique<std::vector<std::array<int, 2>>>();
+    branches->push_back(std::array<int, 2>{1,2});
+    branches->push_back(std::array<int, 2>{1,3});
+    branches->push_back(std::array<int, 2>{3,4});
+    branches->push_back(std::array<int, 2>{3,5});
+    branches->push_back(std::array<int, 2>{4,6});
+    branches->push_back(std::array<int, 2>{4,7});
+    branches->push_back(std::array<int, 2>{5,8});
+    branches->push_back(std::array<int, 2>{5,9});
+    Tree tree1 = Tree(branches, 1);
+    Tree tree2 = Tree(branches, 1);
+    int RF_dist = robinsonFouldsDistance(tree1, tree2);
+    EXPECT_EQ(RF_dist, 0);
+}
+
+TEST(RobinsonFoulds, RFDistSameClustersDifferentTreesTest) {
+    // tips: 2, 6, 7, 8, 9
+    std::unique_ptr<std::vector<std::array<int, 2>>> branches1 = std::make_unique<std::vector<std::array<int, 2>>>();
+    branches1->push_back(std::array<int, 2>{1,2});
+    branches1->push_back(std::array<int, 2>{1,3});
+    branches1->push_back(std::array<int, 2>{3,4});
+    branches1->push_back(std::array<int, 2>{3,5});
+    branches1->push_back(std::array<int, 2>{4,6});
+    branches1->push_back(std::array<int, 2>{4,7});
+    branches1->push_back(std::array<int, 2>{5,8});
+    branches1->push_back(std::array<int, 2>{5,9});
+    Tree tree1 = Tree(branches1, 1);
+    std::unique_ptr<std::vector<std::array<int, 2>>> branches2 = std::make_unique<std::vector<std::array<int, 2>>>();
+    branches2->push_back(std::array<int, 2>{1,5});
+    branches2->push_back(std::array<int, 2>{1,3});
+    branches2->push_back(std::array<int, 2>{3,4});
+    branches2->push_back(std::array<int, 2>{3,9});
+    branches2->push_back(std::array<int, 2>{4,6});
+    branches2->push_back(std::array<int, 2>{4,7});
+    branches2->push_back(std::array<int, 2>{5,8});
+    branches2->push_back(std::array<int, 2>{5,2});
+    Tree tree2 = Tree(branches2, 1);
+    int RF_dist = robinsonFouldsDistance(tree1, tree2);
+    EXPECT_EQ(RF_dist, 2);
+}
+
+TEST(RobinsonFoulds, RFDistDifferentClustersAndTreesTest) {
+    // tips: 2, 6, 7, 8, 9
+    // t1: 1->(all); 3->(6,7,8,9); 4->(6,7); 5->(8,9)
+    // t2: 1->(all); 5->(8,9); 3->(2,6,7); 4->(6,7)
+    std::unique_ptr<std::vector<std::array<int, 2>>> branches1 = std::make_unique<std::vector<std::array<int, 2>>>();
+    branches1->push_back(std::array<int, 2>{1,2});
+    branches1->push_back(std::array<int, 2>{1,3});
+    branches1->push_back(std::array<int, 2>{3,4});
+    branches1->push_back(std::array<int, 2>{3,5});
+    branches1->push_back(std::array<int, 2>{4,6});
+    branches1->push_back(std::array<int, 2>{4,7});
+    branches1->push_back(std::array<int, 2>{5,8});
+    branches1->push_back(std::array<int, 2>{5,9});
+    Tree tree1 = Tree(branches1, 1);
+    std::unique_ptr<std::vector<std::array<int, 2>>> branches2 = std::make_unique<std::vector<std::array<int, 2>>>();
+    branches2->push_back(std::array<int, 2>{1,5});
+    branches2->push_back(std::array<int, 2>{1,3});
+    branches2->push_back(std::array<int, 2>{3,4});
+    branches2->push_back(std::array<int, 2>{3,2});
+    branches2->push_back(std::array<int, 2>{4,6});
+    branches2->push_back(std::array<int, 2>{4,7});
+    branches2->push_back(std::array<int, 2>{5,8});
+    branches2->push_back(std::array<int, 2>{5,9});
+    Tree tree2 = Tree(branches2, 1);
+    int RF_dist = robinsonFouldsDistance(tree1, tree2);
+    EXPECT_EQ(RF_dist, 1);
+}
+
+TEST(RobinsonFoulds, RFDistDifferentClustersAndTreesVersion2Test) {
+    // tips: 2, 6, 7, 8, 9
+    // t1: 1->(all); 3->(6,7,8,9); 4->(6,7); 5->(8,9)
+    // t2: 1->(all); 3->(2,6,7,8); 4->(2,7); 5->(6,8)
+    // expected RF = 3
+    std::unique_ptr<std::vector<std::array<int, 2>>> branches1 = std::make_unique<std::vector<std::array<int, 2>>>();
+    branches1->push_back(std::array<int, 2>{1,2});
+    branches1->push_back(std::array<int, 2>{1,3});
+    branches1->push_back(std::array<int, 2>{3,4});
+    branches1->push_back(std::array<int, 2>{3,5});
+    branches1->push_back(std::array<int, 2>{4,6});
+    branches1->push_back(std::array<int, 2>{4,7});
+    branches1->push_back(std::array<int, 2>{5,8});
+    branches1->push_back(std::array<int, 2>{5,9});
+    Tree tree1 = Tree(branches1, 1);
+    std::unique_ptr<std::vector<std::array<int, 2>>> branches2 = std::make_unique<std::vector<std::array<int, 2>>>();
+    branches2->push_back(std::array<int, 2>{1,9});
+    branches2->push_back(std::array<int, 2>{1,3});
+    branches2->push_back(std::array<int, 2>{3,4});
+    branches2->push_back(std::array<int, 2>{3,5});
+    branches2->push_back(std::array<int, 2>{4,2});
+    branches2->push_back(std::array<int, 2>{4,7});
+    branches2->push_back(std::array<int, 2>{5,8});
+    branches2->push_back(std::array<int, 2>{5,6});
+    Tree tree2 = Tree(branches2, 1);
+    int RF_dist = robinsonFouldsDistance(tree1, tree2);
+    EXPECT_EQ(RF_dist, 3);
 }
 
 
